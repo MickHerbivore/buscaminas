@@ -19,6 +19,8 @@ export class BoxComponent {
   public gameOverEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
   public clickBlankEvent: EventEmitter<Box> = new EventEmitter<Box>();
+  @Output()
+  public clickEvent: EventEmitter<null> = new EventEmitter<null>();
   
 
   public onRightClick() {
@@ -32,6 +34,7 @@ export class BoxComponent {
     if (this.isGameOver || this.box.isFlagged) return;
 
     this.box.isRotated = true;
+    this.clickEvent.emit();
 
     if (this.box.hasMine)
       this.gameOverEvent.emit(true);

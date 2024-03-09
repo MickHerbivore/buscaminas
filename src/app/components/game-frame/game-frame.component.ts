@@ -17,6 +17,7 @@ export class GameFrameComponent {
   public boxes: Box[][] = [];
   public mines: number = 10;
   public isGameOver: boolean = false;
+  public hasWon: boolean = false;
 
   constructor() {
     this.resetGame();
@@ -83,6 +84,7 @@ export class GameFrameComponent {
     this.putMines();
     this.putNumbers();
     this.isGameOver = false;
+    this.hasWon = false;
   }
 
   public rotateNeighbours(box: Box) {
@@ -96,9 +98,20 @@ export class GameFrameComponent {
             this.rotateNeighbours(this.boxes[i][j]); 
           }
         }
-        
+
       }
     }
+  }
+
+  public validateWin() {
+    for (let i = 0; i < this.boxesX; i++) {
+      for (let j = 0; j < this.boxesY; j++) {
+        if (!this.boxes[i][j].hasMine && !this.boxes[i][j].isRotated) {
+          return;
+        }
+      }
+    }
+    this.hasWon = true;
   }
 
 }

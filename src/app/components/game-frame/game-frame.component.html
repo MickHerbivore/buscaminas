@@ -5,7 +5,8 @@
                 <app-box [box]="boxes[x][y]"
                     [isGameOver]="isGameOver" 
                     (gameOverEvent)="setGameOver()"
-                    (clickBlankEvent)="rotateNeighbours($event)"></app-box>
+                    (clickBlankEvent)="rotateNeighbours($event)"
+                    (clickEvent)="validateWin()"></app-box>
             }
         }
     </div>
@@ -20,4 +21,11 @@
             <h1 class="text-3xl text-pink-500">GAME OVER!</h1>
         </div>
     }
+
+    @if (hasWon) {
+        <div class="flex justify-center py-4">
+            <h1 class="text-3xl text-lime-500">YOU WON!</h1>
+        </div>
+    }
+
 </section>
