@@ -3,5 +3,7 @@ export interface Box {
     y: number;
     hasMine: boolean;
     isFlagged: boolean;
+    isRotated: boolean;
+    numberOfMinesAround: number;
     
 }

@@ -15,10 +15,12 @@ export class GameFrameComponent {
   public boxesX: number = 8;
   public boxesY: number = 8;
   public boxes: Box[][] = [];
+  public mines: number = 10;
 
   constructor() {
     this.boxes = this.createBoxes();
     this.putMines();
+    this.putNumbers();
   }
 
 
@@ -32,6 +34,8 @@ export class GameFrameComponent {
           y: j,
           hasMine: false,
           isFlagged: false,
+          isRotated: false,
+          numberOfMinesAround: 0
         };
       }
     }
@@ -40,12 +44,36 @@ export class GameFrameComponent {
   }
 
   private putMines() {
-    const mines = 10;
-    for (let i = 0; i < mines; i++) {
+    for (let i = 0; i < this.mines; i++) {
       let x = Math.floor(Math.random() * this.boxesX);
       let y = Math.floor(Math.random() * this.boxesY);
       this.boxes[x][y].hasMine = true;
     }
+  }
+
+  public putNumbers() {
+    for (let i = 0; i < this.boxesX; i++) {
+      for (let j = 0; j < this.boxesY; j++) {
+        if (!this.boxes[i][j].hasMine) {
+          this.boxes[i][j].numberOfMinesAround = this.getNumberOfMinesAround(i, j);
+        }
+      }
+    }
+  }
+
+
+  private getNumberOfMinesAround(x: number, y: number): number {
+    let numberOfMines = 0;
+    for (let i = x - 1; i <= x + 1; i++) {
+      for (let j = y - 1; j <= y + 1; j++) {
+        if (i >= 0 && i < this.boxesX && j >= 0 && j < this.boxesY) {
+          if (this.boxes[i][j].hasMine) {
+            numberOfMines++;
+          }
+        }
+      }
+    }
+    return numberOfMines;
   }
 
 }

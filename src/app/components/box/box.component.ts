@@ -15,9 +15,13 @@ export class BoxComponent {
   public box: Box = {} as Box;
   
 
-  public onClick() {
+  public onRightClick() {
     this.box.isFlagged = !this.box.isFlagged;
     return false;
+  }
+
+  public onClick() {
+    this.box.isRotated = true;
   }
 
 }
