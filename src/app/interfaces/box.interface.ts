@@ -1,5 +1,7 @@
 export interface Box {
-    mine: boolean;
     x: number;
     y: number;
+    hasMine: boolean;
+    isFlagged: boolean;
+    
 }

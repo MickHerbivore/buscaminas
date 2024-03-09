@@ -1,7 +1,7 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { BoxComponent } from '../box/box.component';
 import { Box } from '../../interfaces/box.interface';
+import { BoxComponent } from '../box/box.component';
 
 @Component({
   selector: 'app-game-frame',
@@ -21,15 +21,17 @@ export class GameFrameComponent {
     this.putMines();
   }
 
+
   private createBoxes(): Box[][] {
     let boxes: Box[][] = [];
     for (let i = 0; i < this.boxesX; i++) {
       boxes[i] = [];
       for (let j = 0; j < this.boxesY; j++) {
         boxes[i][j] = {
-          mine: false,
           x: i,
-          y: j
+          y: j,
+          hasMine: false,
+          isFlagged: false,
         };
       }
     }
@@ -42,7 +44,7 @@ export class GameFrameComponent {
     for (let i = 0; i < mines; i++) {
       let x = Math.floor(Math.random() * this.boxesX);
       let y = Math.floor(Math.random() * this.boxesY);
-      this.boxes[x][y].mine = true;
+      this.boxes[x][y].hasMine = true;
     }
   }
 
