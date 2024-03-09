@@ -29,7 +29,7 @@ export class BoxComponent {
   }
 
   public onClick() {
-    if (this.isGameOver) return;
+    if (this.isGameOver || this.box.isFlagged) return;
 
     this.box.isRotated = true;
 
