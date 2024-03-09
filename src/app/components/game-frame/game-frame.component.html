@@ -2,8 +2,19 @@
     <div class="w-auto grid grid-cols-{{boxesY}} grid-flow-col grid-rows-{{boxesX}}">
         @for (boxY of boxes; track x; let x = $index) {
             @for (boxX of boxY; track y; let y = $index) {
-                <app-box [box]="boxes[x][y]"></app-box>
+                <app-box [box]="boxes[x][y]" [isGameOver]="isGameOver" (gameOverEvent)="setGameOver()"></app-box>
             }
         }
     </div>
+
+    <div class="flex justify-center py-4">
+        <button class="bg-pink-500 text-white p-2 rounded-md" (click)="resetGame()">Reset Game</button>
+    </div>
+
+
+    @if (isGameOver) {
+        <div class="flex justify-center py-4">
+            <h1 class="text-3xl text-pink-500">GAME OVER!</h1>
+        </div>
+    }
 </section>

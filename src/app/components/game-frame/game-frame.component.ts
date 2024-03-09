@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 import { BoxComponent } from '../box/box.component';
@@ -6,7 +6,7 @@ import { BoxComponent } from '../box/box.component';
 @Component({
   selector: 'app-game-frame',
   standalone: true,
-  imports: [NgFor, BoxComponent],
+  imports: [NgFor, BoxComponent, NgIf],
   templateUrl: './game-frame.component.html',
   styleUrl: './game-frame.component.css'
 })
@@ -16,11 +16,10 @@ export class GameFrameComponent {
   public boxesY: number = 8;
   public boxes: Box[][] = [];
   public mines: number = 10;
+  public isGameOver: boolean = false;
 
   constructor() {
-    this.boxes = this.createBoxes();
-    this.putMines();
-    this.putNumbers();
+    this.resetGame();
   }
 
 
@@ -61,7 +60,6 @@ export class GameFrameComponent {
     }
   }
 
-
   private getNumberOfMinesAround(x: number, y: number): number {
     let numberOfMines = 0;
     for (let i = x - 1; i <= x + 1; i++) {
@@ -74,6 +72,17 @@ export class GameFrameComponent {
       }
     }
     return numberOfMines;
+  }
+
+  public setGameOver() {
+    this.isGameOver = true;
+  }
+
+  public resetGame() {
+    this.boxes = this.createBoxes();
+    this.putMines();
+    this.putNumbers();
+    this.isGameOver = false;
   }
 
 }
