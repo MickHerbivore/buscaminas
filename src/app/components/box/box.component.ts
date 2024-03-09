@@ -17,6 +17,8 @@ export class BoxComponent {
   public isGameOver: boolean = false;
   @Output()
   public gameOverEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output()
+  public clickBlankEvent: EventEmitter<Box> = new EventEmitter<Box>();
   
 
   public onRightClick() {
@@ -31,9 +33,12 @@ export class BoxComponent {
 
     this.box.isRotated = true;
 
-    if (this.box.hasMine) {
+    if (this.box.hasMine)
       this.gameOverEvent.emit(true);
-    }
+
+    else if (this.box.numberOfMinesAround === 0)
+      this.clickBlankEvent.emit(this.box);
+    
   }
 
 }

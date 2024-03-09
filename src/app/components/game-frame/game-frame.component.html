@@ -1,8 +1,11 @@
-<section class="w-auto">
-    <div class="w-auto grid grid-cols-{{boxesY}} grid-flow-col grid-rows-{{boxesX}}">
+<section class="w-full">
+    <div class="grid grid-cols-8">
         @for (boxY of boxes; track x; let x = $index) {
             @for (boxX of boxY; track y; let y = $index) {
-                <app-box [box]="boxes[x][y]" [isGameOver]="isGameOver" (gameOverEvent)="setGameOver()"></app-box>
+                <app-box [box]="boxes[x][y]"
+                    [isGameOver]="isGameOver" 
+                    (gameOverEvent)="setGameOver()"
+                    (clickBlankEvent)="rotateNeighbours($event)"></app-box>
             }
         }
     </div>

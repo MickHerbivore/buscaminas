@@ -85,4 +85,20 @@ export class GameFrameComponent {
     this.isGameOver = false;
   }
 
+  public rotateNeighbours(box: Box) {
+    for (let i = box.x - 1; i <= box.x + 1; i++) {
+      for (let j = box.y - 1; j <= box.y + 1; j++) {
+
+        if (i >= 0 && i < this.boxesX && j >= 0 && j < this.boxesY && !this.boxes[i][j].isRotated) {
+          this.boxes[i][j].isRotated = true;
+          
+          if (this.boxes[i][j].numberOfMinesAround === 0) {
+            this.rotateNeighbours(this.boxes[i][j]); 
+          }
+        }
+        
+      }
+    }
+  }
+
 }
