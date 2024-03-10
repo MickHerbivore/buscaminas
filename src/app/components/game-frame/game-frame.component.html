@@ -2,11 +2,7 @@
     <div class="grid grid-cols-8">
         @for (boxY of boxes; track x; let x = $index) {
             @for (boxX of boxY; track y; let y = $index) {
-                <app-box [box]="boxes[x][y]"
-                    [isGameOver]="isGameOver" 
-                    (gameOverEvent)="setGameOver()"
-                    (clickBlankEvent)="rotateNeighbours($event)"
-                    (clickEvent)="validateWin()"></app-box>
+                <app-box [box]="boxes[x][y]"></app-box>
             }
         }
     </div>

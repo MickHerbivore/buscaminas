@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-box',
@@ -11,17 +12,19 @@ import { Box } from '../../interfaces/box.interface';
 })
 export class BoxComponent {
 
+  public gameService = inject( GameService );
+  
   @Input()
   public box: Box = {} as Box;
-  @Input()
-  public isGameOver: boolean = false;
-  @Output()
-  public gameOverEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
   public clickBlankEvent: EventEmitter<Box> = new EventEmitter<Box>();
-  @Output()
-  public clickEvent: EventEmitter<null> = new EventEmitter<null>();
   
+  public isGameOver: boolean = false;
+
+  
+  constructor() {
+    this.gameService.isGameOverBSubject.subscribe( isGameOver => this.isGameOver = isGameOver );
+  }
 
   public onRightClick() {
     if (this.isGameOver) return;
@@ -34,13 +37,13 @@ export class BoxComponent {
     if (this.isGameOver || this.box.isFlagged) return;
 
     this.box.isRotated = true;
-    this.clickEvent.emit();
+      this.gameService.validateWin();
 
     if (this.box.hasMine)
-      this.gameOverEvent.emit(true);
+      this.gameService.isGameOverBSubject.next( true );
 
     else if (this.box.numberOfMinesAround === 0)
-      this.clickBlankEvent.emit(this.box);
+      this.gameService.rotateNeighbours( this.box );
     
   }
 
