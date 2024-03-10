@@ -1,7 +1,10 @@
-@if (!level.name) {
-    <app-levels></app-levels>
-} @else {
-    <app-game-frame></app-game-frame>
-    <app-reset-button></app-reset-button>
-}
+<article class="from-indigo-600 bg-gradient-to-br to-zinc-400 flex flex-col justify-between items-center gap-4 p-8 rounded-3xl">
 
+    @if (!level.name) {
+        <app-levels></app-levels>
+    } @else {
+        <app-game-frame></app-game-frame>
+        <app-reset-button></app-reset-button>
+    }
+
+</article>
