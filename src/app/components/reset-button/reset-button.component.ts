@@ -11,11 +11,6 @@ import { GameService } from '../../services/game.service';
 export class ResetButtonComponent {
 
   private gameService = inject( GameService );
-
-
-  constructor() {
-    this.resetGame();
-  }
   
   
   public resetGame() {

@@ -1,8 +1,11 @@
 <section class="w-full relative">
-    <div class="grid grid-cols-8">
-        @for (boxY of boxes; track x; let x = $index) {
-            @for (boxX of boxY; track y; let y = $index) {
-                <app-box [box]="boxes[x][y]"></app-box>
+
+    <div class="grid"
+        [style]="'grid-template-columns: repeat('+ level.cols + ', minmax(0, 1fr))'">
+        
+        @for (boxRow of boxes; track row; let row = $index) {
+            @for (boxX of boxRow; track col; let col = $index) {
+                <app-box [box]="boxes[row][col]"></app-box>
             }
         }
     </div>

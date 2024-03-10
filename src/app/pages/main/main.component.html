@@ -1,2 +1,7 @@
-<app-game-frame></app-game-frame>
-<app-reset-button></app-reset-button>
+@if (!level.name) {
+    <app-levels></app-levels>
+} @else {
+    <app-game-frame></app-game-frame>
+    <app-reset-button></app-reset-button>
+}
+

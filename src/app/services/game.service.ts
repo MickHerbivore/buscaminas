@@ -1,19 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Box } from '../interfaces/box.interface';
 import { BehaviorSubject } from 'rxjs';
+import { Box } from '../interfaces/box.interface';
+import { Level } from '../interfaces/level.interface';
+import { LEVELS } from '../properties/properties';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
+  public levelBSubject: BehaviorSubject<Level> = new BehaviorSubject({} as Level);
   public boxesBSubject: BehaviorSubject<Box[][]> = new BehaviorSubject<Box[][]>([]);
   public isGameOverBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public hasWonBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private boxesX: number = 8;
-  private boxesY: number = 8;
+  private columns: number = 8;
+  private rows: number = 8;
   private numberOfMines: number = 10;
 
+
+  public getLevels(): Level[] {
+    return LEVELS;
+  }
+
+  public setLevel( level: Level ) {
+    console.log('setLevel', level);
+    
+    this.levelBSubject.next( level );
+    this.columns = level.cols;
+    this.rows = level.rows;
+    this.numberOfMines = level.mines;
+    this.resetGame();
+  }
 
   public resetGame() {
     this.initializeBoxes();
@@ -25,12 +42,12 @@ export class GameService {
 
   private initializeBoxes(): void {
     let boxes: Box[][] = [];
-    for (let i = 0; i < this.boxesX; i++) {
-      boxes[i] = [];
-      for (let j = 0; j < this.boxesY; j++) {
-        boxes[i][j] = {
-          x: i,
-          y: j,
+    for (let row = 0; row < this.rows; row++) {
+      boxes[row] = [];
+      for (let col = 0; col < this.columns; col++) {
+        boxes[row][col] = {
+          row: row,
+          col: col,
           hasMine: false,
           isFlagged: false,
           isRotated: false,
@@ -44,40 +61,44 @@ export class GameService {
 
   private putMines() {
     for (let i = 0; i < this.numberOfMines; i++) {
-      let x = Math.floor(Math.random() * this.boxesX);
-      let y = Math.floor(Math.random() * this.boxesY);
-      this.boxesBSubject.getValue()[x][y].hasMine = true;
+      let row = Math.floor(Math.random() * this.rows);
+      let col = Math.floor(Math.random() * this.columns);
+      this.boxesBSubject.getValue()[row][col].hasMine = true;
     }
   }
 
   private putNumbers() {
-    for (let i = 0; i < this.boxesX; i++) {
-      for (let j = 0; j < this.boxesY; j++) {
-        if (!this.boxesBSubject.getValue()[i][j].hasMine) {
-          this.boxesBSubject.getValue()[i][j].numberOfMinesAround = this.getNumberOfMinesAround(i, j);
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.columns; col++) {
+        if (!this.boxesBSubject.getValue()[row][col].hasMine) {
+          this.boxesBSubject.getValue()[row][col].numberOfMinesAround = this.getNumberOfMinesAround(row, col);
         }
       }
     }
   }
 
-  private getNumberOfMinesAround(x: number, y: number): number {
+  private getNumberOfMinesAround(row: number, col: number): number {
     let numberOfMines = 0;
-    for (let i = x - 1; i <= x + 1; i++) {
-      for (let j = y - 1; j <= y + 1; j++) {
-        if (i >= 0 && i < this.boxesX && j >= 0 && j < this.boxesY) {
-          if (this.boxesBSubject.getValue()[i][j].hasMine) {
+
+    for (let i = row - 1; i <= row + 1; i++) {
+      for (let j = col - 1; j <= col + 1; j++) {
+        
+        if (i >= 0 && i < this.rows 
+          && j >= 0 && j < this.columns
+          && this.boxesBSubject.getValue()[i][j].hasMine) {
             numberOfMines++;
-          }
         }
+
       }
     }
+    
     return numberOfMines;
   }
 
   public validateWin() {
-    for (let i = 0; i < this.boxesX; i++) {
-      for (let j = 0; j < this.boxesY; j++) {
-        if (!this.boxesBSubject.getValue()[i][j].hasMine && !this.boxesBSubject.getValue()[i][j].isRotated) {
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.columns; col++) {
+        if (!this.boxesBSubject.getValue()[row][col].hasMine && !this.boxesBSubject.getValue()[row][col].isRotated) {
           return;
         }
       }
@@ -86,14 +107,17 @@ export class GameService {
   }
 
   public rotateNeighbours(box: Box) {
-    for (let i = box.x - 1; i <= box.x + 1; i++) {
-      for (let j = box.y - 1; j <= box.y + 1; j++) {
+    for (let row = box.row - 1; row <= box.row + 1; row++) {
+      for (let col = box.col - 1; col <= box.col + 1; col++) {
 
-        if (i >= 0 && i < this.boxesX && j >= 0 && j < this.boxesY && !this.boxesBSubject.getValue()[i][j].isRotated) {
-          this.boxesBSubject.getValue()[i][j].isRotated = true;
+        if (row >= 0 && row < this.rows 
+          && col >= 0 && col < this.columns 
+          && !this.boxesBSubject.getValue()[row][col].isRotated) {
+
+          this.boxesBSubject.getValue()[row][col].isRotated = true;
           
-          if (this.boxesBSubject.getValue()[i][j].numberOfMinesAround === 0) {
-            this.rotateNeighbours(this.boxesBSubject.getValue()[i][j]); 
+          if (this.boxesBSubject.getValue()[row][col].numberOfMinesAround === 0) {
+            this.rotateNeighbours(this.boxesBSubject.getValue()[row][col]); 
           }
         }
 

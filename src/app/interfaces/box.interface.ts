@@ -1,6 +1,6 @@
 export interface Box {
-    x: number;
-    y: number;
+    row: number;
+    col: number;
     hasMine: boolean;
     isFlagged: boolean;
     isRotated: boolean;

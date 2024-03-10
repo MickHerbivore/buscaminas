@@ -1,0 +1,19 @@
+<section class="flex flex-col justify-between items-center gap-4">
+
+    <h1 class="text-xl font-bold">Select difficulty:</h1>
+    
+    <ul>
+        <li><strong>Easy:</strong> 8 × 8 boxes and 10 mines.</li>
+        <li><strong>Intermediate:</strong> 16 × 16 boxes and 40 mines.</li>
+        <li><strong>Expert:</strong> 16 × 30 boxes and 99 mines.</li>
+    </ul>
+
+    @for (level of levels; track level.name) {
+        <button class="w-full px-4 py-2 bg-indigo-500 border-2 border-indigo-500 rounded-full box-border text-lg font-semibold
+            hover:bg-indigo-400 hover:border-2 hover:border-indigo-100"
+            (click)="setLevel( level )">
+            {{ level.name }}
+        </button>
+    }
+
+</section>
