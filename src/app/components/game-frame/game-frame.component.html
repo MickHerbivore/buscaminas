@@ -1,4 +1,4 @@
-<section class="w-full">
+<section class="w-full relative">
     <div class="grid grid-cols-8">
         @for (boxY of boxes; track x; let x = $index) {
             @for (boxX of boxY; track y; let y = $index) {
@@ -7,20 +7,15 @@
         }
     </div>
 
-    <div class="flex justify-center py-4">
-        <button class="bg-pink-500 text-white p-2 rounded-md" (click)="resetGame()">Reset Game</button>
-    </div>
-
-
     @if (isGameOver) {
-        <div class="flex justify-center py-4">
-            <h1 class="text-3xl text-pink-500">GAME OVER!</h1>
+        <div class="w-full h-full bg-neutral-600/50 flex justify-center items-center py-4 absolute top-0">
+            <h1 class="text-3xl font-extrabold text-pink-500">GAME OVER!</h1>
         </div>
     }
 
     @if (hasWon) {
-        <div class="flex justify-center py-4">
-            <h1 class="text-3xl text-lime-500">YOU WON!</h1>
+        <div class="w-full h-full bg-neutral-400/50 flex justify-center items-center py-4 absolute top-0">
+            <h1 class="text-3xl font-extrabold text-lime-600">YOU WON!</h1>
         </div>
     }
 

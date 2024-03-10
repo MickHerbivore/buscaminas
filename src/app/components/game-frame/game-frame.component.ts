@@ -23,14 +23,10 @@ export class GameFrameComponent {
 
 
   constructor() {
-    this.resetGame();
     this.gameService.boxesBSubject.subscribe( boxes => this.boxes = boxes );
     this.gameService.isGameOverBSubject.subscribe( isGameOver => this.isGameOver = isGameOver );
     this.gameService.hasWonBSubject.subscribe( hasWon => this.hasWon = hasWon );
   }
-  
-  public resetGame() {
-    this.gameService.resetGame();
-  }
+
 
 }
