@@ -22,9 +22,7 @@ export class GameService {
     return LEVELS;
   }
 
-  public setLevel( level: Level ) {
-    console.log('setLevel', level);
-    
+  public setLevel( level: Level ) {    
     this.levelBSubject.next( level );
     this.columns = level.cols;
     this.rows = level.rows;
