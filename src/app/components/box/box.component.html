@@ -6,7 +6,7 @@
         (contextmenu)="onRightClick()"
         (click)="onClick()">
         @if (box.isFlagged){
-            <img src="./../../../assets/img/flag.svg" alt="">
+            <img src="./assets/img/flag.svg" alt="">
         }
     </div>
 
@@ -16,7 +16,7 @@
         hover:bg-indigo-500"
         (click)="onClick()">
         @if (box.hasMine){
-            <img src="./../../../assets/img/bomb.svg" alt="">
+            <img src="./assets/img/bomb.svg" alt="">
         } @else if (box.numberOfMinesAround > 0) {
             {{ box.numberOfMinesAround }}
         }
