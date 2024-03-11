@@ -1,10 +1,10 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Box } from '../../interfaces/box.interface';
 import { Level } from '../../interfaces/level.interface';
 import { GameService } from '../../services/game.service';
 import { BoxComponent } from '../box/box.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game-frame',
@@ -29,6 +29,10 @@ export class GameFrameComponent implements OnDestroy {
     this.gameService.boxesBSubject.subscribe( boxes => this.boxes = boxes );
     this.gameService.isGameOverBSubject.subscribe( isGameOver => this.isGameOver = isGameOver );
     this.gameService.hasWonBSubject.subscribe( hasWon => this.hasWon = hasWon );
+  }
+
+  setGameOver() {
+    this.gameService.isGameOverBSubject.next( true );
   }
 
   ngOnDestroy(): void {
