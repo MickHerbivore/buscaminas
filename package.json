@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "delete:docs": "rm -r -f docs",
-    "copy:dist": "mkdir docs && cp dist/buscaminas/browser/* ./docs/"
+    "copy:dist": "mkdir docs && cp -r dist/buscaminas/browser/* ./docs/"
   },
   "private": true,
   "dependencies": {
