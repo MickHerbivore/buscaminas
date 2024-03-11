@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 import { GameService } from '../../services/game.service';
 
@@ -10,7 +10,7 @@ import { GameService } from '../../services/game.service';
   templateUrl: './box.component.html',
   styleUrl: './box.component.css'
 })
-export class BoxComponent {
+export class BoxComponent implements OnDestroy {
 
   public gameService = inject( GameService );
   
@@ -45,6 +45,10 @@ export class BoxComponent {
     else if (this.box.numberOfMinesAround === 0)
       this.gameService.rotateNeighbours( this.box );
     
+  }
+
+  ngOnDestroy(): void {
+    this.gameService.isGameOverBSubject.unsubscribe();
   }
 
 }

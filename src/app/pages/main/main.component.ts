@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { ChangeLevelButtonComponent } from '../../components/change-level-button/change-level-button.component';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { LevelsComponent } from '../../components/levels/levels.component';
@@ -14,7 +14,7 @@ import { GameService } from '../../services/game.service';
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
-export class MainComponent {
+export class MainComponent implements OnDestroy {
 
   private gameService = inject( GameService );
   public level!: Level;
@@ -23,5 +23,8 @@ export class MainComponent {
     this.gameService.levelBSubject.subscribe( level => this.level = level );
   }
 
+  ngOnDestroy(): void {
+    this.gameService.levelBSubject.unsubscribe();
+  }
 
 }
