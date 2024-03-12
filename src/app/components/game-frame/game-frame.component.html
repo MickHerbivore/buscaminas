@@ -1,7 +1,7 @@
-<section class="w-fit relative">
+<section class="relative">
 
-    <div class="grid"
-        [style]="'grid-template-columns: repeat('+ level.cols + ', minmax(0, 1fr))'">
+    <div class="grid "
+        [style]="'grid-template-columns: repeat('+ level.cols + ', 1fr)'">
         
         @for (boxRow of boxes; track row; let row = $index) {
             @for (boxX of boxRow; track col; let col = $index) {
