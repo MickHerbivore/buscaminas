@@ -1,0 +1,25 @@
+<section class="relative">
+
+    <div class="grid "
+        [style]="'grid-template-columns: repeat('+ level.cols + ', 1fr)'">
+        
+        @for (boxRow of boxes; track row; let row = $index) {
+            @for (boxX of boxRow; track col; let col = $index) {
+                <app-box [box]="boxes[row][col]" (clickOverMineEvent)="setGameOver()"></app-box>
+            }
+        }
+    </div>
+
+    @if (isGameOver) {
+        <div class="w-full h-full bg-neutral-600/50 flex justify-center items-center py-4 absolute top-0">
+            <h1 class="text-3xl font-extrabold text-pink-500">GAME OVER!</h1>
+        </div>
+    }
+
+    @if (hasWon) {
+        <div class="w-full h-full bg-neutral-400/50 flex justify-center items-center py-4 absolute top-0">
+            <h1 class="text-3xl font-extrabold text-pink-600">YOU WON!</h1>
+        </div>
+    }
+
+</section>
