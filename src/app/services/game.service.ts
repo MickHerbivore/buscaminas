@@ -85,6 +85,9 @@ export class GameService {
     for (let i = 0; i < this.numberOfMinesBSbuject.getValue(); i++) {
       let row = Math.floor(Math.random() * this.rows);
       let col = Math.floor(Math.random() * this.columns);
+      
+      if (this.boxesBSubject.getValue()[row][col].hasMine) i--;
+      
       this.boxesBSubject.getValue()[row][col].hasMine = true;
     }
   }
