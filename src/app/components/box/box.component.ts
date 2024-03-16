@@ -22,7 +22,7 @@ export class BoxComponent {
 
   public onRightClick() {
     this.box.isFlagged = !this.box.isFlagged;
-    this.box.isFlagged ? this.gameService.substractFlagLeft() : this.gameService.addFlagLeft();
+    this.box.isFlagged ? this.gameService.palceFlag() : this.gameService.removeFlag();
     return false;
   }
 

@@ -13,7 +13,7 @@ export class GameService {
   private boxesBSubject: BehaviorSubject<Box[][]> = new BehaviorSubject<Box[][]>([]);
   private isGameOverBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private hasWonBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private flagsLeftBSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private flagsPlacedBSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   private numberOfMinesBSbuject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   
   private columns: number = 8;
@@ -23,7 +23,7 @@ export class GameService {
   public boxes$ = this.boxesBSubject.asObservable();
   public isGameOver$ = this.isGameOverBSubject.asObservable();
   public hasWon$ = this.hasWonBSubject.asObservable();
-  public flagsLeft$ = this.flagsLeftBSubject.asObservable();
+  public flagsPlaced$ = this.flagsPlacedBSubject.asObservable();
   public numberOfMines$ = this.numberOfMinesBSbuject.asObservable();
 
 
@@ -45,21 +45,21 @@ export class GameService {
     this.putNumbers();
     this.isGameOverBSubject.next( false );
     this.hasWonBSubject.next( false );
-    this.flagsLeftBSubject.next( this.numberOfMinesBSbuject.getValue() );
+    this.flagsPlacedBSubject.next( 0 );
   }
 
   public setGameOver() {
     this.isGameOverBSubject.next( true );
   }
 
-  public addFlagLeft() {
-    const flagsLeft = this.flagsLeftBSubject.getValue() + 1;
-    this.flagsLeftBSubject.next( flagsLeft );
+  public palceFlag() {
+    const flagsLeft = this.flagsPlacedBSubject.getValue() + 1;
+    this.flagsPlacedBSubject.next( flagsLeft );
   }
 
-  public substractFlagLeft() {
-    const flagsLeft = this.flagsLeftBSubject.getValue() - 1;
-    this.flagsLeftBSubject.next( flagsLeft );
+  public removeFlag() {
+    const flagsLeft = this.flagsPlacedBSubject.getValue() - 1;
+    this.flagsPlacedBSubject.next( flagsLeft );
   }
 
   private initializeBoxes(): void {
