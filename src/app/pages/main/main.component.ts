@@ -1,30 +1,31 @@
 import { NgIf } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
-import { ChangeLevelButtonComponent } from '../../components/change-level-button/change-level-button.component';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { LevelsComponent } from '../../components/levels/levels.component';
-import { ResetButtonComponent } from '../../components/reset-button/reset-button.component';
 import { Level } from '../../interfaces/level.interface';
 import { GameService } from '../../services/game.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [GameFrameComponent, ResetButtonComponent, LevelsComponent, NgIf, ChangeLevelButtonComponent],
+  imports: [LevelsComponent, NgIf, GameFrameComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
 export class MainComponent implements OnDestroy {
 
   private gameService = inject( GameService );
+  private currentLevelSubscription: Subscription;
   public level!: Level;
 
+
   constructor() {
-    this.gameService.levelBSubject.subscribe( level => this.level = level );
+    this.currentLevelSubscription = this.gameService.currentLevel$.subscribe( level => this.level = level );
   }
 
   ngOnDestroy(): void {
-    this.gameService.levelBSubject.unsubscribe();
+    this.currentLevelSubscription.unsubscribe();
   }
 
 }

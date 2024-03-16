@@ -9,13 +9,22 @@ import { LEVELS } from '../properties/properties';
 })
 export class GameService {
 
-  public levelBSubject: BehaviorSubject<Level> = new BehaviorSubject({} as Level);
-  public boxesBSubject: BehaviorSubject<Box[][]> = new BehaviorSubject<Box[][]>([]);
-  public isGameOverBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public hasWonBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private levelBSubject: BehaviorSubject<Level> = new BehaviorSubject({} as Level);
+  private boxesBSubject: BehaviorSubject<Box[][]> = new BehaviorSubject<Box[][]>([]);
+  private isGameOverBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private hasWonBSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private flagsLeftBSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private numberOfMinesBSbuject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  
   private columns: number = 8;
   private rows: number = 8;
-  private numberOfMines: number = 10;
+  
+  public currentLevel$ = this.levelBSubject.asObservable();
+  public boxes$ = this.boxesBSubject.asObservable();
+  public isGameOver$ = this.isGameOverBSubject.asObservable();
+  public hasWon$ = this.hasWonBSubject.asObservable();
+  public flagsLeft$ = this.flagsLeftBSubject.asObservable();
+  public numberOfMines$ = this.numberOfMinesBSbuject.asObservable();
 
 
   public getLevels(): Level[] {
@@ -26,7 +35,7 @@ export class GameService {
     this.levelBSubject.next( level );
     this.columns = level.cols;
     this.rows = level.rows;
-    this.numberOfMines = level.mines;
+    this.numberOfMinesBSbuject.next( level.mines );
     this.resetGame();
   }
 
@@ -36,6 +45,21 @@ export class GameService {
     this.putNumbers();
     this.isGameOverBSubject.next( false );
     this.hasWonBSubject.next( false );
+    this.flagsLeftBSubject.next( this.numberOfMinesBSbuject.getValue() );
+  }
+
+  public setGameOver() {
+    this.isGameOverBSubject.next( true );
+  }
+
+  public addFlagLeft() {
+    const flagsLeft = this.flagsLeftBSubject.getValue() + 1;
+    this.flagsLeftBSubject.next( flagsLeft );
+  }
+
+  public substractFlagLeft() {
+    const flagsLeft = this.flagsLeftBSubject.getValue() - 1;
+    this.flagsLeftBSubject.next( flagsLeft );
   }
 
   private initializeBoxes(): void {
@@ -58,7 +82,7 @@ export class GameService {
   }
 
   private putMines() {
-    for (let i = 0; i < this.numberOfMines; i++) {
+    for (let i = 0; i < this.numberOfMinesBSbuject.getValue(); i++) {
       let row = Math.floor(Math.random() * this.rows);
       let col = Math.floor(Math.random() * this.columns);
       this.boxesBSubject.getValue()[row][col].hasMine = true;
