@@ -33,10 +33,6 @@ export class BoxesFrameComponent implements OnDestroy {
     );
   }
 
-  setGameOver() {
-    this.gameService.setGameOver();
-  }
-
   ngOnDestroy(): void {
     this.subs.forEach( sub => sub.unsubscribe() );
   }

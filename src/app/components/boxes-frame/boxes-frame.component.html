@@ -5,7 +5,7 @@
         
         @for (boxRow of boxes; track row; let row = $index) {
             @for (boxX of boxRow; track col; let col = $index) {
-                <app-box [box]="boxes[row][col]" (clickOverMineEvent)="setGameOver()"></app-box>
+                <app-box [box]="boxes[row][col]"></app-box>
             }
         }
     </div>

@@ -16,8 +16,6 @@ export class BoxComponent {
   
   @Input()
   public box: Box = {} as Box;
-  @Output()
-  public clickOverMineEvent: EventEmitter<null> = new EventEmitter<null>();
 
 
   public onRightClick() {
@@ -33,7 +31,7 @@ export class BoxComponent {
     this.gameService.validateWin();
 
     if (this.box.hasMine)
-      this.clickOverMineEvent.emit();
+      this.gameService.setGameOver();
 
     else if (this.box.numberOfMinesAround === 0)
       this.gameService.rotateNeighbours( this.box );
