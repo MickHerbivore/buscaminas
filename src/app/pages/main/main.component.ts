@@ -1,10 +1,10 @@
 import { NgIf } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { LevelsComponent } from '../../components/levels/levels.component';
 import { Level } from '../../interfaces/level.interface';
 import { GameService } from '../../services/game.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -22,6 +22,7 @@ export class MainComponent implements OnDestroy {
 
   constructor() {
     this.currentLevelSubscription = this.gameService.currentLevel$.subscribe( level => this.level = level );
+    this.gameService.initGame();
   }
 
   ngOnDestroy(): void {

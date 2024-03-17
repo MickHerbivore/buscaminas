@@ -33,6 +33,10 @@ export class BoxesFrameComponent implements OnDestroy {
     );
   }
 
+  saveBoxes() {
+    this.gameService.saveBoxes( this.boxes );
+  }
+
   ngOnDestroy(): void {
     this.subs.forEach( sub => sub.unsubscribe() );
   }

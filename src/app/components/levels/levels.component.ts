@@ -20,7 +20,7 @@ export class LevelsComponent {
   }
 
   setLevel( level: Level ) {
-    this.gameService.setLevel( level );
+    this.gameService.startGame( level );
   }
 
 }

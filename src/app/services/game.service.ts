@@ -27,15 +27,38 @@ export class GameService {
   public numberOfMines$ = this.numberOfMinesBSbuject.asObservable();
 
 
+  public initGame() {
+    if (localStorage.getItem('boxes') && localStorage.getItem('level')) {
+      this.boxesBSubject.next( JSON.parse(localStorage.getItem('boxes')!) );
+      const lvl = LEVELS.find( level => level.name == localStorage.getItem('level') );
+      this.setLevel( lvl! );
+      this.flagsPlacedBSubject.next( this.getFlagsPlaced() );
+    }
+  }
+
+  private getFlagsPlaced(): number {
+    return this.boxesBSubject.getValue().reduce( (acc, row) => acc + row.filter( box => box.isFlagged ).length, 0 );
+  }
+
   public getLevels(): Level[] {
     return LEVELS;
   }
 
-  public setLevel( level: Level ) {    
+  public clearGame() {
+    localStorage.removeItem('boxes');
+    localStorage.removeItem('level');
+    this.setLevel( {} as Level );
+  }
+
+  public setLevel( level: Level ) {
     this.levelBSubject.next( level );
     this.columns = level.cols;
     this.rows = level.rows;
     this.numberOfMinesBSbuject.next( level.mines );
+  }
+  
+  public startGame( level: Level ) {
+    this.setLevel( level );
     this.resetGame();
   }
 
@@ -46,6 +69,7 @@ export class GameService {
     this.isGameOverBSubject.next( false );
     this.hasWonBSubject.next( false );
     this.flagsPlacedBSubject.next( 0 );
+    this.saveGame();
   }
 
   public setGameOver() {
@@ -60,6 +84,21 @@ export class GameService {
   public removeFlag() {
     const flagsLeft = this.flagsPlacedBSubject.getValue() - 1;
     this.flagsPlacedBSubject.next( flagsLeft );
+  }
+
+  private saveGame() {
+    this.saveBoxes( this.boxesBSubject.getValue() );
+    this.saveLevel();
+  }
+
+  public saveBoxes( boxes: Box[][] ) {
+    if (boxes.length)
+      localStorage.setItem('boxes', JSON.stringify(boxes));
+  }
+
+  private saveLevel() {
+    if (this.levelBSubject.getValue().name)
+      localStorage.setItem('level', this.levelBSubject.getValue().name);
   }
 
   private initializeBoxes(): void {
@@ -85,7 +124,7 @@ export class GameService {
     for (let i = 0; i < this.numberOfMinesBSbuject.getValue(); i++) {
       let row = Math.floor(Math.random() * this.rows);
       let col = Math.floor(Math.random() * this.columns);
-      
+
       if (this.boxesBSubject.getValue()[row][col].hasMine) i--;
       
       this.boxesBSubject.getValue()[row][col].hasMine = true;

@@ -16,11 +16,14 @@ export class BoxComponent {
   
   @Input()
   public box: Box = {} as Box;
+  @Output()
+  public boxChangedEvent: EventEmitter<null> = new EventEmitter();
 
 
   public onRightClick() {
     this.box.isFlagged = !this.box.isFlagged;
     this.box.isFlagged ? this.gameService.palceFlag() : this.gameService.removeFlag();
+    this.boxChangedEvent.emit();
     return false;
   }
 
@@ -35,6 +38,8 @@ export class BoxComponent {
 
     else if (this.box.numberOfMinesAround === 0)
       this.gameService.rotateNeighbours( this.box );
+
+    this.boxChangedEvent.emit();
   }
 
 }
