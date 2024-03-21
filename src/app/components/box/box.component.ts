@@ -31,12 +31,9 @@ export class BoxComponent {
     if (this.box.isFlagged) return;
 
     this.box.isRotated = true;
-    this.gameService.validateWin();
+    this.gameService.validateResult();
 
-    if (this.box.hasMine)
-      this.gameService.setGameOver();
-
-    else if (this.box.numberOfMinesAround === 0)
+    if (!this.box.hasMine && this.box.numberOfMinesAround === 0)
       this.gameService.rotateNeighbours( this.box );
 
     this.boxChangedEvent.emit();

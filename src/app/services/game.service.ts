@@ -33,6 +33,7 @@ export class GameService {
       const lvl = LEVELS.find( level => level.name == localStorage.getItem('level') );
       this.setLevel( lvl! );
       this.flagsPlacedBSubject.next( this.getFlagsPlaced() );
+      this.isGameOverBSubject.next( this.hasLost() );
     }
   }
 
@@ -50,7 +51,7 @@ export class GameService {
     this.setLevel( {} as Level );
   }
 
-  public setLevel( level: Level ) {
+  private setLevel( level: Level ) {
     this.levelBSubject.next( level );
     this.columns = level.cols;
     this.rows = level.rows;
@@ -92,6 +93,7 @@ export class GameService {
   }
 
   public saveBoxes( boxes: Box[][] ) {
+    this.boxesBSubject.next( boxes );
     if (boxes.length)
       localStorage.setItem('boxes', JSON.stringify(boxes));
   }
@@ -159,15 +161,25 @@ export class GameService {
     return numberOfMines;
   }
 
-  public validateWin() {
+  public validateResult() {
+    if (this.hasLost()) return;
+    this.validateWin();
+  }
+  
+  private validateWin() {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.columns; col++) {
-        if (!this.boxesBSubject.getValue()[row][col].hasMine && !this.boxesBSubject.getValue()[row][col].isRotated) {
+        if (!this.boxesBSubject.getValue()[row][col].hasMine && !this.boxesBSubject.getValue()[row][col].isRotated)
           return;
-        }
       }
     }
     this.hasWonBSubject.next( true );
+  }
+
+  private hasLost() {
+    const hasLost = this.boxesBSubject.getValue().some( row => row.some( box => box.hasMine && box.isRotated ) );
+    if ( hasLost ) this.setGameOver();
+    return hasLost;
   }
 
   public rotateNeighbours(box: Box) {
@@ -184,7 +196,6 @@ export class GameService {
             this.rotateNeighbours(this.boxesBSubject.getValue()[row][col]); 
           }
         }
-
       }
     }
   }
