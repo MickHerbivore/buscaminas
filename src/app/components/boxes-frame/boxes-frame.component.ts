@@ -33,8 +33,8 @@ export class BoxesFrameComponent implements OnDestroy {
     );
   }
 
-  setGameOver() {
-    this.gameService.setGameOver();
+  saveBoxes() {
+    this.gameService.saveBoxes( this.boxes );
   }
 
   ngOnDestroy(): void {

@@ -14,7 +14,7 @@ export class ChangeLevelButtonComponent {
   private gameService = inject( GameService );
 
   public changeLevel() {
-    this.gameService.setLevel( {} as Level );
+    this.gameService.clearGame();
   }
 
 }

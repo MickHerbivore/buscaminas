@@ -17,12 +17,13 @@ export class BoxComponent {
   @Input()
   public box: Box = {} as Box;
   @Output()
-  public clickOverMineEvent: EventEmitter<null> = new EventEmitter<null>();
+  public boxChangedEvent: EventEmitter<null> = new EventEmitter();
 
 
   public onRightClick() {
     this.box.isFlagged = !this.box.isFlagged;
-    this.box.isFlagged ? this.gameService.substractFlagLeft() : this.gameService.addFlagLeft();
+    this.box.isFlagged ? this.gameService.palceFlag() : this.gameService.removeFlag();
+    this.boxChangedEvent.emit();
     return false;
   }
 
@@ -30,13 +31,12 @@ export class BoxComponent {
     if (this.box.isFlagged) return;
 
     this.box.isRotated = true;
-    this.gameService.validateWin();
+    this.gameService.validateResult();
 
-    if (this.box.hasMine)
-      this.clickOverMineEvent.emit();
-
-    else if (this.box.numberOfMinesAround === 0)
+    if (!this.box.hasMine && this.box.numberOfMinesAround === 0)
       this.gameService.rotateNeighbours( this.box );
+
+    this.boxChangedEvent.emit();
   }
 
 }
