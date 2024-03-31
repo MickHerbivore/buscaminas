@@ -1,6 +1,6 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
-import { GameStateService } from './game-state.service';
 import { STORAGE_START_TIME } from '../properties/properties';
+import { GameStateService } from './game-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,10 @@ export class TimerService {
   private gameStateService = inject( GameStateService );
 
   private startTime = signal<Date>(new Date());
-  public elapsedTime = signal<string>('01/01/01 00:00:00');
+  public elapsedDays = signal<string>('');
+  public elapsedHours = signal<string>('00');
+  public elapsedMinutes = signal<string>('00');
+  public elapsedSeconds = signal<string>('00');
 
   private interval: any;
   
@@ -42,25 +45,35 @@ export class TimerService {
       const diffDate = new Date();
       diffDate.setHours(now.getHours() - start.getHours());
       diffDate.setMinutes(now.getMinutes() - start.getMinutes());
-      diffDate.setSeconds( now.getSeconds() - start.getSeconds() );      
+      diffDate.setSeconds( now.getSeconds() - start.getSeconds());      
   
-      this.elapsedTime.set( diffDate.toString() );
-      console.log( diffDate.toString() );
-      
-      
+      const days = diffDate.getDay();
+      const hours = diffDate.getHours();
+      const minutes = diffDate.getMinutes();
+      const seconds = diffDate.getSeconds();
+
+      this.elapsedDays.set( days ? days.toString().padStart(2, '0') : '' );
+      this.elapsedHours.set( hours.toString().padStart(2, '0') );
+      this.elapsedMinutes.set( minutes.toString().padStart(2, '0') );
+      this.elapsedSeconds.set( seconds.toString().padStart(2, '0') );
     }, 1000);
   }
 
   public stopTimer() {
-    console.log('stop timer');
-    
     clearInterval(this.interval);
   }
 
   public resetTimer() {
     this.stopTimer();
-    this.elapsedTime.set( '01/01/01 00:00:00' );
+    this.restartTimer();
     localStorage.removeItem(STORAGE_START_TIME);
+  }
+
+  private restartTimer() {
+    this.elapsedDays.set( '' );
+    this.elapsedHours.set( '00' );
+    this.elapsedMinutes.set( '00' );
+    this.elapsedSeconds.set( '00' );
   }
 
 }
