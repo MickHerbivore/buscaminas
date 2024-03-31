@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
-import { GameService } from '../../services/game.service';
+import { BoxesService } from '../../services/boxes.service';
 
 @Component({
   selector: 'app-box',
@@ -12,18 +12,15 @@ import { GameService } from '../../services/game.service';
 })
 export class BoxComponent {
 
-  public gameService = inject( GameService );
+  public boxesService = inject( BoxesService );
   
   @Input()
   public box: Box = {} as Box;
-  @Output()
-  public boxChangedEvent: EventEmitter<null> = new EventEmitter();
 
 
   public onRightClick() {
     this.box.isFlagged = !this.box.isFlagged;
-    this.box.isFlagged ? this.gameService.palceFlag() : this.gameService.removeFlag();
-    this.boxChangedEvent.emit();
+    this.boxesService.updateBox(this.box);
     return false;
   }
 
@@ -31,12 +28,7 @@ export class BoxComponent {
     if (this.box.isFlagged) return;
 
     this.box.isRotated = true;
-    this.gameService.validateResult();
-
-    if (!this.box.hasMine && this.box.numberOfMinesAround === 0)
-      this.gameService.rotateNeighbours( this.box );
-
-    this.boxChangedEvent.emit();
+    this.boxesService.updateBox(this.box);
   }
 
 }

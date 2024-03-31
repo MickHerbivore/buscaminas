@@ -1,44 +1,26 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, OnDestroy, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Box } from '../../interfaces/box.interface';
-import { Level } from '../../interfaces/level.interface';
-import { GameService } from '../../services/game.service';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { BoxesService } from '../../services/boxes.service';
+import { GameStatusService } from '../../services/game-status.service';
+import { LevelService } from '../../services/level.service';
 import { BoxComponent } from '../box/box.component';
 
 @Component({
   selector: 'app-boxes-frame',
   standalone: true,
-  imports: [NgFor, BoxComponent, NgIf],
+  imports: [NgFor, BoxComponent, NgIf, AsyncPipe],
   templateUrl: './boxes-frame.component.html',
   styleUrl: './boxes-frame.component.css'
 })
-export class BoxesFrameComponent implements OnDestroy {
+export class BoxesFrameComponent {
 
-  private gameService = inject( GameService );
+  private gameStatusService = inject( GameStatusService );
+  private boxesService = inject( BoxesService );
+  private levelService = inject( LevelService );
   
-  public boxes: Box[][] = [];
-  public isGameOver: boolean = false;
-  public hasWon: boolean = false;
-  public level: Level = {} as Level;
-  private subs: Subscription[] = [];
-
-
-  constructor() {
-    this.subs.push(
-      this.gameService.currentLevel$.subscribe( level => this.level = level ),
-      this.gameService.boxes$.subscribe( boxes => this.boxes = boxes ),
-      this.gameService.isGameOver$.subscribe( isGameOver => this.isGameOver = isGameOver ),
-      this.gameService.hasWon$.subscribe( hasWon => this.hasWon = hasWon ),
-    );
-  }
-
-  saveBoxes() {
-    this.gameService.saveBoxes( this.boxes );
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach( sub => sub.unsubscribe() );
-  }
+  public level = this.levelService.currentLevel;
+  public boxes = this.boxesService.boxes;
+  public hasWon = this.gameStatusService.hasWon;
+  public isGameOver = this.gameStatusService.hasLost;
 
 }
