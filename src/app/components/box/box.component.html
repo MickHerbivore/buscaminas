@@ -1,12 +1,12 @@
 
-@if (!box.isRotated) {
+@if (!box().isRotated) {
 
     <div class="w-10 h-10 p-2 bg-indigo-600 border-2 border-indigo-400 cursor-pointer flex justify-center items-center
         hover:bg-indigo-500"
         (contextmenu)="onRightClick()"
         (click)="onClick()">
-        @if (box.isFlagged){
-            <img src="./assets/img/flag.svg" alt="SVG iamge of a flag">
+        @if (box().isFlagged){
+            <img src="./assets/img/flag.svg" alt="">
         }
     </div>
 
@@ -15,10 +15,10 @@
     <div class="w-10 h-10 p-2 bg-indigo-500 border-2 border-indigo-400 cursor-pointer flex justify-center items-center
         hover:bg-indigo-500"
         (click)="onClick()">
-        @if (box.hasMine){
-            <img src="./assets/img/bomb.svg" alt="SVG iamge of a bomb">
-        } @else if (box.numberOfMinesAround > 0) {
-            {{ box.numberOfMinesAround }}
+        @if (box().hasMine){
+            <img src="./assets/img/bomb.svg" alt="">
+        } @else if (box().numberOfMinesAround > 0) {
+            {{ box().numberOfMinesAround }}
         }
     </div>
 

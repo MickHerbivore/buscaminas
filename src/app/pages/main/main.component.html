@@ -1,7 +1,7 @@
 <div class="min-w-fit w-screen h-fit
     md:w-fit ">
 
-    @if (!level.name) {
+    @if (!currentLevel()?.name) {
         <app-levels></app-levels>
     } @else {
         <app-game-frame></app-game-frame>
