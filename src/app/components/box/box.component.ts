@@ -1,7 +1,8 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
-import { BoxesService } from '../../services/boxes.service';
+import { GameService } from '../../services/game.service';
+import { ACTION_FLAG, ACTION_ROTATE } from '../../properties/properties';
 
 @Component({
   selector: 'app-box',
@@ -12,23 +13,17 @@ import { BoxesService } from '../../services/boxes.service';
 })
 export class BoxComponent {
 
-  public boxesService = inject( BoxesService );
+  public gameService = inject( GameService );
   
-  @Input()
-  public box: Box = {} as Box;
-
+  public box = input.required<Box>();
 
   public onRightClick() {
-    this.box.isFlagged = !this.box.isFlagged;
-    this.boxesService.updateBox(this.box);
+    this.gameService.makeMove(ACTION_FLAG, this.box());
     return false;
   }
 
   public onClick() {
-    if (this.box.isFlagged) return;
-
-    this.box.isRotated = true;
-    this.boxesService.updateBox(this.box);
+    this.gameService.makeMove(ACTION_ROTATE, this.box());
   }
 
 }

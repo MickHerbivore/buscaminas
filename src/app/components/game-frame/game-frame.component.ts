@@ -4,6 +4,7 @@ import { GameService } from '../../services/game.service';
 import { BoxesFrameComponent } from '../boxes-frame/boxes-frame.component';
 import { ChangeLevelButtonComponent } from '../change-level-button/change-level-button.component';
 import { ResetButtonComponent } from '../reset-button/reset-button.component';
+import { TimerComponent } from '../timer/timer.component';
 
 @Component({
   selector: 'app-game-frame',
@@ -13,6 +14,7 @@ import { ResetButtonComponent } from '../reset-button/reset-button.component';
     BoxesFrameComponent,
     ChangeLevelButtonComponent,
     ResetButtonComponent,
+    TimerComponent
   ],
   templateUrl: './game-frame.component.html',
   styleUrl: './game-frame.component.css'

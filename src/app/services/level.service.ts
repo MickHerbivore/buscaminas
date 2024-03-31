@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Level } from '../interfaces/level.interface';
-import { LEVELS } from '../properties/properties';
+import { LEVELS, STORAGE_LEVEL } from '../properties/properties';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class LevelService {
 
   public setLevel( level: Level | undefined ) {
     this.currentLevel.set( level );
-    if (!level) localStorage.removeItem('level');
-    else localStorage.setItem('level', this.currentLevel()!.name);
+    if (!level) localStorage.removeItem(STORAGE_LEVEL);
+    else localStorage.setItem(STORAGE_LEVEL, this.currentLevel()!.name);
   }
 }

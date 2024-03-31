@@ -1,7 +1,7 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { BoxesService } from '../../services/boxes.service';
-import { GameStatusService } from '../../services/game-status.service';
+import { GameStateService } from '../../services/game-state.service';
 import { LevelService } from '../../services/level.service';
 import { BoxComponent } from '../box/box.component';
 
@@ -14,13 +14,13 @@ import { BoxComponent } from '../box/box.component';
 })
 export class BoxesFrameComponent {
 
-  private gameStatusService = inject( GameStatusService );
+  private gameStateService = inject( GameStateService );
   private boxesService = inject( BoxesService );
   private levelService = inject( LevelService );
   
   public level = this.levelService.currentLevel;
   public boxes = this.boxesService.boxes;
-  public hasWon = this.gameStatusService.hasWon;
-  public isGameOver = this.gameStatusService.hasLost;
+  public hasWon = this.gameStateService.hasWon;
+  public isGameOver = this.gameStateService.hasLost;
 
 }

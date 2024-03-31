@@ -4,7 +4,7 @@ import { BoxesService } from './boxes.service';
 @Injectable({
   providedIn: 'root'
 })
-export class GameStatusService {
+export class GameStateService {
 
   private boxesService = inject( BoxesService );
 
@@ -18,7 +18,8 @@ export class GameStatusService {
   });
   
   public playing = computed( () => {
-    return this.boxesService.boxes().some( row => row.some( box => box.isRotated ) );
+    return this.boxesService.boxes().some( row => row.some( box => box.isRotated ) )
+      && !this.hasLost() && !this.hasWon();
   });
 
 }

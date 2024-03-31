@@ -1,6 +1,7 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { Box } from '../interfaces/box.interface';
 import { LevelService } from './level.service';
+import { STORAGE_BOXES } from '../properties/properties';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +12,23 @@ export class BoxesService {
   
   private currentLevel = this.levelService.currentLevel;
   public boxes = signal<Box[][]>([]);
+
+  public e = effect( () => {
+    if (!this.boxes().length)
+      localStorage.removeItem(STORAGE_BOXES);
+    else
+      localStorage.setItem(STORAGE_BOXES, JSON.stringify(this.boxes()));
+  });
   
   
   public setBoxes( boxes: Box[][] | undefined ) {
-    if (!boxes) localStorage.removeItem('boxes');
-    else {
-      this.boxes.set( [ ...boxes ] );
-      localStorage.setItem('boxes', JSON.stringify(boxes));
-    }
+    this.boxes.set( boxes ? [...boxes] : [] );
   }
 
   public updateBox( box: Box ) {
     if (!box.hasMine && box.numberOfMinesAround === 0)
       this.rotateNeighbours( box );
-
-    let boxes = this.boxes();
-    boxes[box.row][box.col] = box;
-    this.setBoxes( boxes );
+    this.setBoxes( this.boxes() );
     
   }
 
