@@ -43,16 +43,17 @@ export class TimerService {
       const start = this.startTime();
   
       const diffDate = new Date();
-      diffDate.setHours(now.getHours() - start.getHours());
-      diffDate.setMinutes(now.getMinutes() - start.getMinutes());
-      diffDate.setSeconds( now.getSeconds() - start.getSeconds());      
+      diffDate.setDate(now.getDate() - start.getDate());
+      diffDate.setHours(now.getHours() - start.getHours() );
+      diffDate.setMinutes(now.getMinutes() - start.getMinutes() );
+      diffDate.setSeconds( now.getSeconds() - start.getSeconds() );      
   
       const days = diffDate.getDay();
       const hours = diffDate.getHours();
       const minutes = diffDate.getMinutes();
       const seconds = diffDate.getSeconds();
 
-      this.elapsedDays.set( days ? days.toString().padStart(2, '0') : '' );
+      this.elapsedDays.set( days ? days.toString() : '' );
       this.elapsedHours.set( hours.toString().padStart(2, '0') );
       this.elapsedMinutes.set( minutes.toString().padStart(2, '0') );
       this.elapsedSeconds.set( seconds.toString().padStart(2, '0') );
