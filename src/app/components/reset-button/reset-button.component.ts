@@ -14,20 +14,29 @@ export class ResetButtonComponent implements OnDestroy {
   private gameService = inject(GameService);
   private boxesService = inject(BoxesService);
 
-  private resetBoxesSubs: Subscription = new Subscription();
+  private subs: Subscription[] = [];
 
   public resetGame() {
     this.gameService.resetGame();
     this.resetBoxes();
+    this.resetTimer();
   }
 
   private resetBoxes() {
-    this.resetBoxesSubs = this.boxesService
+    this.subs.push(  
+      this.boxesService
       .putBoxes(this.gameService.gameId()!, this.boxesService.boxes())
-      .subscribe();
+      .subscribe()
+    );
+  }
+
+  private resetTimer() {
+    this.subs.push(
+      this.gameService.resetTimer().subscribe()
+    );
   }
 
   ngOnDestroy() {
-    this.resetBoxesSubs.unsubscribe();
+    this.subs.forEach( sub => sub.unsubscribe() );
   }
 }

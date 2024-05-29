@@ -77,8 +77,6 @@ export class GameService {
   }
 
   private handleGame(game: GameResponse) {
-    console.log('Game', game);
-    
     this.timerService.setStartTime(game.startDate);
     this.timerService.setCurrentTime(game.currentTime);
     const level = LEVELS.find(level => level.name === game.level);
@@ -116,6 +114,11 @@ export class GameService {
   public deleteGame() {
     const gameId = localStorage.getItem( STORAGE_GAME_ID );
     return this.http.delete<boolean>(`${environment.apiUrl}${environment.gameUri}${gameId}`);
+  }
+
+  public resetTimer() {
+    const gameId = localStorage.getItem( STORAGE_GAME_ID );
+    return this.http.patch<boolean>(`${environment.apiUrl}${environment.resetTimerUri}${gameId}`, {});
   }
 
 }

@@ -40,8 +40,8 @@ export class TimerService {
       this.stopTimer();    
   }, { allowSignalWrites: true });
 
-  public setStartTime( startDate: Date ) {
-    this.startTime.set( new Date( startDate ) );
+  public setStartTime( startDate: Date ) {    
+    this.startTime.set( startDate ? new Date( startDate ) : new Date() );
   }
 
   public setCurrentTime( currentTime: Date ) {

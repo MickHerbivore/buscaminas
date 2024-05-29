@@ -3,5 +3,6 @@ export const environment = {
     gameUri: 'game/',
     initGameUri: 'game/init/',
     startGameUri: 'game/start/',
+    resetTimerUri: 'game/reset-timer/',
     boxesUri: 'frame/',
 };
