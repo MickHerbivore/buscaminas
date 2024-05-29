@@ -1,4 +1,4 @@
 <span class="text-white" async>
-    {{ elapsedDays() ? elapsedDays() + ' day'+ ((elapsedDays() !== '1') ? 's' : '') + ' ' : ''}}
+    {{ elapsedDays() > 0 ? elapsedDays() + ' day'+ ((elapsedDays() !== 1) ? 's' : '') + ' ' : ''}}
     {{ elapsedHours() }}:{{ elapsedMinutes() }}:{{ elapsedSeconds() }}
 </span>
