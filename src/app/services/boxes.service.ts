@@ -1,7 +1,9 @@
-import { Injectable, effect, inject, signal } from '@angular/core';
-import { Box } from '../interfaces/box.interface';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Box, PatchBox } from '../interfaces/box.interface';
 import { LevelService } from './level.service';
-import { STORAGE_BOXES } from '../properties/properties';
 
 @Injectable({
   providedIn: 'root'
@@ -9,16 +11,12 @@ import { STORAGE_BOXES } from '../properties/properties';
 export class BoxesService {
 
   private levelService = inject( LevelService );
+  private http = inject( HttpClient );
   
   private currentLevel = this.levelService.currentLevel;
   public boxes = signal<Box[][]>([]);
-
-  public e = effect( () => {
-    if (!this.boxes().length)
-      localStorage.removeItem(STORAGE_BOXES);
-    else
-      localStorage.setItem(STORAGE_BOXES, JSON.stringify(this.boxes()));
-  });
+  
+  public boxesToPatch: PatchBox[] = [];
   
   
   public setBoxes( boxes: Box[][] | undefined ) {
@@ -26,7 +24,7 @@ export class BoxesService {
   }
 
   public updateBox( box: Box ) {
-    if (!box.hasMine && box.numberOfMinesAround === 0)
+    if (!box.isFlagged && !box.hasMine && box.numberOfMinesAround === 0)
       this.rotateNeighbours( box );
     this.setBoxes( this.boxes() );
     
@@ -103,6 +101,7 @@ export class BoxesService {
           && !this.boxes()[row][col].isRotated) {
 
           this.boxes.update( box => {
+            this.boxesToPatch.push(this.boxes()[row][col]);
             box[row][col].isRotated = true;
             return box;
           });
@@ -113,5 +112,29 @@ export class BoxesService {
         }
       }
     }
+  }
+
+  public getBoxes( gameId: string ): Observable<Box[][]> {
+    return this.http.get<Box[][]>(`${environment.apiUrl}${environment.boxesUri}${gameId}`)
+    .pipe(
+      tap({
+        next: (boxes: Box[][]) => {
+          this.setBoxes( boxes );
+        }
+      })
+    );
+  }
+
+  public patchBoxes( gameId: string, box: PatchBox ) {
+    return this.http.patch<boolean>(`${environment.apiUrl}${environment.boxesUri}${gameId}`, { boxes: [ box, ...this.boxesToPatch ] })
+      .pipe(
+        tap( () => {
+          this.boxesToPatch = [];
+        })
+      );
+  }
+
+  public putBoxes( gameId: string, boxes: Box[][] ) {
+    return this.http.put<boolean>(`${environment.apiUrl}${environment.boxesUri}${gameId}`, { boxes });
   }
 }

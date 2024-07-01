@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { GameService } from '../../services/game.service';
-import { Level } from '../../interfaces/level.interface';
 import { NgFor } from '@angular/common';
+import { Component, OnDestroy, inject } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Level } from '../../interfaces/level.interface';
+import { GameService } from '../../services/game.service';
 import { LevelService } from '../../services/level.service';
 
 @Component({
@@ -11,10 +12,12 @@ import { LevelService } from '../../services/level.service';
   templateUrl: './levels.component.html',
   styleUrl: './levels.component.css'
 })
-export class LevelsComponent {
+export class LevelsComponent implements OnDestroy {
 
   private gameService = inject( GameService );
   private levelService = inject( LevelService );
+  
+  private initGameSubs: Subscription = new Subscription();
   
   public levels: Level[] = [];
 
@@ -22,8 +25,14 @@ export class LevelsComponent {
     this.levels = this.levelService.levels;
   }
 
-  setLevel( level: Level ) {
+  onLevel( level: Level ) {
     this.gameService.prepareGame( level );
+
+    this.initGameSubs = this.gameService.initGame().subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.initGameSubs.unsubscribe(); 
   }
 
 }

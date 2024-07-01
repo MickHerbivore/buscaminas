@@ -5,5 +5,11 @@ export interface Box {
     isFlagged: boolean;
     isRotated: boolean;
     numberOfMinesAround: number;
-    
+}
+
+export interface PatchBox {
+    row: number;
+    col: number;
+    isFlagged: boolean;
+    isRotated: boolean;
 }

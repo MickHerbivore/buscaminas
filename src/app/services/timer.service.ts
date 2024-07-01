@@ -1,5 +1,4 @@
-import { Injectable, effect, inject, signal } from '@angular/core';
-import { STORAGE_START_TIME } from '../properties/properties';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { GameStateService } from './game-state.service';
 
 @Injectable({
@@ -10,10 +9,23 @@ export class TimerService {
   private gameStateService = inject( GameStateService );
 
   private startTime = signal<Date>(new Date());
-  public elapsedDays = signal<string>('');
-  public elapsedHours = signal<string>('00');
-  public elapsedMinutes = signal<string>('00');
-  public elapsedSeconds = signal<string>('00');
+  private currentTime = signal<Date>(new Date());
+  private diffTime = computed<Date>( () => {
+    const diffDate = new Date();
+    diffDate.setHours(this.currentTime().getHours() - this.startTime().getHours() );
+    diffDate.setMinutes(this.currentTime().getMinutes() - this.startTime().getMinutes() );
+    diffDate.setSeconds( this.currentTime().getSeconds() - this.startTime().getSeconds() );
+    return diffDate;
+  });
+
+  public elapsedDays = computed<number>(() => {
+    const diffTimeInMs = this.currentTime().getTime() - this.startTime().getTime();
+    return Math.floor(diffTimeInMs / (1000 * 60 * 60 * 24));
+  });
+
+  public elapsedHours = computed<string>(() => this.diffTime().getHours().toString().padStart(2, '0'));
+  public elapsedMinutes = computed<string>(() => this.diffTime().getMinutes().toString().padStart(2, '0'));
+  public elapsedSeconds = computed<string>(() => this.diffTime().getSeconds().toString().padStart(2, '0'));
 
   private interval: any;
   
@@ -28,35 +40,17 @@ export class TimerService {
       this.stopTimer();    
   }, { allowSignalWrites: true });
 
-  public startTimer() {
-    localStorage.setItem(STORAGE_START_TIME, new Date().toString());
+  public setStartTime( startDate: Date ) {    
+    this.startTime.set( startDate ? new Date( startDate ) : new Date() );
+  }
+
+  public setCurrentTime( currentTime: Date ) {
+    this.currentTime.set( new Date( currentTime ) );
   }
   
   public runTimer() {
-    if (!localStorage.getItem(STORAGE_START_TIME)) return;
-    
-    this.startTime.set( new Date( localStorage.getItem(STORAGE_START_TIME)! ) );
-
     this.interval = setInterval( () => {
-  
-      const now = new Date();
-      const start = this.startTime();
-  
-      const diffDate = new Date();
-      diffDate.setDate(now.getDate() - start.getDate());
-      diffDate.setHours(now.getHours() - start.getHours() );
-      diffDate.setMinutes(now.getMinutes() - start.getMinutes() );
-      diffDate.setSeconds( now.getSeconds() - start.getSeconds() );      
-  
-      const days = diffDate.getDay();
-      const hours = diffDate.getHours();
-      const minutes = diffDate.getMinutes();
-      const seconds = diffDate.getSeconds();
-
-      this.elapsedDays.set( days ? days.toString() : '' );
-      this.elapsedHours.set( hours.toString().padStart(2, '0') );
-      this.elapsedMinutes.set( minutes.toString().padStart(2, '0') );
-      this.elapsedSeconds.set( seconds.toString().padStart(2, '0') );
+      this.currentTime.set( new Date( this.currentTime().getTime() + 1000 ) );
     }, 1000);
   }
 
@@ -67,14 +61,11 @@ export class TimerService {
   public resetTimer() {
     this.stopTimer();
     this.restartTimer();
-    localStorage.removeItem(STORAGE_START_TIME);
   }
 
   private restartTimer() {
-    this.elapsedDays.set( '' );
-    this.elapsedHours.set( '00' );
-    this.elapsedMinutes.set( '00' );
-    this.elapsedSeconds.set( '00' );
+    this.startTime.set( new Date() );
+    this.currentTime.set( new Date() );
   }
 
 }
