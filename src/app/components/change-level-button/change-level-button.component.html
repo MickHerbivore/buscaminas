@@ -1,3 +1,15 @@
 <div class="flex justify-center">
-    <button class="w-full bg-indigo-500 text-white p-2 rounded-md" (click)="onChangeLevel()">Change Difficulty</button>
+    
+    @if(!loading) {
+        <button class="w-full bg-indigo-500 text-white p-2 rounded-md"
+        (click)="onChangeLevel()">
+            Change Level
+        </button>
+
+    } @else {
+        <button class="w-full bg-indigo-500 text-white p-2 rounded-md flex justify-center items-center gap-4">
+            <span>Loading</span>
+            <app-loading-spinner class="text-white"></app-loading-spinner>
+        </button>
+    }
 </div>

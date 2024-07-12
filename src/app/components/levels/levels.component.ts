@@ -1,14 +1,15 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Level } from '../../interfaces/level.interface';
 import { GameService } from '../../services/game.service';
 import { LevelService } from '../../services/level.service';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-levels',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf, LoadingSpinnerComponent],
   templateUrl: './levels.component.html',
   styleUrl: './levels.component.css'
 })
@@ -20,6 +21,7 @@ export class LevelsComponent implements OnDestroy {
   private initGameSubs: Subscription = new Subscription();
   
   public levels: Level[] = [];
+  public loading: boolean = false;
 
   constructor() {
     this.levels = this.levelService.levels;
@@ -28,6 +30,7 @@ export class LevelsComponent implements OnDestroy {
   onLevel( level: Level ) {
     this.gameService.prepareGame( level );
 
+    this.loading = true;
     this.initGameSubs = this.gameService.initGame().subscribe();
   }
 
