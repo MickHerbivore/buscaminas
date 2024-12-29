@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { LevelDto } from '../dto/level.dto';
 import { Level } from '../entities/level.entity';
@@ -11,9 +12,12 @@ export class LevelService {
     private readonly levelRepository: Repository<Level>,
   ) {}
 
-  findAll(): Promise<LevelDto[]> {
+  async findAll(): Promise<LevelDto[]> {
     try {
-      return this.levelRepository.find();
+      const levels = await this.levelRepository.find();
+      return plainToInstance(LevelDto, levels, {
+        excludeExtraneousValues: true,
+      });
     } catch (error) {
       throw new InternalServerErrorException(
         `Error finding all levels: ${error}`,
