@@ -4,15 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { LevelDto } from '../../level/dto/level.dto';
 import { LevelService } from '../../level/service/level.service';
-import { Repository } from 'typeorm';
 import { CreateGameResponseDto } from '../dto/create-game-response.dto';
 import { StartGameResponse } from '../dto/start-game-response.dto';
 import { Game } from '../entity/game.entity';
-import { UuidService } from './../../common/uuid/service/uuid.service';
 import { CreateGameDto } from './../dto/create-game.dto';
 import { FrameService } from './frame.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class GameService {
@@ -20,7 +20,6 @@ export class GameService {
     @InjectRepository(Game)
     private readonly gameRepository: Repository<Game>,
     private readonly levelService: LevelService,
-    private readonly uuidService: UuidService,
     private readonly frameService: FrameService,
   ) {}
 
@@ -53,7 +52,9 @@ export class GameService {
 
       const savedGame = await this.gameRepository.save(game);
 
-      return { id: savedGame.id };
+      return plainToInstance(CreateGameResponseDto, savedGame, {
+        excludeExtraneousValues: true,
+      });
     } catch (error) {
       throw new InternalServerErrorException(`Error creating game: ${error}`);
     }

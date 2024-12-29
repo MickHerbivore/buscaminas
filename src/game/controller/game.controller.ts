@@ -9,6 +9,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { CreateGameResponseDto } from '../dto/create-game-response.dto';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { GameDto } from '../dto/game.dto';
 import { GameService } from '../service/game.service';
@@ -23,7 +24,10 @@ export class GameController {
   }
 
   @Post('')
-  async createGame(@Body() createGameDto: CreateGameDto, @Res() res) {
+  async createGame(
+    @Body() createGameDto: CreateGameDto,
+    @Res() res,
+  ): Promise<CreateGameResponseDto> {
     const game = await this.gameService.createGame(createGameDto);
     return res.status(201).json(game);
   }

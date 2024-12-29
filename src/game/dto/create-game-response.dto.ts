@@ -1,6 +1,6 @@
-import { IsUUID } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 export class CreateGameResponseDto {
-  @IsUUID()
-  readonly id: string;
+  @Expose()
+  id: string;
 }
