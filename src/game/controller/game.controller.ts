@@ -18,11 +18,6 @@ import { GameService } from '../service/game.service';
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
-  @Get(':id')
-  async getGame(@Param('id', ParseUUIDPipe) id: string): Promise<GameDto> {
-    return this.gameService.getGame(id);
-  }
-
   @Post('')
   async createGame(
     @Body() createGameDto: CreateGameDto,
@@ -30,6 +25,11 @@ export class GameController {
   ): Promise<CreateGameResponseDto> {
     const game = await this.gameService.createGame(createGameDto);
     return res.status(201).json(game);
+  }
+
+  @Get(':id')
+  async getGame(@Param('id', ParseUUIDPipe) id: string): Promise<GameDto> {
+    return this.gameService.getGame(id);
   }
 
   @Patch(':id')

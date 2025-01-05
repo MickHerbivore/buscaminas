@@ -57,7 +57,7 @@ describe('BoxService', () => {
 
     jest.spyOn(mockRepository, 'find').mockResolvedValue(boxes);
 
-    const response = await service.findAllByFrameId(gameIdMock);
+    const response = await service.findAllByGameId(gameIdMock);
 
     expect(mockRepository.find).toHaveBeenCalled();
     expect(response.length).toEqual(boxes.length);

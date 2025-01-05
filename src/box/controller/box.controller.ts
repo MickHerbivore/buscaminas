@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
-  Get,
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
 } from '@nestjs/common';
+import { BoxDto } from '../dto/box.dto';
+import { GetBoxesDto } from '../dto/get-boxes';
 import { UpdateBoxDto } from '../dto/update-box.dto';
 import { BoxService } from '../service/box.service';
 
@@ -13,16 +15,16 @@ import { BoxService } from '../service/box.service';
 export class BoxController {
   constructor(private readonly boxService: BoxService) {}
 
-  @Get('frame/:frameId')
-  findAllByFrameId(@Param('frameId', ParseUUIDPipe) frameId: string) {
-    return this.boxService.findAllByFrameId(frameId);
+  @Post('')
+  findAllByGameId(@Body() body: GetBoxesDto): Promise<BoxDto[]> {
+    return this.boxService.findAllByGameId(body.gameId);
   }
 
   @Patch(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateBoxDto: UpdateBoxDto,
-  ) {
+  ): Promise<BoxDto> {
     return this.boxService.update(id, updateBoxDto);
   }
 }

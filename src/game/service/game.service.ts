@@ -4,15 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { LevelDto } from '../../level/dto/level.dto';
 import { LevelService } from '../../level/service/level.service';
 import { CreateGameResponseDto } from '../dto/create-game-response.dto';
+import { GameDto } from '../dto/game.dto';
 import { StartGameResponse } from '../dto/start-game-response.dto';
 import { Game } from '../entity/game.entity';
 import { CreateGameDto } from './../dto/create-game.dto';
 import { FrameService } from './frame.service';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class GameService {
@@ -23,13 +24,24 @@ export class GameService {
     private readonly frameService: FrameService,
   ) {}
 
-  async getGame(id: string): Promise<Game> {
+  async getGame(id: string): Promise<GameDto> {
     try {
-      const game = await this.gameRepository.findOneBy({ id });
+      const game = await this.gameRepository.findOne({
+        where: { id },
+        relations: ['level'],
+      });
 
       if (!game) throw new NotFoundException(`Game with id ${id} not found`);
 
-      return game;
+      const gameDto = plainToInstance(GameDto, game, {
+        excludeExtraneousValues: true,
+      });
+
+      gameDto.level = plainToInstance(LevelDto, game.level, {
+        excludeExtraneousValues: true,
+      });
+
+      return gameDto;
     } catch (error) {
       throw new InternalServerErrorException(`Error getting game: ${error}`);
     }

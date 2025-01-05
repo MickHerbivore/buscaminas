@@ -11,7 +11,7 @@ export const createBoxDtoMock: CreateBoxDto = {
   hasMine: false,
   isFlagged: false,
   isRotated: false,
-  minesArroundQunatiy: 0,
+  minesArroundQuantiy: 0,
 };
 
 export const createBoxesDtoMock: CreateBoxDto[] = [createBoxDtoMock];
@@ -23,7 +23,7 @@ export const boxMock: Box = {
   hasMine: createBoxDtoMock.hasMine,
   isFlagged: createBoxDtoMock.isFlagged,
   isRotated: createBoxDtoMock.isRotated,
-  minesArroundQunatiy: createBoxDtoMock.minesArroundQunatiy,
+  minesArroundQuantiy: createBoxDtoMock.minesArroundQuantiy,
   game: null,
 };
 
@@ -41,6 +41,6 @@ export const boxesDtoMock: BoxDto[] = [
     column: 1,
     isFlagged: false,
     isRotated: false,
-    minesArroundQunatiy: 0,
+    minesArroundQuantiy: 0,
   },
 ];

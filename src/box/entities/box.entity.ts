@@ -28,7 +28,7 @@ export class Box {
   isRotated: boolean;
 
   @Column({ name: 'mines_arround_quantity' })
-  minesArroundQunatiy: number;
+  minesArroundQuantiy: number;
 
   @ManyToOne(() => Game, (game) => game.boxes)
   @JoinColumn({ name: 'game_id' })

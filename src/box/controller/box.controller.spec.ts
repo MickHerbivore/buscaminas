@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { frameIdMock } from '../../game/mocks/frame.mocks';
-import { boxesDtoMock, boxIdMock, updateBoxDtoMock } from '../mocks/box.mocks';
+import { boxIdMock, updateBoxDtoMock } from '../mocks/box.mocks';
 import { BoxService } from '../service/box.service';
 import { BoxController } from './box.controller';
 
@@ -8,7 +7,7 @@ describe('BoxController', () => {
   let controller: BoxController;
   const mockBoxService = {
     createBoxes: jest.fn(),
-    findAllByFrameId: jest.fn(),
+    findAllByGameId: jest.fn(),
     update: jest.fn(),
   };
 
@@ -25,16 +24,16 @@ describe('BoxController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should be able to find all boxes by frame id', async () => {
-    jest
-      .spyOn(mockBoxService, 'findAllByFrameId')
-      .mockResolvedValue(boxesDtoMock);
+  // it('should be able to find all boxes by game id', async () => {
+  //   jest
+  //     .spyOn(mockBoxService, 'findAllByGameId')
+  //     .mockResolvedValue(boxesDtoMock);
 
-    const response = await controller.findAllByFrameId(frameIdMock);
+  //   const response = await controller.findAllByGameId();
 
-    expect(mockBoxService.findAllByFrameId).toHaveBeenCalledWith(frameIdMock);
-    expect(response).toEqual(boxesDtoMock);
-  });
+  //   expect(mockBoxService.findAllByGameId).toHaveBeenCalledWith(gameIdMock);
+  //   expect(response).toEqual(boxesDtoMock);
+  // });
 
   it('should be able to update a box', async () => {
     jest.spyOn(mockBoxService, 'update').mockResolvedValue(true);

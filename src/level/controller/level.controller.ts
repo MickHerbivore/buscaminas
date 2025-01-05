@@ -7,7 +7,7 @@ export class LevelController {
   constructor(private readonly levelService: LevelService) {}
 
   @Get('')
-  async getGame(): Promise<LevelDto[]> {
+  async getLevels(): Promise<LevelDto[]> {
     return this.levelService.findAll();
   }
 }

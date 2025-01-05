@@ -38,7 +38,7 @@ export class FrameService {
           hasMine: false,
           isFlagged: false,
           isRotated: false,
-          minesArroundQunatiy: 0,
+          minesArroundQuantiy: 0,
         };
       }
     }
@@ -63,7 +63,7 @@ export class FrameService {
     for (let row = 0; row < level.rowsQuantity; row++) {
       for (let col = 0; col < level.columnsQuantity; col++) {
         if (!boxes[row][col].hasMine) {
-          boxes[row][col].minesArroundQunatiy = this.getNumberOfMinesAround(
+          boxes[row][col].minesArroundQuantiy = this.getNumberOfMinesAround(
             level,
             boxes,
             boxes[row][col],
