@@ -1,15 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { gameIdMock, gameMock } from '../../game/mocks/game.mocks';
-import { Box } from '../entities/box.entity';
-import {
-  boxesMock,
-  boxIdMock,
-  boxMock,
-  createBoxesDtoMock,
-  updateBoxDtoMock,
-} from '../mocks/box.mocks';
-import { Game } from './../../game/entity/game.entity';
+import { Box } from '../entity/box.entity';
+import { Game } from '../entity/game.entity';
+import { boxesMock, boxMock, createBoxesDtoMock } from '../mocks/box.mocks';
+import { gameIdMock, gameMock } from '../mocks/game.mocks';
 import { BoxService } from './box.service';
 
 describe('BoxService', () => {
@@ -62,14 +56,5 @@ describe('BoxService', () => {
     expect(mockRepository.find).toHaveBeenCalled();
     expect(response.length).toEqual(boxes.length);
     expect(response[0].id).toEqual(boxes[0].id);
-  });
-
-  it('should be able to update a box', async () => {
-    jest.spyOn(mockRepository, 'findOneBy').mockResolvedValue(boxMock);
-
-    const response = await service.update(boxIdMock, updateBoxDtoMock);
-
-    expect(mockRepository.findOneBy).toHaveBeenCalledWith({ id: boxIdMock });
-    expect(response).toEqual(true);
   });
 });

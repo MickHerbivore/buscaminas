@@ -1,26 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateBoxDto } from '../../box/dto/create-box.dto';
-import { Box } from '../../box/entities/box.entity';
-import { BoxService } from '../../box/service/box.service';
+import { Injectable } from '@nestjs/common';
 import { Level } from '../../level/entities/level.entity';
-import { CreateFrameDto } from '../dto/create-frame.dto';
+import { CreateBoxDto } from '../dto/create-box.dto';
 
 @Injectable()
 export class FrameService {
-  constructor(private readonly boxService: BoxService) {}
-
-  async create(createFrameDto: CreateFrameDto): Promise<Box[]> {
-    try {
-      const boxes = this.buildBoxesFrame(createFrameDto.level);
-      const boxesEntity = await this.boxService.createBoxes(boxes);
-
-      return boxesEntity;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error creating frame: ${error}`);
-    }
-  }
-
-  private buildBoxesFrame(level: Level): CreateBoxDto[] {
+  buildBoxesFrame(level: Level): CreateBoxDto[] {
     const boxes = this.initBoxes(level);
     this.putMines(level, boxes);
     this.putNumbers(level, boxes);

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Game } from '../../game/entity/game.entity';
+import { Game } from './game.entity';
 
 @Entity('boxes')
 export class Box {
@@ -30,7 +30,7 @@ export class Box {
   @Column({ name: 'mines_arround_quantity' })
   minesArroundQuantiy: number;
 
-  @ManyToOne(() => Game, (game) => game.boxes)
+  @ManyToOne(() => Game, (game) => game.boxes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'game_id' })
   game: Game;
 }

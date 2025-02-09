@@ -1,7 +1,8 @@
-import { BoxDto } from '../dto/box.dto';
-import { CreateBoxDto } from '../dto/create-box.dto';
-import { UpdateBoxDto } from '../dto/update-box.dto';
-import { Box } from '../entities/box.entity';
+import { BoxResponseDto } from '../../game/dto/box.dto';
+import { CreateBoxDto } from '../../game/dto/create-box.dto';
+import { UpdateBoxDto } from '../../game/dto/update-box.dto';
+import { Box } from '../../game/entity/box.entity';
+import { Action } from '../enum/action.enum';
 
 export const boxIdMock = '38f55f76-e0cc-4425-b6ab-fe91081927c5';
 
@@ -30,11 +31,10 @@ export const boxMock: Box = {
 export const boxesMock: Box[] = [boxMock];
 
 export const updateBoxDtoMock: UpdateBoxDto = {
-  isFlagged: true,
-  isRotated: false,
+  action: Action.FLAG,
 };
 
-export const boxesDtoMock: BoxDto[] = [
+export const boxesDtoMock: BoxResponseDto[] = [
   {
     id: boxIdMock,
     row: 1,

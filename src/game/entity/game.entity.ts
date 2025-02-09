@@ -7,13 +7,17 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Box } from '../../box/entities/box.entity';
 import { Level } from '../../level/entities/level.entity';
+import { GameStatusType } from '../types/game-status';
+import { Box } from './box.entity';
 
 @Entity('games')
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ name: 'status', nullable: false })
+  status: GameStatusType;
 
   @Column({ name: 'started_at', nullable: true })
   startedAt: Date;
@@ -25,6 +29,8 @@ export class Game {
   @JoinColumn({ name: 'level_id' })
   level: Level;
 
-  @OneToMany(() => Box, (box) => box.game, { cascade: true })
+  @OneToMany(() => Box, (box) => box.game, {
+    cascade: true,
+  })
   boxes: Box[];
 }

@@ -1,4 +1,5 @@
 import { levelDtoMock, levelMock } from '../../level/mocks/level.mocks';
+import { GameStatus } from '../enum/game-status.enum';
 import { CreateGameResponseDto } from '../dto/create-game-response.dto';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { GameDto } from '../dto/game.dto';
@@ -13,6 +14,7 @@ export const gameMock: Game = {
   createdAt: new Date(),
   startedAt: null,
   boxes: [],
+  status: GameStatus.PLAYING,
 };
 
 export const createGameDtoMock: CreateGameDto = {

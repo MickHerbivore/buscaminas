@@ -81,15 +81,6 @@ describe('GameService', () => {
     expect(response.startedAt).toBeTruthy();
   });
 
-  it('should be able to reset a game', async () => {
-    jest.spyOn(mockRepository, 'findOneBy').mockResolvedValue(gameMock);
-
-    const response = await service.resetGame(gameIdMock);
-
-    expect(response).toBe(true);
-    expect(mockRepository.save).toHaveBeenCalled();
-  });
-
   it('should be able to delete a game', async () => {
     jest.spyOn(mockRepository, 'delete').mockResolvedValue(true);
 
