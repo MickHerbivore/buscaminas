@@ -163,9 +163,9 @@ export class GameService {
     try {
       box.isFlagged = !box.isFlagged;
 
-      const boxEntity = await this.boxService.save(box);
+      await this.boxService.save(box);
 
-      return plainToInstance(BoxSelectedDto, [boxEntity], {
+      return plainToInstance(BoxSelectedDto, [box], {
         excludeExtraneousValues: true,
       });
     } catch (error) {
