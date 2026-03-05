@@ -6,15 +6,15 @@ import { GameStateService } from './game-state.service';
 })
 export class TimerService {
 
-  private gameStateService = inject( GameStateService );
+  private gameStateService = inject(GameStateService);
 
   private startTime = signal<Date>(new Date());
   private currentTime = signal<Date>(new Date());
-  private diffTime = computed<Date>( () => {
+  private diffTime = computed<Date>(() => {
     const diffDate = new Date();
-    diffDate.setHours(this.currentTime().getHours() - this.startTime().getHours() );
-    diffDate.setMinutes(this.currentTime().getMinutes() - this.startTime().getMinutes() );
-    diffDate.setSeconds( this.currentTime().getSeconds() - this.startTime().getSeconds() );
+    diffDate.setHours(this.currentTime().getHours() - this.startTime().getHours());
+    diffDate.setMinutes(this.currentTime().getMinutes() - this.startTime().getMinutes());
+    diffDate.setSeconds(this.currentTime().getSeconds() - this.startTime().getSeconds());
     return diffDate;
   });
 
@@ -28,8 +28,8 @@ export class TimerService {
   public elapsedSeconds = computed<string>(() => this.diffTime().getSeconds().toString().padStart(2, '0'));
 
   private interval: any;
-  
-  private e = effect( () => {
+
+  private e = effect(() => {
     if (this.gameStateService.playing())
       this.runTimer();
 
@@ -37,20 +37,20 @@ export class TimerService {
       this.resetTimer();
 
     if (this.gameStateService.hasWon() || !this.gameStateService.playing())
-      this.stopTimer();    
-  }, { allowSignalWrites: true });
+      this.stopTimer();
+  });
 
-  public setStartTime( startDate: Date ) {    
-    this.startTime.set( startDate ? new Date( startDate ) : new Date() );
+  public setStartTime(startDate: Date) {
+    this.startTime.set(startDate ? new Date(startDate) : new Date());
   }
 
-  public setCurrentTime( currentTime: Date ) {
-    this.currentTime.set( new Date( currentTime ) );
+  public setCurrentTime(currentTime: Date) {
+    this.currentTime.set(new Date(currentTime));
   }
-  
+
   public runTimer() {
-    this.interval = setInterval( () => {
-      this.currentTime.set( new Date( this.currentTime().getTime() + 1000 ) );
+    this.interval = setInterval(() => {
+      this.currentTime.set(new Date(this.currentTime().getTime() + 1000));
     }, 1000);
   }
 
@@ -64,8 +64,8 @@ export class TimerService {
   }
 
   private restartTimer() {
-    this.startTime.set( new Date() );
-    this.currentTime.set( new Date() );
+    this.startTime.set(new Date());
+    this.currentTime.set(new Date());
   }
 
 }

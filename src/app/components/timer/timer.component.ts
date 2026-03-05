@@ -1,17 +1,16 @@
-import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TimerService } from '../../services/timer.service';
 
 @Component({
-    selector: 'app-timer',
-    imports: [DatePipe],
-    templateUrl: './timer.component.html',
-    styleUrl: './timer.component.css'
+  selector: 'app-timer',
+  imports: [],
+  templateUrl: './timer.component.html',
+  styleUrl: './timer.component.css'
 })
 export class TimerComponent {
 
-  private timerService = inject( TimerService );
-  
+  private timerService = inject(TimerService);
+
   public elapsedDays = this.timerService.elapsedDays;
   public elapsedHours = this.timerService.elapsedHours;
   public elapsedMinutes = this.timerService.elapsedMinutes;

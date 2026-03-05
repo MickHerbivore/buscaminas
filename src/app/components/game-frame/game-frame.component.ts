@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { BoxesFrameComponent } from '../boxes-frame/boxes-frame.component';
@@ -9,7 +8,6 @@ import { TimerComponent } from '../timer/timer.component';
 @Component({
     selector: 'app-game-frame',
     imports: [
-        AsyncPipe,
         BoxesFrameComponent,
         ChangeLevelButtonComponent,
         ResetButtonComponent,
@@ -20,10 +18,10 @@ import { TimerComponent } from '../timer/timer.component';
 })
 export class GameFrameComponent {
 
-  private gameService = inject( GameService );
+    private gameService = inject(GameService);
 
-  
-  public flagsPlaced = this.gameService.flagsPlaced;
-  public numberOfMines = this.gameService.numberOfMines;
+
+    public flagsPlaced = this.gameService.flagsPlaced;
+    public numberOfMines = this.gameService.numberOfMines;
 
 }
