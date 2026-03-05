@@ -15,19 +15,15 @@ export class BoxService {
   constructor(
     @InjectRepository(Box)
     private readonly boxRepository: Repository<Box>,
-  ) {}
+  ) { }
 
-  async createBoxes(boxes: CreateBoxDto[]): Promise<Box[]> {
-    try {
-      const result = await this.boxRepository.save(boxes);
+  createBoxes(boxes: CreateBoxDto[]): Box[] {
+    const result = this.boxRepository.create(boxes);
 
-      if (result.length === 0)
-        throw new InternalServerErrorException(`Error creating boxes`);
+    if (result.length === 0)
+      throw new InternalServerErrorException(`Error creating boxes`);
 
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error creating boxes: ${error}`);
-    }
+    return result;
   }
 
   async rotateAdjacentBoxes(
