@@ -4,11 +4,10 @@ import { BoxesService } from '../../services/boxes.service';
 import { GameService } from '../../services/game.service';
 
 @Component({
-  selector: 'app-reset-button',
-  standalone: true,
-  imports: [],
-  templateUrl: './reset-button.component.html',
-  styleUrl: './reset-button.component.css',
+    selector: 'app-reset-button',
+    imports: [],
+    templateUrl: './reset-button.component.html',
+    styleUrl: './reset-button.component.css'
 })
 export class ResetButtonComponent implements OnDestroy {
   private gameService = inject(GameService);

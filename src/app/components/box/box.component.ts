@@ -8,11 +8,10 @@ import { GameStateService } from '../../services/game-state.service';
 import { GameService } from '../../services/game.service';
 
 @Component({
-  selector: 'app-box',
-  standalone: true,
-  imports: [NgIf],
-  templateUrl: './box.component.html',
-  styleUrl: './box.component.css'
+    selector: 'app-box',
+    imports: [NgIf],
+    templateUrl: './box.component.html',
+    styleUrl: './box.component.css'
 })
 export class BoxComponent implements OnDestroy {
 

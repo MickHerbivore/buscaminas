@@ -7,17 +7,16 @@ import { ResetButtonComponent } from '../reset-button/reset-button.component';
 import { TimerComponent } from '../timer/timer.component';
 
 @Component({
-  selector: 'app-game-frame',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    BoxesFrameComponent,
-    ChangeLevelButtonComponent,
-    ResetButtonComponent,
-    TimerComponent
-  ],
-  templateUrl: './game-frame.component.html',
-  styleUrl: './game-frame.component.css'
+    selector: 'app-game-frame',
+    imports: [
+        AsyncPipe,
+        BoxesFrameComponent,
+        ChangeLevelButtonComponent,
+        ResetButtonComponent,
+        TimerComponent
+    ],
+    templateUrl: './game-frame.component.html',
+    styleUrl: './game-frame.component.css'
 })
 export class GameFrameComponent {
 

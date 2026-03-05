@@ -7,11 +7,10 @@ import { GameService } from '../../services/game.service';
 import { STORAGE_GAME_ID } from '../../properties/properties';
 
 @Component({
-  selector: 'app-main',
-  standalone: true,
-  imports: [LevelsComponent, NgIf, GameFrameComponent],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.css'
+    selector: 'app-main',
+    imports: [LevelsComponent, NgIf, GameFrameComponent],
+    templateUrl: './main.component.html',
+    styleUrl: './main.component.css'
 })
 export class MainComponent implements OnInit, OnDestroy{
 

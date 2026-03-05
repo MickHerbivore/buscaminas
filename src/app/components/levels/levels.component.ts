@@ -7,11 +7,10 @@ import { LevelService } from '../../services/level.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-levels',
-  standalone: true,
-  imports: [NgFor, NgIf, LoadingSpinnerComponent],
-  templateUrl: './levels.component.html',
-  styleUrl: './levels.component.css'
+    selector: 'app-levels',
+    imports: [NgFor, NgIf, LoadingSpinnerComponent],
+    templateUrl: './levels.component.html',
+    styleUrl: './levels.component.css'
 })
 export class LevelsComponent implements OnDestroy {
 

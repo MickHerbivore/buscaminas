@@ -5,11 +5,10 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-change-level-button',
-  standalone: true,
-  imports: [LoadingSpinnerComponent, NgIf],
-  templateUrl: './change-level-button.component.html',
-  styleUrl: './change-level-button.component.css'
+    selector: 'app-change-level-button',
+    imports: [LoadingSpinnerComponent, NgIf],
+    templateUrl: './change-level-button.component.html',
+    styleUrl: './change-level-button.component.css'
 })
 export class ChangeLevelButtonComponent implements OnDestroy {
 

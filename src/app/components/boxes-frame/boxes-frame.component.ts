@@ -6,11 +6,10 @@ import { LevelService } from '../../services/level.service';
 import { BoxComponent } from '../box/box.component';
 
 @Component({
-  selector: 'app-boxes-frame',
-  standalone: true,
-  imports: [NgFor, BoxComponent, NgIf, AsyncPipe],
-  templateUrl: './boxes-frame.component.html',
-  styleUrl: './boxes-frame.component.css'
+    selector: 'app-boxes-frame',
+    imports: [NgFor, BoxComponent, NgIf, AsyncPipe],
+    templateUrl: './boxes-frame.component.html',
+    styleUrl: './boxes-frame.component.css'
 })
 export class BoxesFrameComponent {
 
