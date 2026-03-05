@@ -7,14 +7,13 @@ import { GameService } from '../../services/game.service';
 import { STORAGE_GAME_ID } from '../../properties/properties';
 
 @Component({
-    selector: 'app-main',
-    imports: [LevelsComponent, GameFrameComponent],
-    templateUrl: './main.component.html',
-    styleUrl: './main.component.css'
+  selector: 'app-main',
+  imports: [LevelsComponent, GameFrameComponent],
+  templateUrl: './main.component.html',
 })
-export class MainComponent implements OnInit, OnDestroy{
+export class MainComponent implements OnInit, OnDestroy {
 
-  private gameService = inject( GameService );
+  private gameService = inject(GameService);
 
   private subs: Subscription[] = [];
 
@@ -23,7 +22,7 @@ export class MainComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     if (localStorage.getItem(STORAGE_GAME_ID)) {
-      this.gameService.gameId.set( localStorage.getItem(STORAGE_GAME_ID)! );
+      this.gameService.gameId.set(localStorage.getItem(STORAGE_GAME_ID)!);
       this.getGame();
     }
   }
@@ -31,12 +30,12 @@ export class MainComponent implements OnInit, OnDestroy{
   getGame() {
     this.subs.push(
       this.gameService.getGame()
-      .subscribe()
+        .subscribe()
     );
   }
 
   ngOnDestroy() {
-    this.subs.forEach( sub => sub.unsubscribe() );
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
 }

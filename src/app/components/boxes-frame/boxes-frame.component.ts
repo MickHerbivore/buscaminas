@@ -8,7 +8,6 @@ import { BoxComponent } from '../box/box.component';
   selector: 'app-boxes-frame',
   imports: [BoxComponent],
   templateUrl: './boxes-frame.component.html',
-  styleUrl: './boxes-frame.component.css'
 })
 export class BoxesFrameComponent {
 

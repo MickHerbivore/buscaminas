@@ -5,15 +5,14 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 
 
 @Component({
-    selector: 'app-change-level-button',
-    imports: [LoadingSpinnerComponent],
-    templateUrl: './change-level-button.component.html',
-    styleUrl: './change-level-button.component.css'
+  selector: 'app-change-level-button',
+  imports: [LoadingSpinnerComponent],
+  templateUrl: './change-level-button.component.html',
 })
 export class ChangeLevelButtonComponent implements OnDestroy {
 
-  private gameService = inject( GameService );
-  
+  private gameService = inject(GameService);
+
   private deleteSubs: Subscription = new Subscription();
 
   public loading: boolean = false;
@@ -22,7 +21,7 @@ export class ChangeLevelButtonComponent implements OnDestroy {
     this.loading = true;
     this.deleteGame();
   }
-  
+
   private deleteGame() {
     this.deleteSubs = this.gameService.deleteGame().subscribe({
       next: () => {

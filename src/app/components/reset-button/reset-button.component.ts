@@ -4,10 +4,9 @@ import { BoxesService } from '../../services/boxes.service';
 import { GameService } from '../../services/game.service';
 
 @Component({
-    selector: 'app-reset-button',
-    imports: [],
-    templateUrl: './reset-button.component.html',
-    styleUrl: './reset-button.component.css'
+  selector: 'app-reset-button',
+  imports: [],
+  templateUrl: './reset-button.component.html',
 })
 export class ResetButtonComponent implements OnDestroy {
   private gameService = inject(GameService);
@@ -22,10 +21,10 @@ export class ResetButtonComponent implements OnDestroy {
   }
 
   private resetBoxes() {
-    this.subs.push(  
+    this.subs.push(
       this.boxesService
-      .putBoxes(this.gameService.gameId()!, this.boxesService.boxes())
-      .subscribe()
+        .putBoxes(this.gameService.gameId()!, this.boxesService.boxes())
+        .subscribe()
     );
   }
 
@@ -36,6 +35,6 @@ export class ResetButtonComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs.forEach( sub => sub.unsubscribe() );
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

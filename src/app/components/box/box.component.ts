@@ -8,17 +8,16 @@ import { GameStateService } from '../../services/game-state.service';
 import { GameService } from '../../services/game.service';
 
 @Component({
-    selector: 'app-box',
-    imports: [],
-    templateUrl: './box.component.html',
-    styleUrl: './box.component.css'
+  selector: 'app-box',
+  imports: [],
+  templateUrl: './box.component.html',
 })
 export class BoxComponent implements OnDestroy {
 
-  private gameService = inject( GameService );
-  private boxesService = inject( BoxesService );
-  private gameStateService = inject( GameStateService );
-  
+  private gameService = inject(GameService);
+  private boxesService = inject(BoxesService);
+  private gameStateService = inject(GameStateService);
+
   private subs: Subscription[] = [];
   public box = input.required<Box>();
 
@@ -31,11 +30,11 @@ export class BoxComponent implements OnDestroy {
   public onClick() {
     if (!this.gameStateService.playing())
       this.startGame();
-    
+
     this.gameService.makeMove(ACTION_ROTATE, this.box());
     this.patchBox();
   }
-  
+
   private startGame() {
     this.subs.push(
       this.gameService.startGame().subscribe()
@@ -44,11 +43,11 @@ export class BoxComponent implements OnDestroy {
 
   private patchBox() {
     this.subs.push(
-      this.boxesService.patchBoxes( this.gameService.gameId()!, this.box() ).subscribe()
+      this.boxesService.patchBoxes(this.gameService.gameId()!, this.box()).subscribe()
     );
   }
 
   ngOnDestroy() {
-    this.subs.forEach( sub => sub.unsubscribe() );
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

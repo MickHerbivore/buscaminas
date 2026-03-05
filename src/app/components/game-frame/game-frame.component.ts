@@ -14,7 +14,6 @@ import { TimerComponent } from '../timer/timer.component';
         TimerComponent
     ],
     templateUrl: './game-frame.component.html',
-    styleUrl: './game-frame.component.css'
 })
 export class GameFrameComponent {
 

@@ -7,18 +7,17 @@ import { LevelService } from '../../services/level.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
-    selector: 'app-levels',
-    imports: [LoadingSpinnerComponent],
-    templateUrl: './levels.component.html',
-    styleUrl: './levels.component.css'
+  selector: 'app-levels',
+  imports: [LoadingSpinnerComponent],
+  templateUrl: './levels.component.html',
 })
 export class LevelsComponent implements OnDestroy {
 
-  private gameService = inject( GameService );
-  private levelService = inject( LevelService );
-  
+  private gameService = inject(GameService);
+  private levelService = inject(LevelService);
+
   private initGameSubs: Subscription = new Subscription();
-  
+
   public levels: Level[] = [];
   public loading: boolean = false;
 
@@ -26,15 +25,15 @@ export class LevelsComponent implements OnDestroy {
     this.levels = this.levelService.levels;
   }
 
-  onLevel( level: Level ) {
-    this.gameService.prepareGame( level );
+  onLevel(level: Level) {
+    this.gameService.prepareGame(level);
 
     this.loading = true;
     this.initGameSubs = this.gameService.initGame().subscribe();
   }
 
   ngOnDestroy(): void {
-    this.initGameSubs.unsubscribe(); 
+    this.initGameSubs.unsubscribe();
   }
 
 }
