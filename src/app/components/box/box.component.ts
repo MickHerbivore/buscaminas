@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, OnDestroy, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Box } from '../../interfaces/box.interface';
@@ -9,7 +9,7 @@ import { GameService } from '../../services/game.service';
 
 @Component({
     selector: 'app-box',
-    imports: [NgIf],
+    imports: [],
     templateUrl: './box.component.html',
     styleUrl: './box.component.css'
 })

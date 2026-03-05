@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+
 import { Component, OnDestroy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Level } from '../../interfaces/level.interface';
@@ -8,7 +8,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 
 @Component({
     selector: 'app-levels',
-    imports: [NgFor, NgIf, LoadingSpinnerComponent],
+    imports: [LoadingSpinnerComponent],
     templateUrl: './levels.component.html',
     styleUrl: './levels.component.css'
 })

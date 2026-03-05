@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { BoxesService } from '../../services/boxes.service';
 import { GameStateService } from '../../services/game-state.service';
@@ -7,7 +7,7 @@ import { BoxComponent } from '../box/box.component';
 
 @Component({
     selector: 'app-boxes-frame',
-    imports: [NgFor, BoxComponent, NgIf, AsyncPipe],
+    imports: [BoxComponent, AsyncPipe],
     templateUrl: './boxes-frame.component.html',
     styleUrl: './boxes-frame.component.css'
 })

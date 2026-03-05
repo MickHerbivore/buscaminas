@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
@@ -8,7 +8,7 @@ import { STORAGE_GAME_ID } from '../../properties/properties';
 
 @Component({
     selector: 'app-main',
-    imports: [LevelsComponent, NgIf, GameFrameComponent],
+    imports: [LevelsComponent, GameFrameComponent],
     templateUrl: './main.component.html',
     styleUrl: './main.component.css'
 })

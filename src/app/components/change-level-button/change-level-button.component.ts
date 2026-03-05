@@ -2,11 +2,11 @@ import { Component, OnDestroy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-change-level-button',
-    imports: [LoadingSpinnerComponent, NgIf],
+    imports: [LoadingSpinnerComponent],
     templateUrl: './change-level-button.component.html',
     styleUrl: './change-level-button.component.css'
 })
