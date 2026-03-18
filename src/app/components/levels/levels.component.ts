@@ -18,12 +18,9 @@ export class LevelsComponent implements OnDestroy {
 
   private initGameSubs: Subscription = new Subscription();
 
-  public levels: Level[] = [];
+  public levels = this.levelService.levels;
   public loading: boolean = false;
 
-  constructor() {
-    this.levels = this.levelService.levels;
-  }
 
   onLevel(level: Level) {
     this.gameService.prepareGame(level);

@@ -5,4 +5,5 @@ export const environment = {
     startGameUri: 'game/start/',
     resetTimerUri: 'game/reset-timer/',
     boxesUri: 'frame/',
+    levelsUri: 'level/',
 };

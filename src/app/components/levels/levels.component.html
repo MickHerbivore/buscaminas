@@ -5,15 +5,16 @@
     <h1 class="text-3xl font-bold">Level:</h1>
 
     @if (!loading) {
-    @for (level of levels; track level.name) {
+    @for (level of levels(); track level.id) {
     <button class="w-full px-4 py-2 bg-indigo-500 border-2 border-indigo-500 rounded-full box-border 
                 hover:bg-indigo-400 hover:border-2 hover:border-indigo-100" (click)="onLevel( level )"
         [disabled]="loading">
         <strong class="text-2xl font-semibold">{{ level.name }}</strong>
         <span class="flex justify-center items-center gap-2">
-            ( {{ level.rows }} × {{ level.cols }} <img src="./assets/img/box.svg" alt="Box" class="size-6">
+            ( {{ level.rowsQuantity }} × {{ level.columnsQuantity }} <img src="./assets/img/box.svg" alt="Box"
+                class="size-6">
             and
-            {{ level.mines }} <img src="./assets/img/bomb.svg" alt="Box" class="size-6">)
+            {{ level.minesQuantity}} <img src="./assets/img/bomb.svg" alt="Box" class="size-6">)
         </span>
     </button>
     }

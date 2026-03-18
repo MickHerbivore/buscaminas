@@ -1,6 +1,7 @@
 export interface Level {
+    id: string;
     name: string;
-    rows: number;
-    cols: number;
-    mines: number;
+    rowsQuantity: number;
+    columnsQuantity: number;
+    minesQuantity: number;
 }

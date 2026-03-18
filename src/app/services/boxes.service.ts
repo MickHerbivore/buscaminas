@@ -10,31 +10,31 @@ import { LevelService } from './level.service';
 })
 export class BoxesService {
 
-  private levelService = inject( LevelService );
-  private http = inject( HttpClient );
-  
+  private levelService = inject(LevelService);
+  private http = inject(HttpClient);
+
   private currentLevel = this.levelService.currentLevel;
   public boxes = signal<Box[][]>([]);
-  
+
   public boxesToPatch: PatchBox[] = [];
-  
-  
-  public setBoxes( boxes: Box[][] | undefined ) {
-    this.boxes.set( boxes ? [...boxes] : [] );
+
+
+  public setBoxes(boxes: Box[][] | undefined) {
+    this.boxes.set(boxes ? [...boxes] : []);
   }
 
-  public updateBox( box: Box ) {
+  public updateBox(box: Box) {
     if (!box.isFlagged && !box.hasMine && box.numberOfMinesAround === 0)
-      this.rotateNeighbours( box );
-    this.setBoxes( this.boxes() );
-    
+      this.rotateNeighbours(box);
+    this.setBoxes(this.boxes());
+
   }
 
   public initializeBoxes(): void {
     let boxes: Box[][] = [];
-    for (let row = 0; row < this.currentLevel()!.rows; row++) {
+    for (let row = 0; row < this.currentLevel()!.rowsQuantity; row++) {
       boxes[row] = [];
-      for (let col = 0; col < this.currentLevel()!.cols; col++) {
+      for (let col = 0; col < this.currentLevel()!.columnsQuantity; col++) {
         boxes[row][col] = {
           row: row,
           col: col,
@@ -45,26 +45,26 @@ export class BoxesService {
         };
       }
     }
-    
-    this.putMines( boxes );
-    this.putNumbers( boxes );
-    this.setBoxes( boxes );
+
+    this.putMines(boxes);
+    this.putNumbers(boxes);
+    this.setBoxes(boxes);
   }
 
-  private putMines( boxes: Box[][] ) {
-    for (let i = 0; i < this.currentLevel()!.mines; i++) {
-      let row = Math.floor(Math.random() * this.currentLevel()!.rows);
-      let col = Math.floor(Math.random() * this.currentLevel()!.cols);
-      
+  private putMines(boxes: Box[][]) {
+    for (let i = 0; i < this.currentLevel()!.minesQuantity; i++) {
+      let row = Math.floor(Math.random() * this.currentLevel()!.rowsQuantity);
+      let col = Math.floor(Math.random() * this.currentLevel()!.columnsQuantity);
+
       if (boxes[row][col].hasMine) i--;
-      
+
       boxes[row][col].hasMine = true;
     }
   }
 
-  private putNumbers( boxes: Box[][] ) {
-    for (let row = 0; row < this.currentLevel()!.rows; row++) {
-      for (let col = 0; col < this.currentLevel()!.cols; col++) {
+  private putNumbers(boxes: Box[][]) {
+    for (let row = 0; row < this.currentLevel()!.rowsQuantity; row++) {
+      for (let col = 0; col < this.currentLevel()!.columnsQuantity; col++) {
         if (!boxes[row][col].hasMine) {
           boxes[row][col].numberOfMinesAround = this.getNumberOfMinesAround(boxes, boxes[row][col]);
         }
@@ -72,69 +72,69 @@ export class BoxesService {
     }
   }
 
-  private getNumberOfMinesAround( boxes: Box[][], box: Box ): number {
+  private getNumberOfMinesAround(boxes: Box[][], box: Box): number {
     let numberOfMines = 0;
 
     for (let i = box.row - 1; i <= box.row + 1; i++) {
       for (let j = box.col - 1; j <= box.col + 1; j++) {
-        
-        if (i >= 0 && i < this.currentLevel()!.rows 
-          && j >= 0 && j < this.currentLevel()!.cols
+
+        if (i >= 0 && i < this.currentLevel()!.rowsQuantity
+          && j >= 0 && j < this.currentLevel()!.columnsQuantity
           && boxes[i][j].hasMine) {
-            numberOfMines++;
+          numberOfMines++;
         }
 
       }
     }
-    
+
     return numberOfMines;
   }
 
   private rotateNeighbours(box: Box) {
-    if ( !this.levelService.currentLevel() ) return;
+    if (!this.levelService.currentLevel()) return;
 
     for (let row = box.row - 1; row <= box.row + 1; row++) {
       for (let col = box.col - 1; col <= box.col + 1; col++) {
 
-        if (row >= 0 && row < this.levelService.currentLevel()!.rows 
-          && col >= 0 && col < this.levelService.currentLevel()!.cols 
+        if (row >= 0 && row < this.levelService.currentLevel()!.rowsQuantity
+          && col >= 0 && col < this.levelService.currentLevel()!.columnsQuantity
           && !this.boxes()[row][col].isRotated) {
 
-          this.boxes.update( box => {
+          this.boxes.update(box => {
             this.boxesToPatch.push(this.boxes()[row][col]);
             box[row][col].isRotated = true;
             return box;
           });
-          
+
           if (this.boxes()[row][col].numberOfMinesAround === 0) {
-            this.rotateNeighbours(this.boxes()[row][col]); 
+            this.rotateNeighbours(this.boxes()[row][col]);
           }
         }
       }
     }
   }
 
-  public getBoxes( gameId: string ): Observable<Box[][]> {
+  public getBoxes(gameId: string): Observable<Box[][]> {
     return this.http.get<Box[][]>(`${environment.apiUrl}${environment.boxesUri}${gameId}`)
-    .pipe(
-      tap({
-        next: (boxes: Box[][]) => {
-          this.setBoxes( boxes );
-        }
-      })
-    );
+      .pipe(
+        tap({
+          next: (boxes: Box[][]) => {
+            this.setBoxes(boxes);
+          }
+        })
+      );
   }
 
-  public patchBoxes( gameId: string, box: PatchBox ) {
-    return this.http.patch<boolean>(`${environment.apiUrl}${environment.boxesUri}${gameId}`, { boxes: [ box, ...this.boxesToPatch ] })
+  public patchBoxes(gameId: string, box: PatchBox) {
+    return this.http.patch<boolean>(`${environment.apiUrl}${environment.boxesUri}${gameId}`, { boxes: [box, ...this.boxesToPatch] })
       .pipe(
-        tap( () => {
+        tap(() => {
           this.boxesToPatch = [];
         })
       );
   }
 
-  public putBoxes( gameId: string, boxes: Box[][] ) {
+  public putBoxes(gameId: string, boxes: Box[][]) {
     return this.http.put<boolean>(`${environment.apiUrl}${environment.boxesUri}${gameId}`, { boxes });
   }
 }
