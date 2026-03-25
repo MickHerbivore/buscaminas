@@ -15,11 +15,6 @@ export class LevelService {
   );
   public levels = this._levelsRef.value;
 
-  constructor() {
-    effect(() => {
-      console.log(this._levelsRef.value());
-    });
-  }
 
   public setLevel(level: Level | undefined) {
     this.currentLevel.set(level);

@@ -1,4 +1,3 @@
-import { Box } from "./box.interface";
 
 export interface Game {
     gameId: string;
@@ -6,11 +5,12 @@ export interface Game {
     level: string;
 }
 
-export interface InitGame {
-    level: string;
-    rows: number;
-    cols: number;
-    boxes: Box[][];
+export interface CreateGameRequest {
+    levelId: string;
+}
+
+export interface CreateGameResponse {
+    id: string;
 }
 
 export interface GameResponse extends Game {

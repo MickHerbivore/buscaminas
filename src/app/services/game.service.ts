@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { switchMap, tap } from 'rxjs';
+import { Injectable, computed, effect, inject, linkedSignal } from '@angular/core';
+import { catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Box } from '../interfaces/box.interface';
-import { Game, GameResponse, InitGame } from '../interfaces/game.interface';
+import { CreateGameRequest, CreateGameResponse, Game, GameResponse } from '../interfaces/game.interface';
 import { Level } from '../interfaces/level.interface';
 import { ACTION_FLAG, ACTION_ROTATE, LEVELS, STORAGE_GAME_ID } from '../properties/properties';
 import { BoxesService } from './boxes.service';
@@ -19,9 +19,11 @@ export class GameService {
   private levelService = inject(LevelService);
   private timerService = inject(TimerService);
 
-  private http = inject(HttpClient);
+  private _http = inject(HttpClient);
 
-  public gameId = signal<string | null>(null);
+  private _gameId = linkedSignal<string | null>(() => localStorage.getItem(STORAGE_GAME_ID));
+  public gameId = computed(() => this._gameId());
+
   public numberOfMines = computed(() => this.levelService.currentLevel()?.minesQuantity);
   public flagsPlaced = computed(() => {
     return this.boxesService.boxes().reduce((acc, row) => acc + row.filter(box => box.isFlagged).length, 0);
@@ -37,7 +39,7 @@ export class GameService {
     this.boxesService.setBoxes(undefined)
     this.levelService.setLevel(undefined);
     this.timerService.resetTimer();
-    this.gameId.set(null);
+    this._gameId.set(null);
     localStorage.removeItem(STORAGE_GAME_ID);
   }
 
@@ -68,13 +70,13 @@ export class GameService {
     this.boxesService.updateBox(box);
   }
 
-  public getGame() {
-    return this.http.get<GameResponse>(`${environment.apiUrl}${environment.gameUri}${this.gameId()}`)
-      .pipe(
-        tap((game: GameResponse) => this.handleGame(game)),
-        switchMap(() => this.boxesService.getBoxes(this.gameId()!)),
-      );
-  }
+  // public getGame() {
+  //   return this.http.get<GameResponse>(`${environment.apiUrl}${environment.gameUri}${this.gameId()}`)
+  //     .pipe(
+  //       tap((game: GameResponse) => this.handleGame(game)),
+  //       switchMap(() => this.boxesService.getBoxes(this.gameId()!)),
+  //     );
+  // }
 
   private handleGame(game: GameResponse) {
     this.timerService.setStartTime(game.startDate);
@@ -87,22 +89,21 @@ export class GameService {
     }
   }
 
-  public initGame() {
-    const initGame: InitGame = {
-      level: this.levelService.currentLevel()!.name,
-      rows: this.levelService.currentLevel()!.rowsQuantity,
-      cols: this.levelService.currentLevel()!.columnsQuantity,
-      boxes: this.boxesService.boxes()
-    };
+  public createGame(levelId: string) {
+    const request: CreateGameRequest = { levelId };
 
-    return this.http.post<string>(`${environment.apiUrl}${environment.initGameUri}`, initGame)
+    return this._http.post<CreateGameResponse>(`${environment.apiUrl}${environment.createGameUri}`, request)
       .pipe(
-        tap((gameId) => this.gameId.set(gameId)),
-      )
+        catchError((error) => {
+          console.error('Error creating game:', error);
+          return throwError(() => error);
+        }),
+        tap(({ id: gameId }) => this._gameId.set(gameId)),
+      );
   }
 
   public startGame() {
-    return this.http.post<Game>(`${environment.apiUrl}${environment.startGameUri}`, { gameId: this.gameId() })
+    return this._http.post<Game>(`${environment.apiUrl}${environment.startGameUri}`, { gameId: this.gameId() })
       .pipe(
         tap((response: Game) => {
           this.timerService.setStartTime(response.startDate);
@@ -113,12 +114,12 @@ export class GameService {
 
   public deleteGame() {
     const gameId = localStorage.getItem(STORAGE_GAME_ID);
-    return this.http.delete<boolean>(`${environment.apiUrl}${environment.gameUri}${gameId}`);
+    return this._http.delete<boolean>(`${environment.apiUrl}${environment.gameUri}${gameId}`);
   }
 
   public resetTimer() {
     const gameId = localStorage.getItem(STORAGE_GAME_ID);
-    return this.http.patch<boolean>(`${environment.apiUrl}${environment.resetTimerUri}${gameId}`, {});
+    return this._http.patch<boolean>(`${environment.apiUrl}${environment.resetTimerUri}${gameId}`, {});
   }
 
 }

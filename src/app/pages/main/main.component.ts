@@ -1,41 +1,38 @@
 
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { take } from 'rxjs';
 import { LevelsComponent } from '../../components/levels/levels.component';
 import { GameService } from '../../services/game.service';
-import { STORAGE_GAME_ID } from '../../properties/properties';
 
 @Component({
   selector: 'app-main',
-  imports: [LevelsComponent, GameFrameComponent],
+  imports: [LevelsComponent],
   templateUrl: './main.component.html',
 })
-export class MainComponent implements OnInit, OnDestroy {
-
+export class MainComponent {
   private gameService = inject(GameService);
-
-  private subs: Subscription[] = [];
+  private router = inject(Router);
 
   public gameId = this.gameService.gameId;
 
-
-  ngOnInit() {
-    if (localStorage.getItem(STORAGE_GAME_ID)) {
-      this.gameService.gameId.set(localStorage.getItem(STORAGE_GAME_ID)!);
-      this.getGame();
+  constructor() {
+    if (this.gameId()) {
+      this.router.navigate(['game']);
     }
   }
 
-  getGame() {
-    this.subs.push(
-      this.gameService.getGame()
-        .subscribe()
-    );
+  createGame(levelId: string) {
+    this.gameService.createGame(levelId)
+      .pipe(take(1))
+      .subscribe({
+        next: ({ id: gameId }) => {
+          console.log('Game created with ID:', gameId);
+          this.router.navigate(['game']);
+        },
+        error: (err) => {
+          console.error('Failed to create game:', err);
+        },
+      })
   }
-
-  ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
-  }
-
 }

@@ -1,8 +1,6 @@
 
-import { Component, OnDestroy, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, inject, output } from '@angular/core';
 import { Level } from '../../interfaces/level.interface';
-import { GameService } from '../../services/game.service';
 import { LevelService } from '../../services/level.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
@@ -11,26 +9,16 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
   imports: [LoadingSpinnerComponent],
   templateUrl: './levels.component.html',
 })
-export class LevelsComponent implements OnDestroy {
-
-  private gameService = inject(GameService);
+export class LevelsComponent {
   private levelService = inject(LevelService);
 
-  private initGameSubs: Subscription = new Subscription();
+  protected levels = this.levelService.levels;
+  protected loading: boolean = false;
 
-  public levels = this.levelService.levels;
-  public loading: boolean = false;
-
+  public levelIdSelectedEvent = output<string>();
 
   onLevel(level: Level) {
-    this.gameService.prepareGame(level);
-
     this.loading = true;
-    this.initGameSubs = this.gameService.initGame().subscribe();
+    this.levelIdSelectedEvent.emit(level.id);
   }
-
-  ngOnDestroy(): void {
-    this.initGameSubs.unsubscribe();
-  }
-
 }
