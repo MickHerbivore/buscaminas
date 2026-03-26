@@ -1,15 +1,15 @@
 export interface Box {
     row: number;
-    col: number;
+    column: number;
     hasMine: boolean;
     isFlagged: boolean;
     isRotated: boolean;
-    numberOfMinesAround: number;
+    minesArroundQuantiy: number;
 }
 
 export interface PatchBox {
     row: number;
-    col: number;
+    column: number;
     isFlagged: boolean;
     isRotated: boolean;
 }

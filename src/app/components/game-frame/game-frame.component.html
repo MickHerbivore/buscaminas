@@ -1,4 +1,4 @@
-<article class="min-h-full flex flex-col gap-2 from-indigo-400 bg-linear-to-br to-zinc-300 p-8 mt-[104px]
+<article class="min-h-full flex flex-col gap-2 from-indigo-400 bg-linear-to-br to-zinc-300 p-8 mt-26
     md:min-h-fit md:rounded-3xl md:mt-0 md:items-center">
 
     <div
@@ -14,7 +14,8 @@
     </div>
 
 
-    <app-boxes-frame></app-boxes-frame>
+    <app-boxes-frame [level]="level()" [boxes]="boxes()" [hasWon]="hasWon()"
+        [isGameOver]="isGameOver()"></app-boxes-frame>
 
     <div class="w-screen p-2 fixed top-0 left-0 bg-indigo-300
         md:w-full md:px-0 md:gap-4 md:static md:bg-transparent">

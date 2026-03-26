@@ -13,7 +13,6 @@ import { GameService } from '../../services/game.service';
   templateUrl: './box.component.html',
 })
 export class BoxComponent implements OnDestroy {
-
   private gameService = inject(GameService);
   private boxesService = inject(BoxesService);
   private gameStateService = inject(GameStateService);

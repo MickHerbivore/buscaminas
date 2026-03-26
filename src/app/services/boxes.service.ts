@@ -24,7 +24,7 @@ export class BoxesService {
   }
 
   public updateBox(box: Box) {
-    if (!box.isFlagged && !box.hasMine && box.numberOfMinesAround === 0)
+    if (!box.isFlagged && !box.hasMine && box.minesArroundQuantiy === 0)
       this.rotateNeighbours(box);
     this.setBoxes(this.boxes());
 
@@ -37,11 +37,11 @@ export class BoxesService {
       for (let col = 0; col < this.currentLevel()!.columnsQuantity; col++) {
         boxes[row][col] = {
           row: row,
-          col: col,
+          column: col,
           hasMine: false,
           isFlagged: false,
           isRotated: false,
-          numberOfMinesAround: 0
+          minesArroundQuantiy: 0
         };
       }
     }
@@ -66,7 +66,7 @@ export class BoxesService {
     for (let row = 0; row < this.currentLevel()!.rowsQuantity; row++) {
       for (let col = 0; col < this.currentLevel()!.columnsQuantity; col++) {
         if (!boxes[row][col].hasMine) {
-          boxes[row][col].numberOfMinesAround = this.getNumberOfMinesAround(boxes, boxes[row][col]);
+          boxes[row][col].minesArroundQuantiy = this.getNumberOfMinesAround(boxes, boxes[row][col]);
         }
       }
     }
@@ -76,7 +76,7 @@ export class BoxesService {
     let numberOfMines = 0;
 
     for (let i = box.row - 1; i <= box.row + 1; i++) {
-      for (let j = box.col - 1; j <= box.col + 1; j++) {
+      for (let j = box.column - 1; j <= box.column + 1; j++) {
 
         if (i >= 0 && i < this.currentLevel()!.rowsQuantity
           && j >= 0 && j < this.currentLevel()!.columnsQuantity
@@ -94,7 +94,7 @@ export class BoxesService {
     if (!this.levelService.currentLevel()) return;
 
     for (let row = box.row - 1; row <= box.row + 1; row++) {
-      for (let col = box.col - 1; col <= box.col + 1; col++) {
+      for (let col = box.column - 1; col <= box.column + 1; col++) {
 
         if (row >= 0 && row < this.levelService.currentLevel()!.rowsQuantity
           && col >= 0 && col < this.levelService.currentLevel()!.columnsQuantity
@@ -106,7 +106,7 @@ export class BoxesService {
             return box;
           });
 
-          if (this.boxes()[row][col].numberOfMinesAround === 0) {
+          if (this.boxes()[row][col].minesArroundQuantiy === 0) {
             this.rotateNeighbours(this.boxes()[row][col]);
           }
         }

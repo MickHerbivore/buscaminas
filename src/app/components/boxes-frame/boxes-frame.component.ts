@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { BoxesService } from '../../services/boxes.service';
-import { GameStateService } from '../../services/game-state.service';
-import { LevelService } from '../../services/level.service';
+import { Component, input } from '@angular/core';
+import { Box } from '../../interfaces/box.interface';
+import { Level } from '../../interfaces/level.interface';
 import { BoxComponent } from '../box/box.component';
 
 @Component({
@@ -10,14 +9,8 @@ import { BoxComponent } from '../box/box.component';
   templateUrl: './boxes-frame.component.html',
 })
 export class BoxesFrameComponent {
-
-  private gameStateService = inject(GameStateService);
-  private boxesService = inject(BoxesService);
-  private levelService = inject(LevelService);
-
-  public level = this.levelService.currentLevel;
-  public boxes = this.boxesService.boxes;
-  public hasWon = this.gameStateService.hasWon;
-  public isGameOver = this.gameStateService.hasLost;
-
+  public level = input.required<Level | null>();
+  public boxes = input.required<Box[]>();
+  public hasWon = input.required<boolean>();
+  public isGameOver = input.required<boolean>();
 }

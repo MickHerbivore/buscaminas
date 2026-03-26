@@ -1,4 +1,6 @@
 import { Component, input } from '@angular/core';
+import { Box } from '../../interfaces/box.interface';
+import { Level } from '../../interfaces/level.interface';
 import { BoxesFrameComponent } from '../boxes-frame/boxes-frame.component';
 import { ChangeLevelButtonComponent } from '../change-level-button/change-level-button.component';
 import { ResetButtonComponent } from '../reset-button/reset-button.component';
@@ -15,6 +17,10 @@ import { TimerComponent } from '../timer/timer.component';
     templateUrl: './game-frame.component.html',
 })
 export class GameFrameComponent {
+    public level = input.required<Level | null>();
+    public boxes = input.required<Box[]>();
+    public hasWon = input.required<boolean>();
+    public isGameOver = input.required<boolean>();
     public flagsPlaced = input<number>(0);
     public numberOfMines = input<number>(0);
 }

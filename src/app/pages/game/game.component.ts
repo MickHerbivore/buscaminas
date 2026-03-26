@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { GameStore } from '../../store/game.store';
@@ -11,6 +11,11 @@ import { GameStore } from '../../store/game.store';
 export class GameComponent {
   readonly router = inject(Router);
   readonly store = inject(GameStore);
+
+  protected level = this.store.level;
+  protected boxes = this.store.boxes;
+  protected hasWon = signal(false);
+  protected isGameOver = signal(false);
 
   constructor() {
     if (!this.store.gameId()) {

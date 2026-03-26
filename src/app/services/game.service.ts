@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, linkedSignal } from '@angular/core';
-import { catchError, tap, throwError } from 'rxjs';
+import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Box } from '../interfaces/box.interface';
 import { CreateGameRequest, CreateGameResponse, Game, GameResponse } from '../interfaces/game.interface';
 import { Level } from '../interfaces/level.interface';
-import { ACTION_FLAG, ACTION_ROTATE, LEVELS, STORAGE_GAME_ID } from '../properties/properties';
+import { ACTION_FLAG, ACTION_ROTATE, STORAGE_GAME_ID } from '../properties/properties';
 import { BoxesService } from './boxes.service';
 import { LevelService } from './level.service';
 import { TimerService } from './timer.service';
@@ -65,24 +65,27 @@ export class GameService {
     this.boxesService.updateBox(box);
   }
 
-  // public getGame() {
-  //   return this.http.get<GameResponse>(`${environment.apiUrl}${environment.gameUri}${this.gameId()}`)
-  //     .pipe(
-  //       tap((game: GameResponse) => this.handleGame(game)),
-  //       switchMap(() => this.boxesService.getBoxes(this.gameId()!)),
-  //     );
-  // }
-
-  private handleGame(game: GameResponse) {
-    this.timerService.setStartTime(game.startDate);
-    this.timerService.setCurrentTime(game.currentTime);
-    const level = LEVELS.find(level => level.name === game.level);
-    if (level) {
-      this.levelService.setLevel(level);
-    } else {
-      console.error('Level not found for game', game);
-    }
+  public getGame(gameId: string): Observable<GameResponse> {
+    return this._http.get<GameResponse>(`${environment.apiUrl}${environment.gameUri}${gameId}`)
+      .pipe(
+        // tap((game: GameResponse) => this.handleGame(game)),
+        catchError((error) => {
+          console.error('Error fetching game detail:', error);
+          return throwError(() => error);
+        })
+      );
   }
+
+  // private handleGame(game: GameResponse) {
+  //   this.timerService.setStartTime(game.startDate);
+  //   this.timerService.setCurrentTime(game.currentTime);
+  //   const level = LEVELS.find(level => level.name === game.level);
+  //   if (level) {
+  //     this.levelService.setLevel(level);
+  //   } else {
+  //     console.error('Level not found for game', game);
+  //   }
+  // }
 
   public createGame(levelId: string) {
     const request: CreateGameRequest = { levelId };

@@ -1,6 +1,6 @@
-import { computed, inject, Injectable, linkedSignal } from "@angular/core";
+import { computed, effect, inject, Injectable, linkedSignal, resource } from "@angular/core";
 import { Router } from "@angular/router";
-import { take } from "rxjs";
+import { firstValueFrom, take } from "rxjs";
 import { GameState, INITIAL_GAME_STATE } from "../interfaces/game.interface";
 import { STORAGE_GAME_ID } from "../properties/properties";
 import { GameService } from "../services/game.service";
@@ -18,17 +18,32 @@ export class GameStore {
 
     // Selectors
     readonly gameId = computed(() => this._state().gameId);
-    readonly levelId = computed(() => this._state().levelId);
+    readonly level = computed(() => this._state().level);
     readonly status = computed(() => this._state().status);
     readonly error = computed(() => this._state().error);
 
     readonly isLoading = computed(() => this._state().status === 'loading');
     readonly isActive = computed(() => this._state().status === 'active');
 
+    private readonly _game = resource({
+        params: () => ({ id: this.gameId() }),
+        loader: async ({ params: { id: gameId } }) => {
+            if (gameId === null) return null;
+            return firstValueFrom(
+                this._gameService.getGame(gameId)
+            );
+        },
+    });
+    readonly boxes = computed(() => this._game.value()?.boxes ?? []);
+
+    private readonly _syncLevelId = effect(() => {
+        const level = this._game.value()?.level ?? null;
+        if (level === null) return;
+        this._patch({ level });
+    });
+
     // Actions
     createGame(levelId: string): void {
-        this._patch({ status: 'loading', error: null, levelId });
-
         this._gameService.createGame(levelId).pipe(take(1)).subscribe({
             next: ({ id: gameId }) => {
                 this._patch({ gameId, status: 'active' });

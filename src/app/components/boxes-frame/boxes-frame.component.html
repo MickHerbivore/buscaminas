@@ -3,10 +3,8 @@
     @if (boxes().length) {
     <div class="grid w-fit" [style]="'grid-template-columns: repeat('+ level()?.columnsQuantity + ', 1fr)'">
 
-        @for (boxesRow of boxes(); track $index) {
-        @for (box of boxesRow; track $index) {
+        @for (box of boxes(); track $index) {
         <app-box [box]="box"></app-box>
-        }
         }
     </div>
     }
