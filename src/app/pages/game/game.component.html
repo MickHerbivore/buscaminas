@@ -1,7 +1,7 @@
 <div class="min-w-fit w-screen h-fit
     md:w-fit ">
 
-    <app-game-frame [level]="level()" [boxes]="boxes()" [hasWon]="hasWon()"
-        [isGameOver]="isGameOver()"></app-game-frame>
+    <app-game-frame [level]="level()" [boxes]="boxes()" [hasWon]="hasWon()" [isGameOver]="isGameOver()"
+        (boxClickedEvent)="boxClicked($event)" (boxRightClickEvent)="boxRightClicked($event)"></app-game-frame>
 
 </div>

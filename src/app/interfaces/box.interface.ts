@@ -1,4 +1,5 @@
 export interface Box {
+    id: string;
     row: number;
     column: number;
     hasMine: boolean;

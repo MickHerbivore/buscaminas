@@ -14,8 +14,8 @@
     </div>
 
 
-    <app-boxes-frame [level]="level()" [boxes]="boxes()" [hasWon]="hasWon()"
-        [isGameOver]="isGameOver()"></app-boxes-frame>
+    <app-boxes-frame [level]="level()" [boxes]="boxes()" [hasWon]="hasWon()" [isGameOver]="isGameOver()"
+        (boxClickedEvent)="boxClicked($event)" (boxRightClickEvent)="boxRightClicked($event)"></app-boxes-frame>
 
     <div class="w-screen p-2 fixed top-0 left-0 bg-indigo-300
         md:w-full md:px-0 md:gap-4 md:static md:bg-transparent">

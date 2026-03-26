@@ -36,6 +36,7 @@ export class BoxesService {
       boxes[row] = [];
       for (let col = 0; col < this.currentLevel()!.columnsQuantity; col++) {
         boxes[row][col] = {
+          id: '',
           row: row,
           column: col,
           hasMine: false,

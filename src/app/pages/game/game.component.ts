@@ -23,8 +23,12 @@ export class GameComponent {
     }
   }
 
-  startGame(): void {
-    // TODO: Start game
+  protected boxClicked(boxId: string) {
+    console.log('boxClicked', boxId);
+  }
+
+  protected boxRightClicked(boxId: string) {
+    console.log('boxRightClicked', boxId);
   }
 
   resetGame(): void {
