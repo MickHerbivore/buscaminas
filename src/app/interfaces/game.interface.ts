@@ -16,3 +16,17 @@ export interface CreateGameResponse {
 export interface GameResponse extends Game {
     currentTime: Date;
 }
+
+export interface GameState {
+    gameId: string | null;
+    levelId: string | null;
+    status: 'idle' | 'loading' | 'active' | 'error';
+    error: string | null;
+}
+
+export const INITIAL_GAME_STATE: GameState = {
+    gameId: null,
+    levelId: null,
+    status: 'idle',
+    error: null,
+};

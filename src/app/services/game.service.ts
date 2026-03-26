@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, effect, inject, linkedSignal } from '@angular/core';
+import { Injectable, computed, inject, linkedSignal } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Box } from '../interfaces/box.interface';
@@ -27,11 +27,6 @@ export class GameService {
   public numberOfMines = computed(() => this.levelService.currentLevel()?.minesQuantity);
   public flagsPlaced = computed(() => {
     return this.boxesService.boxes().reduce((acc, row) => acc + row.filter(box => box.isFlagged).length, 0);
-  });
-
-  private e = effect(() => {
-    if (this.gameId())
-      localStorage.setItem(STORAGE_GAME_ID, this.gameId()!);
   });
 
 
@@ -98,7 +93,6 @@ export class GameService {
           console.error('Error creating game:', error);
           return throwError(() => error);
         }),
-        tap(({ id: gameId }) => this._gameId.set(gameId)),
       );
   }
 

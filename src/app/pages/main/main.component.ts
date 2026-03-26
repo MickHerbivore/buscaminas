@@ -1,9 +1,8 @@
 
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { take } from 'rxjs';
 import { LevelsComponent } from '../../components/levels/levels.component';
-import { GameService } from '../../services/game.service';
+import { GameStore } from '../../store/game.store';
 
 @Component({
   selector: 'app-main',
@@ -11,10 +10,10 @@ import { GameService } from '../../services/game.service';
   templateUrl: './main.component.html',
 })
 export class MainComponent {
-  private gameService = inject(GameService);
+  private gameStore = inject(GameStore);
   private router = inject(Router);
 
-  public gameId = this.gameService.gameId;
+  public gameId = this.gameStore.gameId;
 
   constructor() {
     if (this.gameId()) {
@@ -23,16 +22,6 @@ export class MainComponent {
   }
 
   createGame(levelId: string) {
-    this.gameService.createGame(levelId)
-      .pipe(take(1))
-      .subscribe({
-        next: ({ id: gameId }) => {
-          console.log('Game created with ID:', gameId);
-          this.router.navigate(['game']);
-        },
-        error: (err) => {
-          console.error('Failed to create game:', err);
-        },
-      })
+    this.gameStore.createGame(levelId);
   }
 }
