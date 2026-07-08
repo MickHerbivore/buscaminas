@@ -1,203 +1,300 @@
 import {
+  BadRequestException,
+  ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
-import { LevelDto } from '../../level/dto/level.dto';
 import { LevelService } from '../../level/service/level.service';
-import { BoxDto, BoxResponseDto, BoxSelectedDto } from '../dto/box.dto';
-import { CreateGameResponseDto } from '../dto/create-game-response.dto';
-import { GameDto } from '../dto/game.dto';
-import { StartGameResponse } from '../dto/start-game-response.dto';
-import { UpdateBoxDto } from '../dto/update-box.dto';
+import { ActionResultDto } from '../dto/action-result.dto';
+import { BoxViewDto } from '../dto/box-view.dto';
+import { ChordDto } from '../dto/box-action.dto';
+import { CreateGameDto } from '../dto/create-game.dto';
+import { FlagDto } from '../dto/box-action.dto';
+import { GameResponseDto } from '../dto/game-response.dto';
+import { RevealDto } from '../dto/box-action.dto';
+import { Box } from '../entity/box.entity';
 import { Game } from '../entity/game.entity';
-import { Action } from '../enum/action.enum';
 import { GameStatus } from '../enum/game-status.enum';
-import { GameStatusType } from '../types/game-status';
-import { CreateGameDto } from './../dto/create-game.dto';
+import {
+  adjacentFlagCount,
+  areAllNonMinesRevealed,
+  buildGrid,
+  coordKey,
+  floodReveal,
+  neighborCoords,
+} from './board';
 import { BoxService } from './box.service';
 import { FrameService } from './frame.service';
+import { toBoxView, toBoxViews, toGameResponse } from './game-mapper';
 
 @Injectable()
 export class GameService {
   constructor(
     @InjectRepository(Game)
     private readonly gameRepository: Repository<Game>,
-
     private readonly levelService: LevelService,
     private readonly frameService: FrameService,
     private readonly boxService: BoxService,
   ) {}
 
-  private async findGameById(id: string): Promise<Game> {
-    const game = await this.gameRepository.findOneBy({ id });
-    if (!game) throw new NotFoundException(`Game with id ${id} not found`);
+  async getGame(id: string): Promise<GameResponseDto> {
+    const game = await this.loadGame(id);
+    return toGameResponse(game);
+  }
+
+  async createGame(dto: CreateGameDto): Promise<GameResponseDto> {
+    const level = await this.levelService.findById(dto.levelId);
+
+    const boxes = this.boxService.createMany(
+      this.frameService.initEmptyBoxes(level),
+    );
+
+    const game = this.gameRepository.create({
+      status: GameStatus.INITIAL,
+      level,
+      createdAt: new Date(),
+      startedAt: null,
+      endedAt: null,
+      wonAt: null,
+      boxes,
+    });
+
+    const saved = await this.gameRepository.save(game);
+    return toGameResponse(saved);
+  }
+
+  async deleteGame(id: string): Promise<void> {
+    const result = await this.gameRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Game with id ${id} not found`);
+    }
+  }
+
+  async findBoxes(gameId: string): Promise<BoxViewDto[]> {
+    const game = await this.loadGame(gameId);
+    const boxes = await this.boxService.findByGameId(gameId);
+    return toBoxViews(boxes, game);
+  }
+
+  async reveal(gameId: string, dto: RevealDto): Promise<ActionResultDto> {
+    const game = await this.loadGameWithBoxes(gameId);
+    this.ensurePlayable(game);
+
+    const level = game.level;
+    const startBox = this.findBox(game, dto.boxId);
+    const grid = buildGrid(game.boxes, level.rowsQuantity, level.columnsQuantity);
+
+    const changed: Box[] = [];
+
+    if (game.status === GameStatus.INITIAL) {
+      const avoid = this.buildAvoidSet(level, startBox.row, startBox.column);
+      this.frameService.placeMinesAndNumbers(grid, level, avoid);
+      changed.push(...game.boxes);
+      game.status = GameStatus.PLAYING;
+      game.startedAt = new Date();
+    }
+
+    if (startBox.hasMine) {
+      startBox.isRotated = true;
+      changed.push(startBox);
+      game.status = GameStatus.LOST;
+      game.endedAt = new Date();
+      await this.persist(game, changed);
+      return this.buildResult(game, game.boxes);
+    }
+
+    const revealed = floodReveal(
+      grid,
+      level.rowsQuantity,
+      level.columnsQuantity,
+      startBox.row,
+      startBox.column,
+    );
+    changed.push(...revealed);
+
+    if (
+      areAllNonMinesRevealed(grid, level.rowsQuantity, level.columnsQuantity)
+    ) {
+      game.status = GameStatus.WON;
+      game.endedAt = new Date();
+      game.wonAt = new Date();
+    }
+
+    await this.persist(game, changed);
+
+    const resultBoxes = revealed.length > 0 ? revealed : [startBox];
+    return this.buildResult(game, resultBoxes);
+  }
+
+  async flag(gameId: string, dto: FlagDto): Promise<ActionResultDto> {
+    const game = await this.loadGameWithBoxes(gameId);
+    this.ensurePlayable(game);
+
+    const box = this.findBox(game, dto.boxId);
+    box.isFlagged = !box.isFlagged;
+    await this.boxService.save(box);
+
+    return this.buildResult(game, [box]);
+  }
+
+  async chord(gameId: string, dto: ChordDto): Promise<ActionResultDto> {
+    const game = await this.loadGameWithBoxes(gameId);
+    this.ensurePlayable(game);
+
+    if (game.status === GameStatus.INITIAL) {
+      throw new BadRequestException('Cannot chord before the first reveal');
+    }
+
+    const level = game.level;
+    const box = this.findBox(game, dto.boxId);
+
+    if (!box.isRotated) {
+      throw new BadRequestException('Chord requires a revealed cell');
+    }
+    if (box.minesArroundQuantiy <= 0) {
+      throw new BadRequestException('Chord requires a numbered cell');
+    }
+
+    const grid = buildGrid(game.boxes, level.rowsQuantity, level.columnsQuantity);
+    const flagCount = adjacentFlagCount(
+      grid,
+      level.rowsQuantity,
+      level.columnsQuantity,
+      box.row,
+      box.column,
+    );
+
+    if (flagCount !== box.minesArroundQuantiy) {
+      return this.buildResult(game, [box]);
+    }
+
+    const targets = neighborCoords(
+      level.rowsQuantity,
+      level.columnsQuantity,
+      box.row,
+      box.column,
+    )
+      .map(([r, c]) => grid[r][c])
+      .filter((neighbor) => !neighbor.isFlagged && !neighbor.isRotated);
+
+    const changed: Box[] = [];
+    let hitMine = false;
+
+    for (const target of targets) {
+      if (target.hasMine) {
+        target.isRotated = true;
+        changed.push(target);
+        hitMine = true;
+        break;
+      }
+      const revealed = floodReveal(
+        grid,
+        level.rowsQuantity,
+        level.columnsQuantity,
+        target.row,
+        target.column,
+      );
+      changed.push(...revealed);
+    }
+
+    if (hitMine) {
+      game.status = GameStatus.LOST;
+      game.endedAt = new Date();
+      await this.persist(game, changed);
+      return this.buildResult(game, game.boxes);
+    }
+
+    if (
+      areAllNonMinesRevealed(grid, level.rowsQuantity, level.columnsQuantity)
+    ) {
+      game.status = GameStatus.WON;
+      game.endedAt = new Date();
+      game.wonAt = new Date();
+    }
+
+    await this.persist(game, changed);
+    return this.buildResult(game, changed);
+  }
+
+  private async loadGame(id: string): Promise<Game> {
+    const game = await this.gameRepository.findOne({
+      where: { id },
+      relations: ['level'],
+    });
+    if (!game) {
+      throw new NotFoundException(`Game with id ${id} not found`);
+    }
     return game;
   }
 
-  async getGame(id: string): Promise<GameDto> {
-    try {
-      const game = await this.gameRepository.findOne({
-        where: { id },
-        relations: ['level'],
-      });
-
-      if (!game) throw new NotFoundException(`Game with id ${id} not found`);
-
-      const gameDto = plainToInstance(GameDto, game, {
-        excludeExtraneousValues: true,
-      });
-
-      gameDto.level = plainToInstance(LevelDto, game.level, {
-        excludeExtraneousValues: true,
-      });
-
-      return gameDto;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error getting game: ${error}`);
+  private async loadGameWithBoxes(id: string): Promise<Game> {
+    const game = await this.gameRepository.findOne({
+      where: { id },
+      relations: ['level', 'boxes'],
+    });
+    if (!game) {
+      throw new NotFoundException(`Game with id ${id} not found`);
     }
+    return game;
   }
 
-  async createGame(
-    createGameDto: CreateGameDto,
-  ): Promise<CreateGameResponseDto> {
-    try {
-      const level: LevelDto = await this.levelService.findById(
-        createGameDto.levelId,
+  private findBox(game: Game, boxId: string): Box {
+    const box = game.boxes.find((b) => b.id === boxId);
+    if (!box) {
+      throw new NotFoundException(
+        `Box with id ${boxId} not found in game ${game.id}`,
       );
+    }
+    return box;
+  }
 
-      const boxes = this.frameService.buildBoxesFrame(level);
-      const boxesEntity = await this.boxService.createBoxes(boxes);
-
-      const game = {
-        status: GameStatus.INITIAL,
-        level: level,
-        createdAt: new Date(),
-        startedAt: null,
-        boxes: boxesEntity,
-      };
-
-      const savedGame = await this.gameRepository.save(game);
-
-      return plainToInstance(CreateGameResponseDto, savedGame, {
-        excludeExtraneousValues: true,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException(`Error creating game: ${error}`);
+  private ensurePlayable(game: Game): void {
+    if (
+      game.status === GameStatus.LOST ||
+      game.status === GameStatus.WON
+    ) {
+      throw new ConflictException(
+        `Game ${game.id} is already finished (status=${game.status})`,
+      );
     }
   }
 
-  async startGame(id: string): Promise<StartGameResponse> {
-    try {
-      const game = await this.findGameById(id);
-      game.startedAt = new Date();
-      game.status = GameStatus.PLAYING;
-
-      await this.gameRepository.save(game);
-
-      return { id, startedAt: game.startedAt };
-    } catch (error) {
-      throw new InternalServerErrorException(`Error starting game: ${error}`);
+  private buildAvoidSet(level: Game['level'], row: number, column: number): Set<string> {
+    const avoid = new Set<string>();
+    avoid.add(coordKey(row, column));
+    for (const [r, c] of neighborCoords(
+      level.rowsQuantity,
+      level.columnsQuantity,
+      row,
+      column,
+    )) {
+      avoid.add(coordKey(r, c));
     }
+    return avoid;
   }
 
-  private async updateStatus(
-    id: string,
-    status: GameStatusType,
-  ): Promise<boolean> {
-    try {
-      const game = await this.findGameById(id);
-      game.status = status;
-
-      await this.gameRepository.save(game);
-
-      return true;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error updating game: ${error}`);
+  private async persist(game: Game, changedBoxes: Box[]): Promise<void> {
+    const unique = Array.from(
+      new Map(changedBoxes.map((b) => [b.id, b])).values(),
+    );
+    if (unique.length > 0) {
+      await this.boxService.saveMany(unique);
     }
+    await this.gameRepository.save({
+      id: game.id,
+      status: game.status,
+      startedAt: game.startedAt,
+      endedAt: game.endedAt,
+      wonAt: game.wonAt,
+    });
   }
 
-  async deleteGame(id: string): Promise<boolean> {
-    try {
-      const deleted = await this.gameRepository.delete(id);
-
-      if (deleted.affected === 0) return false;
-
-      return true;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error deleting game: ${error}`);
-    }
-  }
-
-  async findBoxes(gameId: string): Promise<BoxResponseDto[]> {
-    try {
-      return this.boxService.findAllByGameId(gameId);
-    } catch (error) {
-      throw new InternalServerErrorException(`Error finding boxes: ${error}`);
-    }
-  }
-
-  async updateBox(
-    gameId: string,
-    boxId: string,
-    updateBoxDto: UpdateBoxDto,
-  ): Promise<BoxSelectedDto[]> {
-    try {
-      const game = await this.findGameById(gameId);
-      if (game.status === GameStatus.INITIAL) this.startGame(gameId);
-
-      const box = await this.boxService.findByGameIdAndId(gameId, boxId);
-
-      if (updateBoxDto.action === Action.FLAG) return this.flagBox(box);
-      else if (updateBoxDto.action === Action.ROTATE)
-        return this.rotateBox(gameId, box);
-    } catch (error) {
-      throw new InternalServerErrorException(`Error updating box: ${error}`);
-    }
-  }
-
-  private async flagBox(box: BoxDto): Promise<BoxSelectedDto[]> {
-    try {
-      box.isFlagged = !box.isFlagged;
-
-      await this.boxService.save(box);
-
-      return plainToInstance(BoxSelectedDto, [box], {
-        excludeExtraneousValues: true,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException(`Error flaging box: ${error}`);
-    }
-  }
-
-  private async rotateBox(
-    gameId: string,
-    box: BoxDto,
-  ): Promise<BoxSelectedDto[]> {
-    try {
-      box.isRotated = true;
-
-      await this.boxService.save(box);
-
-      if (box.hasMine) {
-        this.updateStatus(gameId, GameStatus.LOST);
-
-        return plainToInstance(BoxSelectedDto, [box], {
-          excludeExtraneousValues: true,
-        });
-      }
-
-      const otherRotatedBoxes: BoxDto[] =
-        await this.boxService.rotateAdjacentBoxes(gameId, box, new Set());
-
-      return plainToInstance(BoxSelectedDto, [box, ...otherRotatedBoxes], {
-        excludeExtraneousValues: true,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException(`Error rotating box: ${error}`);
-    }
+  private buildResult(game: Game, boxes: Box[]): ActionResultDto {
+    const result = new ActionResultDto();
+    result.game = toGameResponse(game);
+    result.boxes = boxes.map((b) => toBoxView(b, game));
+    return result;
   }
 }

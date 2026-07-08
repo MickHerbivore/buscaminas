@@ -1,85 +1,67 @@
 import { Injectable } from '@nestjs/common';
 import { Level } from '../../level/entities/level.entity';
 import { CreateBoxDto } from '../dto/create-box.dto';
+import { Box } from '../entity/box.entity';
+import { coordKey, neighborCoords } from './board';
+import { RandomService } from './random.service';
 
 @Injectable()
 export class FrameService {
-  buildBoxesFrame(level: Level): CreateBoxDto[] {
-    const boxes = this.initBoxes(level);
-    this.putMines(level, boxes);
-    this.putNumbers(level, boxes);
-    return boxes.flat();
-  }
+  constructor(private readonly random: RandomService) {}
 
-  private initBoxes(level: Level): CreateBoxDto[][] {
-    const boxes: CreateBoxDto[][] = [];
+  initEmptyBoxes(level: Level): CreateBoxDto[] {
+    const boxes: CreateBoxDto[] = [];
     for (let row = 0; row < level.rowsQuantity; row++) {
-      boxes[row] = [];
-      for (let col = 0; col < level.columnsQuantity; col++) {
-        boxes[row][col] = {
-          row: row,
-          column: col,
+      for (let column = 0; column < level.columnsQuantity; column++) {
+        boxes.push({
+          row,
+          column,
           hasMine: false,
           isFlagged: false,
           isRotated: false,
           minesArroundQuantiy: 0,
-        };
+        });
       }
     }
-
     return boxes;
   }
 
-  private putMines(level: Level, boxes: CreateBoxDto[][]): CreateBoxDto[][] {
-    for (let i = 0; i < level.minesQuantity; i++) {
-      const row = Math.floor(Math.random() * level.rowsQuantity);
-      const col = Math.floor(Math.random() * level.columnsQuantity);
+  placeMinesAndNumbers(grid: Box[][], level: Level, avoid: Set<string>): void {
+    const total = level.rowsQuantity * level.columnsQuantity;
 
-      if (boxes[row][col].hasMine) i--;
-
-      boxes[row][col].hasMine = true;
+    let avoidSet = avoid;
+    if (total - avoidSet.size < level.minesQuantity) {
+      const first = [...avoid][0];
+      avoidSet = first ? new Set([first]) : new Set();
     }
 
-    return boxes;
-  }
+    let placed = 0;
+    let guard = 0;
+    const guardLimit = total * 50;
+    while (placed < level.minesQuantity && guard < guardLimit) {
+      guard++;
+      const r = this.random.int(level.rowsQuantity);
+      const c = this.random.int(level.columnsQuantity);
+      if (avoidSet.has(coordKey(r, c))) continue;
+      if (grid[r][c].hasMine) continue;
+      grid[r][c].hasMine = true;
+      placed++;
+    }
 
-  private putNumbers(level: Level, boxes: CreateBoxDto[][]): CreateBoxDto[][] {
-    for (let row = 0; row < level.rowsQuantity; row++) {
-      for (let col = 0; col < level.columnsQuantity; col++) {
-        if (!boxes[row][col].hasMine) {
-          boxes[row][col].minesArroundQuantiy = this.getNumberOfMinesAround(
-            level,
-            boxes,
-            boxes[row][col],
-          );
+    for (let r = 0; r < level.rowsQuantity; r++) {
+      for (let c = 0; c < level.columnsQuantity; c++) {
+        if (grid[r][c].hasMine) continue;
+        let count = 0;
+        for (const [nr, nc] of neighborCoords(
+          level.rowsQuantity,
+          level.columnsQuantity,
+          r,
+          c,
+        )) {
+          if (grid[nr][nc].hasMine) count++;
         }
+        grid[r][c].minesArroundQuantiy = count;
       }
     }
-
-    return boxes;
-  }
-
-  private getNumberOfMinesAround(
-    level: Level,
-    boxes: CreateBoxDto[][],
-    box: CreateBoxDto,
-  ): number {
-    let numberOfMines = 0;
-
-    for (let i = box.row - 1; i <= box.row + 1; i++) {
-      for (let j = box.column - 1; j <= box.column + 1; j++) {
-        if (
-          i >= 0 &&
-          i < level.rowsQuantity &&
-          j >= 0 &&
-          j < level.columnsQuantity &&
-          boxes[i][j].hasMine
-        ) {
-          numberOfMines++;
-        }
-      }
-    }
-
-    return numberOfMines;
   }
 }

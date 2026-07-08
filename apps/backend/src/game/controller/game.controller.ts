@@ -3,59 +3,69 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
   Post,
-  Res,
 } from '@nestjs/common';
-import { BoxResponseDto, BoxSelectedDto } from '../dto/box.dto';
-import { CreateGameResponseDto } from '../dto/create-game-response.dto';
+import { ChordDto, FlagDto, RevealDto } from '../dto/box-action.dto';
+import { ActionResultDto } from '../dto/action-result.dto';
+import { BoxViewDto } from '../dto/box-view.dto';
 import { CreateGameDto } from '../dto/create-game.dto';
-import { GameDto } from '../dto/game.dto';
-import { UpdateBoxDto } from '../dto/update-box.dto';
-import { BoxService } from '../service/box.service';
+import { GameResponseDto } from '../dto/game-response.dto';
 import { GameService } from '../service/game.service';
 
-@Controller('game')
+@Controller('games')
 export class GameController {
-  constructor(
-    private readonly gameService: GameService,
-    private readonly boxService: BoxService,
-  ) {}
+  constructor(private readonly gameService: GameService) {}
 
-  @Post('')
+  @Post()
   async createGame(
-    @Body() createGameDto: CreateGameDto,
-    @Res() res,
-  ): Promise<CreateGameResponseDto> {
-    const game = await this.gameService.createGame(createGameDto);
-    return res.status(201).json(game);
+    @Body() dto: CreateGameDto,
+  ): Promise<GameResponseDto> {
+    return this.gameService.createGame(dto);
   }
 
   @Get(':id')
-  async getGame(@Param('id', ParseUUIDPipe) id: string): Promise<GameDto> {
+  getGame(@Param('id', ParseUUIDPipe) id: string): Promise<GameResponseDto> {
     return this.gameService.getGame(id);
   }
 
   @Delete(':id')
-  async deleteGame(@Param('id', ParseUUIDPipe) id: string) {
+  @HttpCode(204)
+  deleteGame(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.gameService.deleteGame(id);
   }
 
   @Get(':id/boxes')
   findBoxes(
-    @Param('id', ParseUUIDPipe) gameId: string,
-  ): Promise<BoxResponseDto[]> {
-    return this.gameService.findBoxes(gameId);
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<BoxViewDto[]> {
+    return this.gameService.findBoxes(id);
   }
 
-  @Patch(':id/boxes/:boxId')
-  update(
-    @Param('id', ParseUUIDPipe) gameId: string,
-    @Param('boxId', ParseUUIDPipe) boxId: string,
-    @Body() updateBoxDto: UpdateBoxDto,
-  ): Promise<BoxSelectedDto[]> {
-    return this.gameService.updateBox(gameId, boxId, updateBoxDto);
+  @Patch(':id/reveal')
+  reveal(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: RevealDto,
+  ): Promise<ActionResultDto> {
+    return this.gameService.reveal(id, dto);
+  }
+
+  @Patch(':id/flag')
+  flag(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: FlagDto,
+  ): Promise<ActionResultDto> {
+    return this.gameService.flag(id, dto);
+  }
+
+  @Patch(':id/chord')
+  chord(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ChordDto,
+  ): Promise<ActionResultDto> {
+    return this.gameService.chord(id, dto);
   }
 }

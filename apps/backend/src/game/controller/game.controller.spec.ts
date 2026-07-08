@@ -1,13 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { levelIdMock } from '../../level/mocks/level.mocks';
-import {
-  createGameDtoMock,
-  createGameResponseDtoMock,
-  gameDtoMock,
-  gameIdMock,
-} from '../mocks/game.mocks';
-import { GameService } from '../service/game.service';
+import { Test } from '@nestjs/testing';
 import { GameController } from './game.controller';
+import { GameService } from '../service/game.service';
 
 describe('GameController', () => {
   let controller: GameController;
@@ -15,58 +8,66 @@ describe('GameController', () => {
   const mockGameService = {
     getGame: jest.fn(),
     createGame: jest.fn(),
-    startGame: jest.fn(),
-    resetGame: jest.fn(),
     deleteGame: jest.fn(),
+    findBoxes: jest.fn(),
+    reveal: jest.fn(),
+    flag: jest.fn(),
+    chord: jest.fn(),
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    jest.clearAllMocks();
+    const module = await Test.createTestingModule({
       controllers: [GameController],
       providers: [{ provide: GameService, useValue: mockGameService }],
     }).compile();
-
-    controller = module.get<GameController>(GameController);
+    controller = module.get(GameController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should be able to get a game', async () => {
-    jest.spyOn(mockGameService, 'getGame').mockResolvedValue(gameDtoMock);
-
-    const response = await controller.getGame(gameIdMock);
-
-    expect(response).toBe(gameDtoMock);
-    expect(response.id).toBe(gameIdMock);
-    expect(response.level.id).toBe(levelIdMock);
+  it('createGame delegates to the service', async () => {
+    mockGameService.createGame.mockResolvedValue({ id: 'g1' });
+    const result = await controller.createGame({ levelId: 'l1' });
+    expect(mockGameService.createGame).toHaveBeenCalledWith({ levelId: 'l1' });
+    expect(result).toEqual({ id: 'g1' });
   });
 
-  it('should be able to create a game', async () => {
-    jest
-      .spyOn(mockGameService, 'createGame')
-      .mockResolvedValue(createGameResponseDtoMock);
-
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnValue(createGameResponseDtoMock),
-    };
-
-    const game = await controller.createGame(createGameDtoMock, res as any);
-
-    expect(mockGameService.createGame).toHaveBeenCalledWith(createGameDtoMock);
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(createGameResponseDtoMock);
-    expect(game).toEqual(createGameResponseDtoMock);
+  it('getGame delegates to the service', async () => {
+    mockGameService.getGame.mockResolvedValue({ id: 'g1' });
+    await controller.getGame('g1');
+    expect(mockGameService.getGame).toHaveBeenCalledWith('g1');
   });
 
-  it('should be able to delete a game', async () => {
-    jest.spyOn(mockGameService, 'deleteGame').mockResolvedValue(true);
+  it('deleteGame delegates to the service', async () => {
+    mockGameService.deleteGame.mockResolvedValue(undefined);
+    await controller.deleteGame('g1');
+    expect(mockGameService.deleteGame).toHaveBeenCalledWith('g1');
+  });
 
-    const response = await controller.deleteGame(gameIdMock);
+  it('findBoxes delegates to the service', async () => {
+    mockGameService.findBoxes.mockResolvedValue([]);
+    await controller.findBoxes('g1');
+    expect(mockGameService.findBoxes).toHaveBeenCalledWith('g1');
+  });
 
-    expect(mockGameService.deleteGame).toHaveBeenCalledWith(gameIdMock);
-    expect(response).toBe(true);
+  it('reveal delegates to the service', async () => {
+    mockGameService.reveal.mockResolvedValue({ game: {}, boxes: [] });
+    await controller.reveal('g1', { boxId: 'b1' });
+    expect(mockGameService.reveal).toHaveBeenCalledWith('g1', { boxId: 'b1' });
+  });
+
+  it('flag delegates to the service', async () => {
+    mockGameService.flag.mockResolvedValue({ game: {}, boxes: [] });
+    await controller.flag('g1', { boxId: 'b1' });
+    expect(mockGameService.flag).toHaveBeenCalledWith('g1', { boxId: 'b1' });
+  });
+
+  it('chord delegates to the service', async () => {
+    mockGameService.chord.mockResolvedValue({ game: {}, boxes: [] });
+    await controller.chord('g1', { boxId: 'b1' });
+    expect(mockGameService.chord).toHaveBeenCalledWith('g1', { boxId: 'b1' });
   });
 });

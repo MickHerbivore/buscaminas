@@ -1,60 +1,84 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { NotFoundException } from '@nestjs/common';
+import { CreateBoxDto } from '../dto/create-box.dto';
 import { Box } from '../entity/box.entity';
-import { Game } from '../entity/game.entity';
-import { boxesMock, boxMock, createBoxesDtoMock } from '../mocks/box.mocks';
-import { gameIdMock, gameMock } from '../mocks/game.mocks';
 import { BoxService } from './box.service';
 
 describe('BoxService', () => {
   let service: BoxService;
 
+  const createBoxDtoMock: CreateBoxDto = {
+    row: 0,
+    column: 0,
+    hasMine: false,
+    isFlagged: false,
+    isRotated: false,
+    minesArroundQuantiy: 0,
+  };
+
+  const boxMock: Box = {
+    id: 'box-1',
+    ...createBoxDtoMock,
+    game: null,
+  } as Box;
+
   const mockRepository = {
+    create: jest.fn((entities) => entities),
     save: jest.fn(),
     find: jest.fn(),
-    delete: jest.fn(),
     findOneBy: jest.fn(),
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    jest.clearAllMocks();
+    const module = await Test.createTestingModule({
       providers: [
         BoxService,
         { provide: getRepositoryToken(Box), useValue: mockRepository },
       ],
     }).compile();
-
-    service = module.get<BoxService>(BoxService);
+    service = module.get(BoxService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should be able to create a list of boxes', async () => {
-    jest.spyOn(mockRepository, 'save').mockResolvedValue(boxesMock);
-
-    const response = await service.createBoxes(createBoxesDtoMock);
-
-    expect(response).toEqual(boxesMock);
-    expect(mockRepository.save).toHaveBeenCalledWith(createBoxesDtoMock);
+  it('createMany returns managed box instances', () => {
+    mockRepository.create.mockReturnValue([boxMock]);
+    const result = service.createMany([createBoxDtoMock]);
+    expect(mockRepository.create).toHaveBeenCalledWith([createBoxDtoMock]);
+    expect(result).toEqual([boxMock]);
   });
 
-  it('should be able to find all boxes by grame id', async () => {
-    const game: Game = {
-      ...gameMock,
-    };
+  it('findByGameId queries by game id ordered by row/column', async () => {
+    mockRepository.find.mockResolvedValue([boxMock]);
+    const result = await service.findByGameId('game-1');
+    expect(mockRepository.find).toHaveBeenCalledWith({
+      where: { game: { id: 'game-1' } },
+      order: { row: 'ASC', column: 'ASC' },
+    });
+    expect(result).toEqual([boxMock]);
+  });
 
-    const boxes: Box[] = [boxMock];
+  it('findByGameIdAndId throws NotFound when missing', async () => {
+    mockRepository.findOneBy.mockResolvedValue(null);
+    await expect(service.findByGameIdAndId('g', 'b')).rejects.toThrow(
+      NotFoundException,
+    );
+  });
 
-    game.boxes = boxes;
+  it('save delegates to the repository', async () => {
+    mockRepository.save.mockResolvedValue(boxMock);
+    const result = await service.save(boxMock);
+    expect(mockRepository.save).toHaveBeenCalledWith(boxMock);
+    expect(result).toBe(boxMock);
+  });
 
-    jest.spyOn(mockRepository, 'find').mockResolvedValue(boxes);
-
-    const response = await service.findAllByGameId(gameIdMock);
-
-    expect(mockRepository.find).toHaveBeenCalled();
-    expect(response.length).toEqual(boxes.length);
-    expect(response[0].id).toEqual(boxes[0].id);
+  it('saveMany is a no-op for an empty list', async () => {
+    const result = await service.saveMany([]);
+    expect(result).toEqual([]);
+    expect(mockRepository.save).not.toHaveBeenCalled();
   });
 });
