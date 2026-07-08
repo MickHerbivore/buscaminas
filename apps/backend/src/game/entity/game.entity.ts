@@ -16,7 +16,7 @@ export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'status', nullable: false })
+  @Column({ name: 'status', nullable: false, type: 'varchar' })
   status: GameStatusType;
 
   @Column({ name: 'started_at', nullable: true })
@@ -24,6 +24,12 @@ export class Game {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @Column({ name: 'ended_at', nullable: true })
+  endedAt: Date;
+
+  @Column({ name: 'won_at', nullable: true })
+  wonAt: Date;
 
   @ManyToOne(() => Level)
   @JoinColumn({ name: 'level_id' })
