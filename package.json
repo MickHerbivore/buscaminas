@@ -1,0 +1,13 @@
+{
+  "name": "buscaminas",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "start": "pnpm --filter @buscaminas/frontend start",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r --if-present lint",
+    "build:github": "rm -rf docs && pnpm --filter @buscaminas/frontend run build:href && mkdir docs && cp -r apps/frontend/dist/buscaminas/browser/* docs/"
+  }
+}

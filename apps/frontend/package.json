@@ -1,19 +1,17 @@
 {
-  "name": "buscaminas",
+  "name": "@buscaminas/frontend",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:href": "ng build --base-href ./",
-    "build:github": "npm run delete:docs && npm run build:href && npm run copy:dist",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "delete:docs": "rm -r -f docs",
-    "copy:dist": "mkdir docs && cp -r dist/buscaminas/browser/* ./docs/"
+    "test": "ng test"
   },
-  "private": true,
   "dependencies": {
+    "@buscaminas/shared": "workspace:*",
     "@angular/animations": "^21.2.1",
     "@angular/common": "^21.2.1",
     "@angular/compiler": "^21.2.1",

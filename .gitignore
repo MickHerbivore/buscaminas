@@ -7,9 +7,14 @@
 /bazel-out
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
+
+# Monorepo (pnpm workspaces) build artifacts
+dist/
+**/.angular/cache
+coverage/
 
 # IDEs and editors
 .idea/

@@ -16,6 +16,9 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
+    "paths": {
+      "@buscaminas/shared": ["../../libs/shared/src/index.ts"]
+    },
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false
