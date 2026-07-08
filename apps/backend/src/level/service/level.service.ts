@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
@@ -25,17 +29,11 @@ export class LevelService {
     }
   }
 
-  findById(id: string): Promise<LevelDto> {
-    try {
-      const level = this.levelRepository.findOneBy({ id });
-
-      if (!level) throw new Error(`Level with id ${id} not found`);
-
-      return level;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Error finding level by id: ${error}`,
-      );
+  async findById(id: string): Promise<Level> {
+    const level = await this.levelRepository.findOneBy({ id });
+    if (!level) {
+      throw new NotFoundException(`Level with id ${id} not found`);
     }
+    return level;
   }
 }
