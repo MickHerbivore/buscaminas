@@ -35,7 +35,7 @@ export class CreateTableBoxes1772566539522 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'id_rotated',
+                        name: 'is_revealed',
                         type: 'boolean',
                         isNullable: false,
                     },

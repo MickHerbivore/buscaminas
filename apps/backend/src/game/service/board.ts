@@ -8,7 +8,7 @@ export interface Cell {
 }
 
 export interface RevealableCell extends Cell {
-  isRotated: boolean;
+  isRevealed: boolean;
 }
 
 export function neighborCoords(
@@ -54,7 +54,7 @@ export function floodReveal(
 ): Box[] {
   const revealed: Box[] = [];
   const startCell = grid[startRow][startCol];
-  if (!startCell || startCell.hasMine || startCell.isRotated) {
+  if (!startCell || startCell.hasMine || startCell.isRevealed) {
     return revealed;
   }
 
@@ -68,9 +68,9 @@ export function floodReveal(
     visited.add(key);
 
     const cell = grid[r][c];
-    if (!cell || cell.hasMine || cell.isRotated) continue;
+    if (!cell || cell.hasMine || cell.isRevealed) continue;
 
-    cell.isRotated = true;
+    cell.isRevealed = true;
     revealed.push(cell);
 
     if (cell.minesAroundQuantity === 0) {
@@ -92,7 +92,7 @@ export function areAllNonMinesRevealed(
     for (let c = 0; c < cols; c++) {
       const cell = grid[r][c];
       if (!cell) continue;
-      if (!cell.hasMine && !cell.isRotated) return false;
+      if (!cell.hasMine && !cell.isRevealed) return false;
     }
   }
   return true;

@@ -15,10 +15,10 @@ export function toBoxView(box: Box, game: Game): BoxViewDto {
   view.row = box.row;
   view.column = box.column;
   view.isFlagged = box.isFlagged;
-  view.isRotated = box.isRotated;
-  view.minesAroundQuantity = box.isRotated ? box.minesAroundQuantity : null;
+  view.isRevealed = box.isRevealed;
+  view.minesAroundQuantity = box.isRevealed ? box.minesAroundQuantity : null;
 
-  if (isGameOver(game) || box.isRotated) {
+  if (isGameOver(game) || box.isRevealed) {
     view.hasMine = box.hasMine;
   }
   return view;

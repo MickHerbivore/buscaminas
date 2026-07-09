@@ -10,7 +10,7 @@ function makeBox(row: number, column: number): Box {
     column,
     hasMine: false,
     isFlagged: false,
-    isRotated: false,
+    isRevealed: false,
     minesAroundQuantity: 0,
     game: null,
   } as Box;
@@ -49,7 +49,7 @@ describe('FrameService', () => {
         boxes.every(
           (b) =>
             b.hasMine === false &&
-            b.isRotated === false &&
+            b.isRevealed === false &&
             b.isFlagged === false &&
             b.minesAroundQuantity === 0,
         ),

@@ -3,6 +3,6 @@ export class CreateBoxDto {
   column: number;
   hasMine: boolean;
   isFlagged: boolean;
-  isRotated: boolean;
+  isRevealed: boolean;
   minesAroundQuantity: number;
 }

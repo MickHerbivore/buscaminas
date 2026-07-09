@@ -14,7 +14,7 @@ export class BoxViewDto {
   isFlagged: boolean;
 
   @Expose()
-  isRotated: boolean;
+  isRevealed: boolean;
 
   @Expose()
   minesAroundQuantity: number | null;

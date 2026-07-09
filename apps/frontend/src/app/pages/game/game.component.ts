@@ -21,7 +21,7 @@ export class GameComponent {
   protected boxClicked(boxId: string): void {
     const box = this.store.currentBoxes().find((b) => b.id === boxId);
     if (!box) return;
-    if (box.isRotated) {
+    if (box.isRevealed) {
       if ((box.minesAroundQuantity ?? 0) > 0) this.store.chord(boxId);
     } else {
       this.store.reveal(boxId);
@@ -30,7 +30,7 @@ export class GameComponent {
 
   protected boxRightClicked(boxId: string): void {
     const box = this.store.currentBoxes().find((b) => b.id === boxId);
-    if (!box || box.isRotated) return;
+    if (!box || box.isRevealed) return;
     this.store.flag(boxId);
   }
 }

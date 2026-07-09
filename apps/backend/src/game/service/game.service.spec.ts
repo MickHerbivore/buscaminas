@@ -28,7 +28,7 @@ function box(
     column,
     hasMine: false,
     isFlagged: false,
-    isRotated: false,
+    isRevealed: false,
     minesAroundQuantity: 0,
     game: null,
     ...over,
@@ -129,7 +129,7 @@ describe('GameService', () => {
       const game = buildGame(
         [
           box('b0', 0, 0, { hasMine: true }),
-          box('b1', 0, 1, { isRotated: true, minesAroundQuantity: 1 }),
+          box('b1', 0, 1, { isRevealed: true, minesAroundQuantity: 1 }),
         ],
         GameStatus.PLAYING,
         level,
@@ -140,7 +140,7 @@ describe('GameService', () => {
       const result = await service.findBoxes('game-1');
 
       const hidden = result.find((b) => b.id === 'b0');
-      expect(hidden.isRotated).toBe(false);
+      expect(hidden.isRevealed).toBe(false);
       expect(hidden.minesAroundQuantity).toBeNull();
       expect(hidden.hasMine).toBeUndefined();
       const revealed = result.find((b) => b.id === 'b1');
@@ -234,13 +234,13 @@ describe('GameService', () => {
       const level = level3x3(1);
       const boxes = [
         box('00', 0, 0, { hasMine: true }),
-        box('01', 0, 1, { isRotated: true, minesAroundQuantity: 1 }),
-        box('02', 0, 2, { isRotated: true, minesAroundQuantity: 0 }),
-        box('10', 1, 0, { isRotated: true, minesAroundQuantity: 1 }),
-        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
-        box('12', 1, 2, { isRotated: true, minesAroundQuantity: 0 }),
-        box('20', 2, 0, { isRotated: true, minesAroundQuantity: 0 }),
-        box('21', 2, 1, { isRotated: true, minesAroundQuantity: 0 }),
+        box('01', 0, 1, { isRevealed: true, minesAroundQuantity: 1 }),
+        box('02', 0, 2, { isRevealed: true, minesAroundQuantity: 0 }),
+        box('10', 1, 0, { isRevealed: true, minesAroundQuantity: 1 }),
+        box('11', 1, 1, { isRevealed: true, minesAroundQuantity: 1 }),
+        box('12', 1, 2, { isRevealed: true, minesAroundQuantity: 0 }),
+        box('20', 2, 0, { isRevealed: true, minesAroundQuantity: 0 }),
+        box('21', 2, 1, { isRevealed: true, minesAroundQuantity: 0 }),
         box('22', 2, 2, { minesAroundQuantity: 0 }), // last unrevealed safe cell
       ];
       const game = buildGame(boxes, GameStatus.PLAYING, level);
@@ -290,7 +290,7 @@ describe('GameService', () => {
         box('01', 0, 1, { isFlagged: true }), // wrong flag (safe cell flagged)
         box('02', 0, 2),
         box('10', 1, 0),
-        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
+        box('11', 1, 1, { isRevealed: true, minesAroundQuantity: 1 }),
         box('12', 1, 2),
         box('20', 2, 0),
         box('21', 2, 1),
@@ -311,7 +311,7 @@ describe('GameService', () => {
         box('01', 0, 1, { minesAroundQuantity: 1 }),
         box('02', 0, 2, { minesAroundQuantity: 0 }),
         box('10', 1, 0, { minesAroundQuantity: 1 }),
-        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
+        box('11', 1, 1, { isRevealed: true, minesAroundQuantity: 1 }),
         box('12', 1, 2, { minesAroundQuantity: 0 }),
         box('20', 2, 0, { minesAroundQuantity: 0 }),
         box('21', 2, 1, { minesAroundQuantity: 0 }),
@@ -327,7 +327,7 @@ describe('GameService', () => {
 
     it('rejects chord on an unrevealed cell', async () => {
       const game = buildGame(
-        [box('00', 0, 0, { isRotated: false })],
+        [box('00', 0, 0, { isRevealed: false })],
         GameStatus.PLAYING,
         level3x3(),
       );

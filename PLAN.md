@@ -217,7 +217,7 @@ Inventario ejecutado contra el frontend (`buscaminas`, este repo) y el backend (
   - No hay `@nestjs/throttler`.
   - Falta `endedAt` en la entidad `Game` (la tabla `games` tampoco tiene esa columna).
 - **Endpoints actuales vs. objetivo del plan**: hoy son `POST /game`, `GET /game/:id`, `DELETE /game/:id`, `GET /game/:id/boxes`, `PATCH /game/:id/boxes/:boxId`. El plan propone `/games/:id/{reveal,chord,flag,state}`. Es una refactorización de API, no una creación desde cero.
-- Identificadores contractuales que **no se "corrigen"**: `isRotated` (= "revealed"), columna `id_rotated` (sic en DB). Coinciden frontend y backend. (`minesAroundQuantity`/`mines_around_quantity` sí se corrigió desde el `Arround…Quantiy` original — ver apéndice Fase 6.)
+- Identificadores contractuales antes sic, **ya corregidos** en la pila completa (entidad, DTOs, mapper, servicios, tests, frontend y DDL `v0.0.1` editada in situ): `minesAroundQuantity`/`mines_around_quantity` (desde `Arround…Quantiy`) y `isRevealed`/`is_revealed` (desde `isRotated`/`id_rotated` — el campo siempre significó "revealed"). Ver apéndice Fase 6.
 
 ### Frontend (`buscaminas`) — la Fase 6 está en curso
 
@@ -307,6 +307,7 @@ Migración del frontend a la API `/games` y eliminación de toda la lógica de m
 - **Tipos/contract**: `Box` con `hasMine?` y `minesAroundQuantity: number | null`; `GameResponse` con `status`/`startedAt`/`endedAt`/`wonAt` (sin boxes); `ActionResult { game, boxes }`. Environments simplificados a `gamesUri`/`levelsUri`.
 - Limpieza de `properties` (`LEVELS` y `ACTION_*` ya sin uso).
 - **Corrección de typo cross-cutting**: `minesArroundQuantiy`/`mines_arround_quantity` → `minesAroundQuantity`/`mines_around_quantity` en toda la pila (entidad, DTOs, mapper, servicios, tests, contract del frontend, y DDL de la migración `v0.0.1`). Al ser pre-producción con DB solo de dev, se editó la migración original in situ (siguiendo el mismo criterio que la corrección de orden de `CreateTableBoxes`).
+- **Corrección de concepto cross-cutting**: `isRotated`/`id_rotated` → `isRevealed`/`is_revealed` en toda la pila. El campo siempre significó "revealed" (nunca "rotated"); además el prefijo `id_` pasaba a `is_` para coincidir con `is_flagged`. Mismo criterio: DDL `v0.0.1` editada in situ.
 
 ### Verificación
 - `pnpm --filter @buscaminas/frontend build` ✔ (AoT con `strictTemplates`).

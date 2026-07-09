@@ -3,7 +3,7 @@ export interface Box {
     row: number;
     column: number;
     isFlagged: boolean;
-    isRotated: boolean;
+    isRevealed: boolean;
     minesAroundQuantity: number | null;
     hasMine?: boolean;
 }

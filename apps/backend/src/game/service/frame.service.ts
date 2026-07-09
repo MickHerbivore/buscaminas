@@ -18,7 +18,7 @@ export class FrameService {
           column,
           hasMine: false,
           isFlagged: false,
-          isRotated: false,
+          isRevealed: false,
           minesAroundQuantity: 0,
         });
       }

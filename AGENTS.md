@@ -57,8 +57,6 @@ There is **no `typecheck` script**. Type errors surface via `build` (frontend Ao
 ## Gotchas
 
 - `docs/` (repo root) is a **committed build artifact** for GitHub Pages. `pnpm build:github` wipes and regenerates it. Don't hand-edit; regenerate.
-- These identifier names are part of the API contract between frontend and backend — **do not "fix" them blindly** (they match DB columns):
-  - `isRotated` actually means "revealed" (DB column `id_rotated` — sic)
 - Package names are scoped (`@buscaminas/frontend` / `@buscaminas/backend` / `@buscaminas/shared`). `build:github` and `pnpm --filter` calls rely on them — don't rename casually.
 - Backend `tsconfig.json` is **non-strict** (`strictNullChecks: false`, `noImplicitAny: false`, `target: ES2021`, `module: commonjs`); frontend `tsconfig.json` is `strict: true` (`target: ES2022`, `module: ES2022`, `moduleResolution: bundler`). They differ deliberately — don't unify without checking both apps still compile.
 - `apps/backend/.env` is the only place with DB creds (local `postgres/postgres`); it's gitignored. Copy from someone or set from `docker-compose.yaml` defaults.

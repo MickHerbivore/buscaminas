@@ -14,7 +14,7 @@ function makeBox(row: number, column: number, over: Partial<Box> = {}): Box {
     column,
     hasMine: false,
     isFlagged: false,
-    isRotated: false,
+    isRevealed: false,
     minesAroundQuantity: 0,
     game: null,
     ...over,
@@ -55,7 +55,7 @@ describe('board helpers', () => {
       const grid = buildGrid(boxes, 1, 1);
       const revealed = floodReveal(grid, 1, 1, 0, 0);
       expect(revealed).toHaveLength(1);
-      expect(revealed[0].isRotated).toBe(true);
+      expect(revealed[0].isRevealed).toBe(true);
     });
 
     it('floods a connected zero-region and the numbered border', () => {
@@ -76,7 +76,7 @@ describe('board helpers', () => {
 
       const revealedKeys = revealed.map((b) => `${b.row}-${b.column}`).sort();
       expect(revealedKeys).toHaveLength(9);
-      expect(revealed.every((b) => b.isRotated)).toBe(true);
+      expect(revealed.every((b) => b.isRevealed)).toBe(true);
     });
 
     it('does not reveal mines', () => {
@@ -88,7 +88,7 @@ describe('board helpers', () => {
       const grid = buildGrid(cells, 2, 2);
       const revealed = floodReveal(grid, 2, 2, 0, 0);
       const mine = cells.find((b) => b.hasMine);
-      expect(mine.isRotated).toBe(false);
+      expect(mine.isRevealed).toBe(false);
       expect(revealed.find((b) => b.hasMine)).toBeUndefined();
     });
   });
@@ -96,9 +96,9 @@ describe('board helpers', () => {
   describe('areAllNonMinesRevealed', () => {
     it('is false when any safe cell is hidden', () => {
       const cells = [
-        makeBox(0, 0, { isRotated: true }),
+        makeBox(0, 0, { isRevealed: true }),
         makeBox(0, 1, { hasMine: true }),
-        makeBox(1, 0, { isRotated: false }),
+        makeBox(1, 0, { isRevealed: false }),
       ];
       const grid = buildGrid(cells, 2, 2);
       expect(areAllNonMinesRevealed(grid, 2, 2)).toBe(false);
@@ -106,9 +106,9 @@ describe('board helpers', () => {
 
     it('is true when every safe cell is revealed', () => {
       const cells = [
-        makeBox(0, 0, { isRotated: true }),
+        makeBox(0, 0, { isRevealed: true }),
         makeBox(0, 1, { hasMine: true }),
-        makeBox(1, 0, { isRotated: true }),
+        makeBox(1, 0, { isRevealed: true }),
         makeBox(1, 1, { hasMine: true }),
       ];
       const grid = buildGrid(cells, 2, 2);

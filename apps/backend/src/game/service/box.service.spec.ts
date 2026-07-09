@@ -13,7 +13,7 @@ describe('BoxService', () => {
     column: 0,
     hasMine: false,
     isFlagged: false,
-    isRotated: false,
+    isRevealed: false,
     minesAroundQuantity: 0,
   };
 

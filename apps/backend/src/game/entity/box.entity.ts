@@ -24,8 +24,8 @@ export class Box {
   @Column({ name: 'is_flagged' })
   isFlagged: boolean;
 
-  @Column({ name: 'id_rotated' })
-  isRotated: boolean;
+  @Column({ name: 'is_revealed' })
+  isRevealed: boolean;
 
   @Column({ name: 'mines_around_quantity' })
   minesAroundQuantity: number;

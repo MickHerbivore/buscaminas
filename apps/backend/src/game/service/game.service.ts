@@ -97,7 +97,7 @@ export class GameService {
     }
 
     if (startBox.hasMine) {
-      startBox.isRotated = true;
+      startBox.isRevealed = true;
       changed.push(startBox);
       game.status = GameStatus.LOST;
       game.endedAt = new Date();
@@ -150,7 +150,7 @@ export class GameService {
     const level = game.level;
     const box = this.findBox(game, dto.boxId);
 
-    if (!box.isRotated) {
+    if (!box.isRevealed) {
       throw new BadRequestException('Chord requires a revealed cell');
     }
     if (box.minesAroundQuantity <= 0) {
@@ -177,14 +177,14 @@ export class GameService {
       box.column,
     )
       .map(([r, c]) => grid[r][c])
-      .filter((neighbor) => !neighbor.isFlagged && !neighbor.isRotated);
+      .filter((neighbor) => !neighbor.isFlagged && !neighbor.isRevealed);
 
     const changed: Box[] = [];
     let hitMine = false;
 
     for (const target of targets) {
       if (target.hasMine) {
-        target.isRotated = true;
+        target.isRevealed = true;
         changed.push(target);
         hitMine = true;
         break;

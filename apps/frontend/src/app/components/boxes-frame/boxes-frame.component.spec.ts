@@ -16,8 +16,8 @@ describe('BoxesFrameComponent', () => {
     minesQuantity: 1,
   };
   const boxes: Box[] = [
-    { id: 'b1', row: 0, column: 0, isFlagged: false, isRotated: false, minesAroundQuantity: 0 },
-    { id: 'b2', row: 0, column: 1, isFlagged: false, isRotated: false, minesAroundQuantity: 0 },
+    { id: 'b1', row: 0, column: 0, isFlagged: false, isRevealed: false, minesAroundQuantity: 0 },
+    { id: 'b2', row: 0, column: 1, isFlagged: false, isRevealed: false, minesAroundQuantity: 0 },
   ];
 
   beforeEach(async () => {

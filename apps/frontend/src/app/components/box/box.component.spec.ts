@@ -12,7 +12,7 @@ describe('BoxComponent', () => {
     row: 0,
     column: 0,
     isFlagged: false,
-    isRotated: false,
+    isRevealed: false,
     minesAroundQuantity: 0,
   };
 
