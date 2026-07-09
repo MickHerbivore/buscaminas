@@ -29,7 +29,7 @@ export class GameStore {
   readonly level = computed(() => this._game()?.level ?? null);
   readonly status = computed(() => this._game()?.status ?? null);
   readonly isGameOver = computed(
-    () => this.status() === 'WON' || this.status() === 'LOST',
+    () => this.status() === 'LOST',
   );
   readonly hasWon = computed(() => this.status() === 'WON');
   readonly flagsPlaced = computed(() =>
