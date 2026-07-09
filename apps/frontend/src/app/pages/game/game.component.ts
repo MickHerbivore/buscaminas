@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { GameStore } from '../../store/game.store';
@@ -9,13 +9,8 @@ import { GameStore } from '../../store/game.store';
   templateUrl: './game.component.html',
 })
 export class GameComponent {
-  readonly router = inject(Router);
+  private readonly router = inject(Router);
   readonly store = inject(GameStore);
-
-  protected level = this.store.level;
-  protected boxes = this.store.boxes;
-  protected hasWon = signal(false);
-  protected isGameOver = signal(false);
 
   constructor() {
     if (!this.store.gameId()) {
@@ -23,15 +18,19 @@ export class GameComponent {
     }
   }
 
-  protected boxClicked(boxId: string) {
-    console.log('boxClicked', boxId);
+  protected boxClicked(boxId: string): void {
+    const box = this.store.currentBoxes().find((b) => b.id === boxId);
+    if (!box) return;
+    if (box.isRotated) {
+      if ((box.minesArroundQuantiy ?? 0) > 0) this.store.chord(boxId);
+    } else {
+      this.store.reveal(boxId);
+    }
   }
 
-  protected boxRightClicked(boxId: string) {
-    console.log('boxRightClicked', boxId);
-  }
-
-  resetGame(): void {
-    this.store.resetGame();
+  protected boxRightClicked(boxId: string): void {
+    const box = this.store.currentBoxes().find((b) => b.id === boxId);
+    if (!box || box.isRotated) return;
+    this.store.flag(boxId);
   }
 }

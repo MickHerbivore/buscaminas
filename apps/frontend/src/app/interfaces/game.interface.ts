@@ -1,37 +1,26 @@
-import { Box } from "./box.interface";
-import { Level } from "./level.interface";
+import { Box } from './box.interface';
+import { Level } from './level.interface';
 
-export interface Game {
-    gameId: string;
-    startDate: Date;
-    level: string;
-}
+export type GameStatus = 'INITIAL' | 'PLAYING' | 'WON' | 'LOST';
 
 export interface CreateGameRequest {
     levelId: string;
 }
 
-export interface CreateGameResponse {
-    id: string;
+export interface BoxActionRequest {
+    boxId: string;
 }
 
 export interface GameResponse {
     id: string;
-    startedAt: Date;
+    status: GameStatus;
+    startedAt: Date | null;
+    endedAt: Date | null;
+    wonAt: Date | null;
     level: Level;
+}
+
+export interface ActionResult {
+    game: GameResponse;
     boxes: Box[];
 }
-
-export interface GameState {
-    gameId: string | null;
-    level: Level | null;
-    status: 'idle' | 'loading' | 'active' | 'error';
-    error: string | null;
-}
-
-export const INITIAL_GAME_STATE: GameState = {
-    gameId: null,
-    level: null,
-    status: 'idle',
-    error: null,
-};

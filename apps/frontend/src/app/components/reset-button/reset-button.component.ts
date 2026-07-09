@@ -1,40 +1,15 @@
-import { Component, OnDestroy, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { BoxesService } from '../../services/boxes.service';
-import { GameService } from '../../services/game.service';
+import { Component, inject } from '@angular/core';
+import { GameStore } from '../../store/game.store';
 
 @Component({
   selector: 'app-reset-button',
   imports: [],
   templateUrl: './reset-button.component.html',
 })
-export class ResetButtonComponent implements OnDestroy {
-  private gameService = inject(GameService);
-  private boxesService = inject(BoxesService);
+export class ResetButtonComponent {
+  private readonly store = inject(GameStore);
 
-  private subs: Subscription[] = [];
-
-  public resetGame() {
-    this.gameService.resetGame();
-    this.resetBoxes();
-    this.resetTimer();
-  }
-
-  private resetBoxes() {
-    this.subs.push(
-      this.boxesService
-        .putBoxes(this.gameService.gameId()!, this.boxesService.boxes())
-        .subscribe()
-    );
-  }
-
-  private resetTimer() {
-    this.subs.push(
-      this.gameService.resetTimer().subscribe()
-    );
-  }
-
-  ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
+  protected resetGame(): void {
+    this.store.newGame();
   }
 }

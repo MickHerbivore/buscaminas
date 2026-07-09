@@ -13,7 +13,7 @@
         hover:bg-indigo-500" (click)="onClick()">
     @if (box().hasMine){
     <img src="./assets/img/bomb.svg" alt="">
-    } @else if (box().minesArroundQuantiy > 0) {
+    } @else if ((box().minesArroundQuantiy ?? 0) > 0) {
     {{ box().minesArroundQuantiy }}
     }
 </div>

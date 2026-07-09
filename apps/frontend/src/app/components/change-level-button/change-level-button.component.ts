@@ -1,40 +1,19 @@
-import { Component, OnDestroy, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { GameService } from '../../services/game.service';
+import { Component, inject, signal } from '@angular/core';
+import { GameStore } from '../../store/game.store';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-
 
 @Component({
   selector: 'app-change-level-button',
   imports: [LoadingSpinnerComponent],
   templateUrl: './change-level-button.component.html',
 })
-export class ChangeLevelButtonComponent implements OnDestroy {
+export class ChangeLevelButtonComponent {
+  private readonly store = inject(GameStore);
 
-  private gameService = inject(GameService);
+  protected readonly loading = signal(false);
 
-  private deleteSubs: Subscription = new Subscription();
-
-  public loading: boolean = false;
-
-  public onChangeLevel() {
-    this.loading = true;
-    this.deleteGame();
+  protected onChangeLevel(): void {
+    this.loading.set(true);
+    this.store.changeLevel();
   }
-
-  private deleteGame() {
-    this.deleteSubs = this.gameService.deleteGame().subscribe({
-      next: () => {
-        this.gameService.clearGame();
-      },
-      error: (error) => {
-        console.error('Error deleting game', error);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.deleteSubs.unsubscribe();
-  }
-
 }
