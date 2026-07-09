@@ -4,7 +4,7 @@ export interface Cell {
   row: number;
   column: number;
   hasMine: boolean;
-  minesArroundQuantiy: number;
+  minesAroundQuantity: number;
 }
 
 export interface RevealableCell extends Cell {
@@ -73,7 +73,7 @@ export function floodReveal(
     cell.isRotated = true;
     revealed.push(cell);
 
-    if (cell.minesArroundQuantiy === 0) {
+    if (cell.minesAroundQuantity === 0) {
       for (const [nr, nc] of neighborCoords(rows, cols, r, c)) {
         stack.push([nr, nc]);
       }

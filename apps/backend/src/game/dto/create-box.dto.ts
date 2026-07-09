@@ -4,5 +4,5 @@ export class CreateBoxDto {
   hasMine: boolean;
   isFlagged: boolean;
   isRotated: boolean;
-  minesArroundQuantiy: number;
+  minesAroundQuantity: number;
 }

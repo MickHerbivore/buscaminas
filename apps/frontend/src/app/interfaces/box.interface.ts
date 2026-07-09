@@ -4,6 +4,6 @@ export interface Box {
     column: number;
     isFlagged: boolean;
     isRotated: boolean;
-    minesArroundQuantiy: number | null;
+    minesAroundQuantity: number | null;
     hasMine?: boolean;
 }

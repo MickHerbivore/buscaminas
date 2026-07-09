@@ -15,7 +15,7 @@ function makeBox(row: number, column: number, over: Partial<Box> = {}): Box {
     hasMine: false,
     isFlagged: false,
     isRotated: false,
-    minesArroundQuantiy: 0,
+    minesAroundQuantity: 0,
     game: null,
     ...over,
   } as Box;
@@ -51,7 +51,7 @@ describe('board helpers', () => {
 
   describe('floodReveal', () => {
     it('reveals only the clicked numbered cell', () => {
-      const boxes = [makeBox(0, 0, { minesArroundQuantiy: 1 })];
+      const boxes = [makeBox(0, 0, { minesAroundQuantity: 1 })];
       const grid = buildGrid(boxes, 1, 1);
       const revealed = floodReveal(grid, 1, 1, 0, 0);
       expect(revealed).toHaveLength(1);
@@ -61,15 +61,15 @@ describe('board helpers', () => {
     it('floods a connected zero-region and the numbered border', () => {
       // 3x3, all zeros except (0,2)=1 and (2,2)=1
       const cells = [
-        makeBox(0, 0, { minesArroundQuantiy: 0 }),
-        makeBox(0, 1, { minesArroundQuantiy: 0 }),
-        makeBox(0, 2, { minesArroundQuantiy: 1 }),
-        makeBox(1, 0, { minesArroundQuantiy: 0 }),
-        makeBox(1, 1, { minesArroundQuantiy: 0 }),
-        makeBox(1, 2, { minesArroundQuantiy: 0 }),
-        makeBox(2, 0, { minesArroundQuantiy: 0 }),
-        makeBox(2, 1, { minesArroundQuantiy: 0 }),
-        makeBox(2, 2, { minesArroundQuantiy: 1 }),
+        makeBox(0, 0, { minesAroundQuantity: 0 }),
+        makeBox(0, 1, { minesAroundQuantity: 0 }),
+        makeBox(0, 2, { minesAroundQuantity: 1 }),
+        makeBox(1, 0, { minesAroundQuantity: 0 }),
+        makeBox(1, 1, { minesAroundQuantity: 0 }),
+        makeBox(1, 2, { minesAroundQuantity: 0 }),
+        makeBox(2, 0, { minesAroundQuantity: 0 }),
+        makeBox(2, 1, { minesAroundQuantity: 0 }),
+        makeBox(2, 2, { minesAroundQuantity: 1 }),
       ];
       const grid = buildGrid(cells, 3, 3);
       const revealed = floodReveal(grid, 3, 3, 1, 1);
@@ -81,9 +81,9 @@ describe('board helpers', () => {
 
     it('does not reveal mines', () => {
       const cells = [
-        makeBox(0, 0, { minesArroundQuantiy: 0 }),
-        makeBox(0, 1, { hasMine: true, minesArroundQuantiy: 0 }),
-        makeBox(1, 0, { minesArroundQuantiy: 1 }),
+        makeBox(0, 0, { minesAroundQuantity: 0 }),
+        makeBox(0, 1, { hasMine: true, minesAroundQuantity: 0 }),
+        makeBox(1, 0, { minesAroundQuantity: 1 }),
       ];
       const grid = buildGrid(cells, 2, 2);
       const revealed = floodReveal(grid, 2, 2, 0, 0);

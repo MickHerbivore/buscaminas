@@ -22,7 +22,7 @@ export class GameComponent {
     const box = this.store.currentBoxes().find((b) => b.id === boxId);
     if (!box) return;
     if (box.isRotated) {
-      if ((box.minesArroundQuantiy ?? 0) > 0) this.store.chord(boxId);
+      if ((box.minesAroundQuantity ?? 0) > 0) this.store.chord(boxId);
     } else {
       this.store.reveal(boxId);
     }

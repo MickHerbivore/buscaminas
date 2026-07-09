@@ -14,7 +14,7 @@ describe('BoxService', () => {
     hasMine: false,
     isFlagged: false,
     isRotated: false,
-    minesArroundQuantiy: 0,
+    minesAroundQuantity: 0,
   };
 
   const boxMock: Box = {

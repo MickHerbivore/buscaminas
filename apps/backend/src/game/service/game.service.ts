@@ -153,7 +153,7 @@ export class GameService {
     if (!box.isRotated) {
       throw new BadRequestException('Chord requires a revealed cell');
     }
-    if (box.minesArroundQuantiy <= 0) {
+    if (box.minesAroundQuantity <= 0) {
       throw new BadRequestException('Chord requires a numbered cell');
     }
 
@@ -166,7 +166,7 @@ export class GameService {
       box.column,
     );
 
-    if (flagCount !== box.minesArroundQuantiy) {
+    if (flagCount !== box.minesAroundQuantity) {
       return this.buildResult(game, [box]);
     }
 

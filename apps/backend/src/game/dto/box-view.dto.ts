@@ -17,7 +17,7 @@ export class BoxViewDto {
   isRotated: boolean;
 
   @Expose()
-  minesArroundQuantiy: number | null;
+  minesAroundQuantity: number | null;
 
   @Expose()
   hasMine?: boolean;

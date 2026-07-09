@@ -13,7 +13,7 @@ describe('BoxComponent', () => {
     column: 0,
     isFlagged: false,
     isRotated: false,
-    minesArroundQuantiy: 0,
+    minesAroundQuantity: 0,
   };
 
   beforeEach(async () => {

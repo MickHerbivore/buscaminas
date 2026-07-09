@@ -11,7 +11,7 @@ function makeBox(row: number, column: number): Box {
     hasMine: false,
     isFlagged: false,
     isRotated: false,
-    minesArroundQuantiy: 0,
+    minesAroundQuantity: 0,
     game: null,
   } as Box;
 }
@@ -51,7 +51,7 @@ describe('FrameService', () => {
             b.hasMine === false &&
             b.isRotated === false &&
             b.isFlagged === false &&
-            b.minesArroundQuantiy === 0,
+            b.minesAroundQuantity === 0,
         ),
       ).toBe(true);
     });
@@ -88,10 +88,10 @@ describe('FrameService', () => {
 
       service.placeMinesAndNumbers(g, level, new Set());
 
-      expect(g[0][0].minesArroundQuantiy).toBe(0); // mine keeps 0
-      expect(g[1][1].minesArroundQuantiy).toBe(2);
-      expect(g[0][1].minesArroundQuantiy).toBe(1);
-      expect(g[1][2].minesArroundQuantiy).toBe(1);
+      expect(g[0][0].minesAroundQuantity).toBe(0); // mine keeps 0
+      expect(g[1][1].minesAroundQuantity).toBe(2);
+      expect(g[0][1].minesAroundQuantity).toBe(1);
+      expect(g[1][2].minesAroundQuantity).toBe(1);
     });
 
     it('keeps the first-click region mine-free', () => {

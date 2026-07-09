@@ -33,19 +33,20 @@ There is **no `typecheck` script**. Type errors surface via `build` (frontend Ao
 **Frontend** (`apps/frontend`, Angular 21):
 - Standalone components only (no NgModules), bootstrapped via `bootstrapApplication`. Routes lazy-load with `loadComponent`.
 - Signals throughout (`signal`, `computed`, `linkedSignal`, `effect`, `resource`). No NgRx.
-- Game state is split across two paths — **read both before refactoring**:
-  - `src/app/store/game.store.ts` — newer signal store (`linkedSignal` + `resource` loader). Prefer for new work.
-  - `src/app/services/*.service.ts` — older services (`GameService`, `BoxesService`, `LevelService`, `TimerService`). `GameService` has commented-out handlers and overlaps with the store.
-- **Client-side mine logic still present** in `BoxesService` (`putMines`, `putNumbers`, `rotateNeighbours`, `initializeBoxes`), still called via `GameService.resetGame()`. This is the antichess hole pending removal (PLAN.md Fase 6). `GameComponent.boxClicked/boxRightClicked` are stubs (`console.log`) — click→API wiring not done.
-- API base URLs in `src/environments/environment*.ts` (dev → `localhost:3000/api/v2/`, prod → Netlify function URL). `gameId` persisted in `localStorage` key `game-id`.
-- `Level` type now lives in `@buscaminas/shared`; `src/app/interfaces/level.interface.ts` re-exports it.
+- **`GameStore` (`src/app/store/game.store.ts`) is the single source of truth.** It holds `currentGame`/`currentBoxes` signals, derived selectors (`status`, `isGameOver`, `hasWon`, `flagsPlaced`, `numberOfMines`, `level`), and the actions `createGame`/`reveal`/`flag`/`chord`/`newGame`/`changeLevel`. After each action it merges the returned boxes into the board. `gameId` is a `linkedSignal` persisted in `localStorage` (`game-id`); a constructor `effect` reloads game+boxes when it changes.
+- Services are thin wrappers, no game state: `GameService` (pure HttpClient over `/games`), `LevelService` (`httpResource` over `/level`), `TimerService` (display-only, derived from the store's `startedAt`/`endedAt`, ticks only while `PLAYING`).
+- **No client-side mine logic** (Fase 6 done): `BoxesService` and `GameStateService` were deleted. The backend owns all mine/number state.
+- Click wiring (Fase 6 done): `GameComponent.boxClicked` → `store.reveal(boxId)` (or `chord` when clicking a revealed numbered cell); `boxRightClicked` → `store.flag(boxId)`.
+- `Box` model reflects the antitrampas contract: `hasMine?: boolean` (present only at game end or if revealed), `minesAroundQuantity: number | null` (null unless revealed).
+- API base URLs in `src/environments/environment*.ts` (dev → `localhost:3000/api/v2/`, prod → Netlify function URL); only `gamesUri`/`levelsUri` remain.
 
 **Backend** (`apps/backend`, NestJS 11):
-- TypeORM + PostgreSQL, `synchronize: false` (migrations only). `DataSource` at `src/shared/utils/datasource.ts`; migrations at `src/database/migrations/`.
-- Global prefix `api/v2`, `ValidationPipe` with `class-validator`, CORS enabled.
-- Game logic server-side: `FrameService.buildBoxesFrame` (board+mines+adjacency), `BoxService.rotateAdjacentBoxes` (flood-fill), `GameService` (`INITIAL|PLAYING|LOST` — missing `WON`).
-- **Known antitrampas leaks** (pending fix, PLAN.md Fase 5): `BoxService.findAllByGameId` nulls `minesArroundQuantiy` of unrevealed boxes but **does not strip `hasMine`** → client can see all mines via `GET /game/:id/boxes`. No full reveal on loss. No `@nestjs/throttler`. No `endedAt`.
-- Entities: `Game` (status, startedAt, createdAt, level M:1, boxes 1:N cascade) and `Box`. Schema is **relational**; PLAN.md's proposed `boardState jsonb` was explicitly **not** adopted (see PLAN.md appendix).
+- TypeORM + PostgreSQL, `synchronize: false` (migrations only). `DataSource` at `src/shared/utils/datasource.ts`; migrations at `src/database/migrations/` (note: `pnpm migrate` needs `ts-node --transpile-only -P tsconfig.json`, already in the scripts — TypeORM 0.3.30 loads the datasource via ESM `import()`).
+- Global prefix `api/v2`, `ValidationPipe` with `class-validator` (`whitelist`, `forbidNonWhitelisted`, `transform`), `@nestjs/throttler` via `APP_GUARD` (`THROTTLE_TTL`/`THROTTLE_LIMIT` env). CORS via `CORS_ORIGINS` (csv), port via `PORT` (default 3000).
+- **API is `/api/v2/games`** (refactored, PLAN.md Fase 5 done): `POST /games`, `GET /games/:id`, `DELETE /games/:id` (204/404), `GET /games/:id/boxes`, `PATCH /games/:id/{reveal,flag,chord}`. Request DTOs `{ boxId }`/`{ levelId }`; responses `GameResponseDto`, `BoxViewDto[]`, `ActionResultDto { game, boxes }`. Old `/game/...` endpoints are gone.
+- Game logic server-side: `FrameService.initEmptyBoxes` (empty board) + `placeMinesAndNumbers` (first-click safe, avoids clicked region); `board.ts` pure helpers (`floodReveal`, `areAllNonMinesRevealed`, `adjacentFlagCount`); `GameService` orchestrates reveal/flag/chord with `INITIAL|PLAYING|WON|LOST`. Mines are placed on the **first reveal**, not at `createGame`.
+- **Antitrampas enforced** in `game-mapper.ts` (`toBoxView`): `hasMine` only when the game ended (`LOST`/`WON`) or the cell is revealed; `minesAroundQuantity` only for revealed cells. On loss, the full board (all mines) is returned. Verified: `flag` on an unrevealed cell leaks nothing.
+- Entities: `Game` (status, startedAt, createdAt, endedAt, wonAt, level M:1, boxes 1:N cascade) and `Box`. Schema is **relational**; PLAN.md's proposed `boardState jsonb` was explicitly **not** adopted.
 
 **Shared** (`libs/shared`): type-only (interfaces). Consumed by frontend via `tsconfig.json` `paths` → `../../libs/shared/src/index.ts`. The backend declares the dep but doesn't import yet (its `Level` is a TypeORM entity with decorators — migrating is Fase 4 scope). Don't put runtime values here without a build step (the CommonJS backend can't `require` a `.ts`).
 
@@ -57,8 +58,9 @@ There is **no `typecheck` script**. Type errors surface via `build` (frontend Ao
 
 - `docs/` (repo root) is a **committed build artifact** for GitHub Pages. `pnpm build:github` wipes and regenerates it. Don't hand-edit; regenerate.
 - These identifier names are part of the API contract between frontend and backend — **do not "fix" them blindly** (they match DB columns):
-  - `minesArroundQuantiy` (sic: misspelled "Around" + "Quantity"; DB column `mines_arround_quantity`)
   - `isRotated` actually means "revealed" (DB column `id_rotated` — sic)
 - Package names are scoped (`@buscaminas/frontend` / `@buscaminas/backend` / `@buscaminas/shared`). `build:github` and `pnpm --filter` calls rely on them — don't rename casually.
 - Backend `tsconfig.json` is **non-strict** (`strictNullChecks: false`, `noImplicitAny: false`, `target: ES2021`, `module: commonjs`); frontend `tsconfig.json` is `strict: true` (`target: ES2022`, `module: ES2022`, `moduleResolution: bundler`). They differ deliberately — don't unify without checking both apps still compile.
 - `apps/backend/.env` is the only place with DB creds (local `postgres/postgres`); it's gitignored. Copy from someone or set from `docker-compose.yaml` defaults.
+- `pnpm --filter @buscaminas/backend lint` is currently **broken**: ESLint 10 (in `package.json`) dropped `.eslintrc.*` support and needs an `eslint.config.js` flat config (only a legacy `.eslintrc.js` exists). Preexisting tooling issue, not addressed by the Fase 5 backend refactor. `build` + `test` are the reliable gates for the backend.
+- `createGame` must set `createdAt: new Date()` explicitly — the `@CreateDateColumn` decorator doesn't auto-populate on `save` here (the `created_at` column has no DB default and is NOT NULL). Don't remove that line.

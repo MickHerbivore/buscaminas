@@ -29,7 +29,7 @@ function box(
     hasMine: false,
     isFlagged: false,
     isRotated: false,
-    minesArroundQuantiy: 0,
+    minesAroundQuantity: 0,
     game: null,
     ...over,
   } as Box;
@@ -124,12 +124,12 @@ describe('GameService', () => {
   });
 
   describe('findBoxes (antitrampas)', () => {
-    it('hides minesArroundQuantiy and hasMine for unrevealed cells', async () => {
+    it('hides minesAroundQuantity and hasMine for unrevealed cells', async () => {
       const level = level3x3();
       const game = buildGame(
         [
           box('b0', 0, 0, { hasMine: true }),
-          box('b1', 0, 1, { isRotated: true, minesArroundQuantiy: 1 }),
+          box('b1', 0, 1, { isRotated: true, minesAroundQuantity: 1 }),
         ],
         GameStatus.PLAYING,
         level,
@@ -141,10 +141,10 @@ describe('GameService', () => {
 
       const hidden = result.find((b) => b.id === 'b0');
       expect(hidden.isRotated).toBe(false);
-      expect(hidden.minesArroundQuantiy).toBeNull();
+      expect(hidden.minesAroundQuantity).toBeNull();
       expect(hidden.hasMine).toBeUndefined();
       const revealed = result.find((b) => b.id === 'b1');
-      expect(revealed.minesArroundQuantiy).toBe(1);
+      expect(revealed.minesAroundQuantity).toBe(1);
     });
   });
 
@@ -185,14 +185,14 @@ describe('GameService', () => {
       const level = level3x3(1);
       const boxes = [
         box('00', 0, 0, { hasMine: true }),
-        box('01', 0, 1, { minesArroundQuantiy: 1 }),
-        box('02', 0, 2, { minesArroundQuantiy: 0 }),
-        box('10', 1, 0, { minesArroundQuantiy: 1 }),
-        box('11', 1, 1, { minesArroundQuantiy: 1 }),
-        box('12', 1, 2, { minesArroundQuantiy: 0 }),
-        box('20', 2, 0, { minesArroundQuantiy: 0 }),
-        box('21', 2, 1, { minesArroundQuantiy: 0 }),
-        box('22', 2, 2, { minesArroundQuantiy: 0 }),
+        box('01', 0, 1, { minesAroundQuantity: 1 }),
+        box('02', 0, 2, { minesAroundQuantity: 0 }),
+        box('10', 1, 0, { minesAroundQuantity: 1 }),
+        box('11', 1, 1, { minesAroundQuantity: 1 }),
+        box('12', 1, 2, { minesAroundQuantity: 0 }),
+        box('20', 2, 0, { minesAroundQuantity: 0 }),
+        box('21', 2, 1, { minesAroundQuantity: 0 }),
+        box('22', 2, 2, { minesAroundQuantity: 0 }),
       ];
       const game = buildGame(boxes, GameStatus.PLAYING, level);
       gameRepo.findOne.mockResolvedValue(game);
@@ -210,10 +210,10 @@ describe('GameService', () => {
       const level = level3x3(1);
       const boxes = [
         box('00', 0, 0, { hasMine: true }),
-        box('01', 0, 1, { minesArroundQuantiy: 1 }),
+        box('01', 0, 1, { minesAroundQuantity: 1 }),
         box('02', 0, 2),
-        box('10', 1, 0, { minesArroundQuantiy: 1 }),
-        box('11', 1, 1, { minesArroundQuantiy: 1 }),
+        box('10', 1, 0, { minesAroundQuantity: 1 }),
+        box('11', 1, 1, { minesAroundQuantity: 1 }),
         box('12', 1, 2),
         box('20', 2, 0),
         box('21', 2, 1),
@@ -234,14 +234,14 @@ describe('GameService', () => {
       const level = level3x3(1);
       const boxes = [
         box('00', 0, 0, { hasMine: true }),
-        box('01', 0, 1, { isRotated: true, minesArroundQuantiy: 1 }),
-        box('02', 0, 2, { isRotated: true, minesArroundQuantiy: 0 }),
-        box('10', 1, 0, { isRotated: true, minesArroundQuantiy: 1 }),
-        box('11', 1, 1, { isRotated: true, minesArroundQuantiy: 1 }),
-        box('12', 1, 2, { isRotated: true, minesArroundQuantiy: 0 }),
-        box('20', 2, 0, { isRotated: true, minesArroundQuantiy: 0 }),
-        box('21', 2, 1, { isRotated: true, minesArroundQuantiy: 0 }),
-        box('22', 2, 2, { minesArroundQuantiy: 0 }), // last unrevealed safe cell
+        box('01', 0, 1, { isRotated: true, minesAroundQuantity: 1 }),
+        box('02', 0, 2, { isRotated: true, minesAroundQuantity: 0 }),
+        box('10', 1, 0, { isRotated: true, minesAroundQuantity: 1 }),
+        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
+        box('12', 1, 2, { isRotated: true, minesAroundQuantity: 0 }),
+        box('20', 2, 0, { isRotated: true, minesAroundQuantity: 0 }),
+        box('21', 2, 1, { isRotated: true, minesAroundQuantity: 0 }),
+        box('22', 2, 2, { minesAroundQuantity: 0 }), // last unrevealed safe cell
       ];
       const game = buildGame(boxes, GameStatus.PLAYING, level);
       gameRepo.findOne.mockResolvedValue(game);
@@ -290,7 +290,7 @@ describe('GameService', () => {
         box('01', 0, 1, { isFlagged: true }), // wrong flag (safe cell flagged)
         box('02', 0, 2),
         box('10', 1, 0),
-        box('11', 1, 1, { isRotated: true, minesArroundQuantiy: 1 }),
+        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
         box('12', 1, 2),
         box('20', 2, 0),
         box('21', 2, 1),
@@ -308,14 +308,14 @@ describe('GameService', () => {
       const level = level3x3(1);
       const boxes = [
         box('00', 0, 0, { hasMine: true, isFlagged: true }),
-        box('01', 0, 1, { minesArroundQuantiy: 1 }),
-        box('02', 0, 2, { minesArroundQuantiy: 0 }),
-        box('10', 1, 0, { minesArroundQuantiy: 1 }),
-        box('11', 1, 1, { isRotated: true, minesArroundQuantiy: 1 }),
-        box('12', 1, 2, { minesArroundQuantiy: 0 }),
-        box('20', 2, 0, { minesArroundQuantiy: 0 }),
-        box('21', 2, 1, { minesArroundQuantiy: 0 }),
-        box('22', 2, 2, { minesArroundQuantiy: 0 }),
+        box('01', 0, 1, { minesAroundQuantity: 1 }),
+        box('02', 0, 2, { minesAroundQuantity: 0 }),
+        box('10', 1, 0, { minesAroundQuantity: 1 }),
+        box('11', 1, 1, { isRotated: true, minesAroundQuantity: 1 }),
+        box('12', 1, 2, { minesAroundQuantity: 0 }),
+        box('20', 2, 0, { minesAroundQuantity: 0 }),
+        box('21', 2, 1, { minesAroundQuantity: 0 }),
+        box('22', 2, 2, { minesAroundQuantity: 0 }),
       ];
       const game = buildGame(boxes, GameStatus.PLAYING, level);
       gameRepo.findOne.mockResolvedValue(game);

@@ -19,7 +19,7 @@ export class FrameService {
           hasMine: false,
           isFlagged: false,
           isRotated: false,
-          minesArroundQuantiy: 0,
+          minesAroundQuantity: 0,
         });
       }
     }
@@ -60,7 +60,7 @@ export class FrameService {
         )) {
           if (grid[nr][nc].hasMine) count++;
         }
-        grid[r][c].minesArroundQuantiy = count;
+        grid[r][c].minesAroundQuantity = count;
       }
     }
   }
