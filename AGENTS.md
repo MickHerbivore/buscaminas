@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Monorepo (**pnpm workspaces**) for Buscaminas (Minesweeper). Three packages:
-- `apps/frontend` — Angular 21 SPA (`@buscaminas/frontend`)
+- `apps/frontend` — Angular 22 SPA (`@buscaminas/frontend`)
 - `apps/backend` — NestJS 11 + TypeORM + PostgreSQL API (`@buscaminas/backend`)
 - `libs/shared` — `@buscaminas/shared`, **type-only** package (currently just `Level`)
 
@@ -19,7 +19,7 @@ Run from repo root unless noted:
 - `pnpm lint` — runs `lint` only where present (backend; frontend has none).
 - `pnpm build:github` — wipe root `docs/`, build frontend with `--base-href ./`, copy into `docs/` for GitHub Pages.
 - Single-package: `pnpm --filter @buscaminas/frontend <script>` / `pnpm --filter @buscaminas/backend <script>`.
-- One frontend spec: `pnpm --filter @buscaminas/frontend exec ng test --include='src/app/services/game.service.spec.ts'`. Non-interactive: add `--watch=false --browsers=ChromeHeadless`.
+- One frontend spec: `pnpm --filter @buscaminas/frontend exec ng test --include='src/app/services/game.service.spec.ts'`. Non-interactive: add `--watch=false --browsers=ChromeHeadless`. On snap Chromium use `--browsers=ChromeHeadlessNoSandbox` (defined in `karma.conf.js`) and set `CHROME_BIN=/usr/bin/chromium-browser`.
 - Backend migrations: `pnpm --filter @buscaminas/backend migrate` / `migration:down` / `migration:create`.
 
 There is **no `typecheck` script**. Type errors surface via `build` (frontend AoT with `strictTemplates`; backend `nest build`).
@@ -30,7 +30,7 @@ There is **no `typecheck` script**. Type errors surface via `build` (frontend Ao
 
 ## Architecture
 
-**Frontend** (`apps/frontend`, Angular 21):
+**Frontend** (`apps/frontend`, Angular 22):
 - Standalone components only (no NgModules), bootstrapped via `bootstrapApplication`. Routes lazy-load with `loadComponent`.
 - Signals throughout (`signal`, `computed`, `linkedSignal`, `effect`, `resource`). No NgRx.
 - **`GameStore` (`src/app/store/game.store.ts`) is the single source of truth.** It holds `currentGame`/`currentBoxes` signals, derived selectors (`status`, `isGameOver`, `hasWon`, `flagsPlaced`, `numberOfMines`, `level`), and the actions `createGame`/`reveal`/`flag`/`chord`/`newGame`/`changeLevel`. After each action it merges the returned boxes into the board. `gameId` is a `linkedSignal` persisted in `localStorage` (`game-id`); a constructor `effect` reloads game+boxes when it changes.
