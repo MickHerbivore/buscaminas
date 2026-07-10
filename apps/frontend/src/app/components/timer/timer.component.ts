@@ -1,10 +1,9 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TimerService } from '../../services/timer.service';
 
 @Component({
   selector: 'app-timer',
   imports: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './timer.component.html',
 })
 export class TimerComponent {

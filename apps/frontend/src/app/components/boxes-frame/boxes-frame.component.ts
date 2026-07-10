@@ -2,7 +2,6 @@ import {
   Component,
   input,
   output,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 import { Level } from '../../interfaces/level.interface';
@@ -11,7 +10,6 @@ import { BoxComponent } from '../box/box.component';
 @Component({
   selector: 'app-boxes-frame',
   imports: [BoxComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './boxes-frame.component.html',
 })
 export class BoxesFrameComponent {

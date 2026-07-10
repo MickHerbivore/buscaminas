@@ -1,10 +1,9 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GameStore } from '../../store/game.store';
 
 @Component({
   selector: 'app-reset-button',
   imports: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './reset-button.component.html',
 })
 export class ResetButtonComponent {

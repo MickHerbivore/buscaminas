@@ -2,7 +2,6 @@ import {
   Component,
   input,
   output,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 import { Level } from '../../interfaces/level.interface';
@@ -19,7 +18,6 @@ import { TimerComponent } from '../timer/timer.component';
     ResetButtonComponent,
     TimerComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './game-frame.component.html',
 })
 export class GameFrameComponent {
