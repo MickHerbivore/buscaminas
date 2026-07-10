@@ -16,6 +16,10 @@ dist/
 **/.angular/cache
 coverage/
 
+# Agent tooling (local, regenerable via `railway setup agent`)
+.agents/
+skills-lock.json
+
 # IDEs and editors
 .idea/
 .project
