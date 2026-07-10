@@ -8,6 +8,6 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "lint": "pnpm -r --if-present lint",
-    "build:github": "rm -rf docs && pnpm --filter @buscaminas/frontend run build:href && mkdir docs && cp -r apps/frontend/dist/buscaminas/browser/* docs/"
+    "build:github": "rm -rf docs && pnpm --filter @buscaminas/frontend run build:href && mkdir docs && cp -r apps/frontend/dist/buscaminas/browser/* docs/ && cp docs/index.html docs/404.html"
   }
 }
