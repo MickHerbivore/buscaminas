@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { GameFrameComponent } from './game-frame.component';
@@ -18,14 +18,28 @@ describe('GameFrameComponent', () => {
     minesQuantity: 1,
   };
   const boxes: Box[] = [
-    { id: 'b1', row: 0, column: 0, isFlagged: false, isRevealed: false, minesAroundQuantity: 0 },
-    { id: 'b2', row: 0, column: 1, isFlagged: false, isRevealed: false, minesAroundQuantity: 0 },
+    {
+      id: 'b1',
+      row: 0,
+      column: 0,
+      isFlagged: false,
+      isRevealed: false,
+      minesAroundQuantity: 0,
+    },
+    {
+      id: 'b2',
+      row: 0,
+      column: 1,
+      isFlagged: false,
+      isRevealed: false,
+      minesAroundQuantity: 0,
+    },
   ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GameFrameComponent],
-      providers: [provideHttpClient(), provideRouter([])],
+      providers: [provideHttpClient(withXhr()), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GameFrameComponent);

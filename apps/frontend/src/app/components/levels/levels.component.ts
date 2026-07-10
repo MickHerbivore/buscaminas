@@ -1,5 +1,9 @@
-
-import { Component, inject, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Level } from '../../interfaces/level.interface';
 import { LevelService } from '../../services/level.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
@@ -7,6 +11,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 @Component({
   selector: 'app-levels',
   imports: [LoadingSpinnerComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './levels.component.html',
 })
 export class LevelsComponent {

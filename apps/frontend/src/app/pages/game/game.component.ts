@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameFrameComponent } from '../../components/game-frame/game-frame.component';
 import { GameStore } from '../../store/game.store';
@@ -6,6 +6,7 @@ import { GameStore } from '../../store/game.store';
 @Component({
   selector: 'app-game',
   imports: [GameFrameComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './game.component.html',
 })
 export class GameComponent {

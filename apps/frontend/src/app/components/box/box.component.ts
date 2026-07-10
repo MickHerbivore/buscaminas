@@ -1,10 +1,15 @@
-
-import { Component, input, output } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 
 @Component({
   selector: 'app-box',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './box.component.html',
 })
 export class BoxComponent {
