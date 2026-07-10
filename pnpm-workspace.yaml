@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "libs/*"
+
+allowBuilds:
+  '@parcel/watcher': false
+  core-js: false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
+  unrs-resolver: false

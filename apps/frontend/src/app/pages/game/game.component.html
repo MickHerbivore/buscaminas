@@ -1,0 +1,5 @@
+<div class="min-w-fit w-screen h-fit md:w-fit ">
+    <app-game-frame [level]="store.level()" [boxes]="store.currentBoxes()" [hasWon]="store.hasWon()"
+        [isGameOver]="store.isGameOver()" [flagsPlaced]="store.flagsPlaced()" [numberOfMines]="store.numberOfMines()"
+        (boxClickedEvent)="boxClicked($event)" (boxRightClickEvent)="boxRightClicked($event)"></app-game-frame>
+</div>
