@@ -7,6 +7,10 @@ Monorepo (**pnpm workspaces**) for Buscaminas (Minesweeper). Three packages:
 
 `PLAN.md` describes the migration that produced this layout (Fases 0-8). Its appendix records the executed inventory and which phases remain. Treat un-checked items as TODO, not done.
 
+## Git workflow
+
+**`main` receives merges ONLY from `develop`.** Feature branches merge into `develop` first; `develop` is then fast-forwarded (or merged) into `main`. Never merge a feature/hotfix branch directly into `main`. Keep `develop` and `main` in sync after every merge to `main`.
+
 ## Commands
 
 Package manager is **pnpm**. Don't use npm/yarn (even though `build:github` uses shell `cp`/`rm`, not `npm run`).
