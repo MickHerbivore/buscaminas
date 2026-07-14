@@ -1,21 +1,226 @@
-/* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+@theme {
+  /* Breakpoint estrecho para colapsar HUD/switcher en móvil */
+  --breakpoint-xs: 30rem;
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+  /* Paleta — Campo minado topográfico */
+  --color-paper: #ede7d9;
+  --color-paper-deep: #e0d8c4;
+  --color-ink: #1a1a18;
+  --color-ink-soft: #3a3a36;
+  --color-detonation: #c8412b;
+  --color-detonation-deep: #9a2e1d;
+  --color-safe: #5c6b3d;
+  --color-safe-deep: #43512b;
+  --color-sand: #c8bfa6;
+  --color-sand-deep: #a89e83;
+
+  /* Rampa de números por adyacencia (1→8) */
+  --color-mine-1: #3b5ba5;
+  --color-mine-2: #5c6b3d;
+  --color-mine-3: #c8412b;
+  --color-mine-4: #5b3a8a;
+  --color-mine-5: #7a1e1e;
+  --color-mine-6: #2a7b7b;
+  --color-mine-7: #1a1a18;
+  --color-mine-8: #6b6b6b;
+
+  /* Tipografía */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radios */
+  --radius-cell: 2px;
+  --radius-card: 4px;
+  --radius-pill: 999px;
+
+  /* Sombra stencil (offset duro sin blur) */
+  --shadow-stencil: 2px 2px 0 0 var(--color-ink);
+  --shadow-stencil-sm: 1px 1px 0 0 var(--color-ink);
+
+  /* Board */
+  --board-cell-min: 28px;
+  --board-cell-max: 44px;
+
+  /* Safe-area insets */
+  --space-safe-top: env(safe-area-inset-top);
+  --space-safe-bottom: env(safe-area-inset-bottom);
+  --space-safe-left: env(safe-area-inset-left);
+  --space-safe-right: env(safe-area-inset-right);
+}
+
 @layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+  }
 
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-sand-deep, currentcolor);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-detonation);
+    outline-offset: 1px;
+    border-radius: 1px;
+  }
+
+  /* Targets táctiles: sin delay ni selección de texto al picar */
+  app-box {
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Reduced motion global */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
+
+@layer components {
+  .cell {
+    width: var(--cell-size, 40px);
+    height: var(--cell-size, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-cell);
+    font-size: clamp(0.75rem, calc(var(--cell-size, 40px) * 0.4), 1.125rem);
+    box-sizing: border-box;
+  }
+
+  .cell-hidden {
+    background-color: var(--color-sand);
+    border: 1px solid var(--color-sand-deep);
+    color: var(--color-detonation);
+    cursor: pointer;
+    transition: background-color 0.12s ease, transform 0.12s ease;
+  }
+  .cell-hidden:hover {
+    background-color: var(--color-sand-deep);
+    transform: translateY(-1px);
+  }
+  .cell-hidden:active {
+    transform: translateY(0);
+    background-color: var(--color-paper-deep);
+  }
+  .cell-flagged {
+    background-color: var(--color-paper-deep);
+    color: var(--color-detonation);
+  }
+
+  .cell-revealed {
+    background-color: var(--color-paper-deep);
+    border: 1px solid var(--color-sand);
+    color: var(--color-ink);
+    animation: cellPeel 0.18s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    animation-delay: var(--anim-delay, 0ms);
+  }
+
+  .cell-empty {
+    background-color: var(--color-paper);
+    border-color: var(--color-sand);
+  }
+
+  .cell-number {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .cell-number[data-n='1'] { color: var(--color-mine-1); }
+  .cell-number[data-n='2'] { color: var(--color-mine-2); }
+  .cell-number[data-n='3'] { color: var(--color-mine-3); }
+  .cell-number[data-n='4'] { color: var(--color-mine-4); }
+  .cell-number[data-n='5'] { color: var(--color-mine-5); }
+  .cell-number[data-n='6'] { color: var(--color-mine-6); }
+  .cell-number[data-n='7'] { color: var(--color-mine-7); }
+  .cell-number[data-n='8'] { color: var(--color-mine-8); }
+
+  .cell-mine {
+    background-color: var(--color-paper-deep);
+    border-color: var(--color-detonation);
+    color: var(--color-detonation);
+    animation: cellDetonate 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    animation-delay: var(--anim-delay, 0ms);
+    position: relative;
+  }
+  .cell-mine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-cell);
+    box-shadow: 0 0 0 0 var(--color-detonation);
+    animation: shockwave 0.6s ease-out var(--anim-delay, 0ms) both;
+    pointer-events: none;
+  }
+
+  @keyframes cellPeel {
+    from {
+      transform: rotateX(-75deg);
+      opacity: 0;
+    }
+    to {
+      transform: rotateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes cellDetonate {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shockwave {
+    0% {
+      box-shadow: 0 0 0 0 var(--color-detonation);
+      opacity: 0.6;
+    }
+    100% {
+      box-shadow: 0 0 0 calc(var(--cell-size, 40px) * 0.6) transparent;
+      opacity: 0;
+    }
+  }
+
+  /* Sr-only helper (Tailwind v4 ya lo trae, replicamos por seguridad) */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
