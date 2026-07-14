@@ -1,6 +1,13 @@
-<div class="min-w-fit w-screen h-fit
-    md:w-fit ">
+<section class="w-full max-w-md flex flex-col gap-8 items-center">
+  <header class="text-center flex flex-col items-center gap-3 pt-2">
+    <app-icon-compass class="text-detonation size-14"></app-icon-compass>
+    <h1 class="font-display font-bold text-4xl sm:text-5xl tracking-tight leading-none">
+      {{ 'app.title' | trans }}
+    </h1>
+    <p class="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-ink-soft">
+      {{ 'app.tagline' | trans }}
+    </p>
+  </header>
 
-    <app-levels (levelIdSelectedEvent)="createGame($event)"></app-levels>
-
-</div>
+  <app-levels (levelIdSelectedEvent)="createGame($event)"></app-levels>
+</section>

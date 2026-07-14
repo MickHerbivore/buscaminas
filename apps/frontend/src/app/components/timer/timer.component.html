@@ -1,4 +1,8 @@
-<span class="text-white">
-    {{ elapsedDays() > 0 ? elapsedDays() + ' day'+ ((elapsedDays() !== 1) ? 's' : '') + ' ' : ''}}
-    {{ elapsedHours() }}:{{ elapsedMinutes() }}:{{ elapsedSeconds() }}
+<span
+  class="font-mono font-bold tabular-nums text-xl text-ink whitespace-nowrap"
+  [title]="elapsedDays() > 0 ? elapsedDays() + ' ' + ((elapsedDays() !== 1 ? 'days' : 'day')) : ''">
+  @if (elapsedDays() > 0) {
+    <span class="text-ink-soft text-base">·{{ elapsedDays() }}d</span>
+  }
+  {{ elapsedHours() }}:{{ elapsedMinutes() }}:{{ elapsedSeconds() }}
 </span>

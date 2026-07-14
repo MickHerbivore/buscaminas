@@ -1,24 +1,44 @@
-<section class="relative flex justify-center">
+<section
+  class="w-full flex justify-center"
+  [style.--cell-size]="cellSize()"
+  [class.pointer-events-none]="isGameOver() || hasWon()">
 
-    @if (boxes().length) {
-    <div class="grid w-fit" [style]="'grid-template-columns: repeat('+ level()?.columnsQuantity + ', 1fr)'">
+  @if (boxes().length) {
+    <div
+      class="max-w-full overflow-x-auto overscroll-x-contain pb-2 -mx-2 px-2"
+      role="grid"
+      [attr.aria-label]="'Tablero ' + (level()?.rowsQuantity ?? 0) + '×' + (level()?.columnsQuantity ?? 0)">
 
-        @for (box of boxes(); track box.id) {
-        <app-box [box]="box" (clickEvent)="boxClicked($event)" (rightClickEvent)="boxRightClicked($event)"></app-box>
-        }
+      <div class="inline-block">
+        <!-- Column header -->
+        <div class="flex items-end gap-px pl-7 mb-1" role="row" aria-hidden="true">
+          @for (label of colLabels(); track $index) {
+            <span
+              class="font-mono text-[0.6rem] text-center text-ink-soft leading-none flex items-center justify-center"
+              [style.width]="'var(--cell-size)'"
+              [style.height]="'0.85rem'">{{ label }}</span>
+          }
+        </div>
+
+        <!-- Rows -->
+        <div class="flex flex-col gap-px">
+          @for (row of rows(); track row.label) {
+            <div class="flex items-center gap-1" role="row">
+              <span
+                class="w-6 shrink-0 font-mono text-[0.6rem] text-right text-ink-soft leading-none pr-1"
+                aria-hidden="true">{{ row.label }}</span>
+              <div class="flex gap-px">
+                @for (cell of row.cells; track cell.id) {
+                  <app-box
+                    [box]="cell"
+                    (clickEvent)="boxClicked($event)"
+                    (rightClickEvent)="boxRightClicked($event)"></app-box>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     </div>
-    }
-
-    @if (isGameOver()) {
-    <div class="w-full h-full bg-neutral-600/50 flex justify-center items-center py-4 absolute top-0">
-        <h1 class="text-3xl font-extrabold text-pink-500">GAME OVER!</h1>
-    </div>
-    }
-
-    @if (hasWon()) {
-    <div class="w-full h-full bg-neutral-400/50 flex justify-center items-center py-4 absolute top-0">
-        <h1 class="text-3xl font-extrabold text-pink-600">YOU WON!</h1>
-    </div>
-    }
-
+  }
 </section>

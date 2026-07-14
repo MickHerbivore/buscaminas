@@ -1,5 +1,35 @@
-<div class="min-h-svh w-full text-white flex justify-center items-center overflow-auto relative">
+<div class="min-h-dvh bg-paper text-ink flex flex-col">
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2
+           focus:bg-paper focus:px-3 focus:py-1.5 focus:border-2 focus:border-ink
+           focus:rounded-pill focus:font-mono focus:text-xs focus:uppercase focus:tracking-wider">
+    {{ 'nav.skip' | trans }}
+  </a>
 
-  <router-outlet></router-outlet>
+  <header
+    class="sticky top-0 z-20 bg-paper/95 backdrop-blur-sm border-b border-sand-deep"
+    style="padding-top: var(--space-safe-top)">
+    <div class="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between gap-3">
+      <a
+        class="flex items-center gap-2.5 text-ink no-underline"
+        routerLink="/"
+        aria-label="Buscaminas">
+        <app-icon-compass class="text-detonation shrink-0 size-7"></app-icon-compass>
+        <span class="font-display font-bold tracking-tight text-lg leading-none">
+          {{ 'app.title' | trans }}
+        </span>
+        <span class="hidden xs:inline text-[0.65rem] uppercase tracking-[0.2em] text-ink-soft font-mono">
+          {{ 'app.subtitle' | trans }}
+        </span>
+      </a>
+      <app-language-switcher></app-language-switcher>
+    </div>
+  </header>
 
+  <main
+    id="main-content"
+    class="flex-1 py-6 px-4 flex justify-center items-start min-w-0">
+    <router-outlet></router-outlet>
+  </main>
 </div>
