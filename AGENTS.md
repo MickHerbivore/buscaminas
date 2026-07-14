@@ -58,6 +58,15 @@ There is **no `typecheck` script**. Type errors surface via `build` (frontend Ao
 
 **Tailwind CSS v4**, configured via `@import 'tailwindcss'` in `apps/frontend/src/styles.css` and `@tailwindcss/postcss` in `apps/frontend/.postcssrc.json`. **No `tailwind.config.js`** — don't assume v3 patterns.
 
+## opencode MCP config
+
+`opencode.jsonc` is gitignored because it contains local API keys. A template with env-var placeholders is at `opencode.jsonc.example`. To use it:
+
+1. `cp opencode.jsonc.example opencode.jsonc`
+2. Set `CONTEXT7_API_KEY` in your shell (or replace inline).
+
+opencode substitutes `${VAR}` syntax with environment variables at runtime.
+
 ## Gotchas
 
 - `docs/` (repo root) is a **committed build artifact** for GitHub Pages. `pnpm build:github` wipes and regenerates it. Don't hand-edit; regenerate.

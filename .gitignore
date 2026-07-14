@@ -20,6 +20,9 @@ coverage/
 .agents/
 skills-lock.json
 
+# opencode MCP config (contains local API keys)
+opencode.jsonc
+
 # IDEs and editors
 .idea/
 .project
