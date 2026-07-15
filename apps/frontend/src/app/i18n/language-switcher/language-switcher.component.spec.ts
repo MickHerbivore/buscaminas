@@ -9,6 +9,7 @@ describe('LanguageSwitcherComponent', () => {
 
   beforeEach(async () => {
     localStorage.clear();
+    spyOnProperty(navigator, 'language', 'get').and.returnValue('es-ES');
     await TestBed.configureTestingModule({
       imports: [LanguageSwitcherComponent],
     }).compileComponents();
@@ -23,17 +24,26 @@ describe('LanguageSwitcherComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('shows ES code when locale is es', () => {
-    expect(service.locale()).toBe('es');
-    const btn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    expect(btn.textContent).toContain('ES');
+  it('renders an option per supported locale', () => {
+    const select: HTMLSelectElement =
+      fixture.nativeElement.querySelector('select');
+    const values = Array.from(select.options).map((o) => o.value);
+    expect(values).toEqual(['es', 'en', 'zh']);
   });
 
-  it('toggles locale on click', () => {
-    const btn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    btn.click();
+  it('reflects the active locale as the selected option', () => {
+    service.setLocale('zh');
     fixture.detectChanges();
+    const select: HTMLSelectElement =
+      fixture.nativeElement.querySelector('select');
+    expect(select.value).toBe('zh');
+  });
+
+  it('changes locale when the select changes', () => {
+    const select: HTMLSelectElement =
+      fixture.nativeElement.querySelector('select');
+    select.value = 'en';
+    select.dispatchEvent(new Event('change'));
     expect(service.locale()).toBe('en');
-    expect(btn.textContent).toContain('EN');
   });
 });

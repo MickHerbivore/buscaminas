@@ -37,10 +37,10 @@
   --color-mine-7: #d9a45a;
   --color-mine-8: #8e919a;
 
-  /* Tipografía */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Tipografía (con pila CJK de fallback para zh) */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, 'Noto Sans Mono CJK SC', monospace;
 
   /* Radios */
   --radius-cell: 2px;

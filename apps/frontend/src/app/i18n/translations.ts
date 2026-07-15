@@ -1,4 +1,4 @@
-export type Locale = 'es' | 'en';
+export type Locale = 'es' | 'en' | 'zh';
 
 export type TranslationKey =
   | 'app.title'
@@ -30,7 +30,8 @@ export type TranslationKey =
   | 'box.hidden'
   | 'lang.label'
   | 'lang.es'
-  | 'lang.en';
+  | 'lang.en'
+  | 'lang.zh';
 
 type Dictionary = Record<TranslationKey, string>;
 
@@ -65,6 +66,7 @@ const es: Dictionary = {
   'lang.label': 'Idioma',
   'lang.es': 'Español',
   'lang.en': 'English',
+  'lang.zh': '简体中文',
 };
 
 const en: Dictionary = {
@@ -98,6 +100,41 @@ const en: Dictionary = {
   'lang.label': 'Language',
   'lang.es': 'Español',
   'lang.en': 'English',
+  'lang.zh': '简体中文',
 };
 
-export const translations: Record<Locale, Dictionary> = { es, en };
+const zh: Dictionary = {
+  'app.title': '扫雷',
+  'app.subtitle': '雷区勘测图',
+  'app.tagline': '标记，揭开，存活。',
+  'nav.skip': '跳至内容',
+  'levels.heading': '选择地图',
+  'levels.subtitle': '各关卡的网格大小与地雷密度',
+  'levels.mines': '颗地雷',
+  'levels.cells': '格',
+  'levels.and': '与',
+  'hud.mines': '地雷',
+  'hud.remaining': '剩余',
+  'hud.time': '用时',
+  'result.win': '胜利！',
+  'result.lose': '失败！',
+  'result.winHint': '所有安全格已揭开',
+  'result.loseHint': '你触发了一颗地雷',
+  'action.reset': '重新开始',
+  'action.changeLevel': '更换关卡',
+  'action.start': '开始',
+  'loading': '加载中…',
+  'timer.day': '天',
+  'timer.days': '天',
+  'box.flagged': '已标记',
+  'box.mine': '地雷',
+  'box.minesNear': '颗附近地雷',
+  'box.empty': '空',
+  'box.hidden': '未揭开',
+  'lang.label': '语言',
+  'lang.es': 'Español',
+  'lang.en': 'English',
+  'lang.zh': '简体中文',
+};
+
+export const translations: Record<Locale, Dictionary> = { es, en, zh };

@@ -7,6 +7,7 @@ describe('TransPipe', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    spyOnProperty(navigator, 'language', 'get').and.returnValue('es-ES');
     TestBed.configureTestingModule({});
     service = TestBed.inject(TranslationService);
   });
@@ -24,7 +25,7 @@ describe('TransPipe', () => {
   it('reflects locale changes', () => {
     const pipe = TestBed.runInInjectionContext(() => new TransPipe());
     expect(pipe.transform('action.reset')).toBe('Reiniciar');
-    service.toggle();
+    service.setLocale('en');
     expect(pipe.transform('action.reset')).toBe('Reset');
   });
 });
