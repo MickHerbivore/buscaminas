@@ -84,6 +84,9 @@ export class GameService {
 
     const level = game.level;
     const startBox = this.findBox(game, dto.boxId);
+    if (startBox.isFlagged) {
+      throw new BadRequestException('Cannot reveal a flagged cell');
+    }
     const grid = buildGrid(game.boxes, level.rowsQuantity, level.columnsQuantity);
 
     const changed: Box[] = [];

@@ -21,6 +21,7 @@ export class GameComponent {
   protected boxClicked(boxId: string): void {
     const box = this.store.currentBoxes().find((b) => b.id === boxId);
     if (!box) return;
+    if (box.isFlagged) return;
     if (box.isRevealed) {
       if ((box.minesAroundQuantity ?? 0) > 0) this.store.chord(boxId);
     } else {
