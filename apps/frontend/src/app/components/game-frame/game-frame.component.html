@@ -30,25 +30,31 @@
     (boxClickedEvent)="boxClicked($event)"
     (boxRightClickEvent)="boxRightClicked($event)"></app-boxes-frame>
 
-  <!-- Controls -->
-  <div class="grid grid-cols-2 gap-2 sm:flex sm:gap-3 sm:justify-center">
-    <app-reset-button></app-reset-button>
-    <app-change-level-button></app-change-level-button>
-  </div>
+  <!-- Controls (ocultos mientras se muestra el overlay de resultado) -->
+  @if (!isGameOver() && !hasWon()) {
+    <div class="grid grid-cols-2 gap-2 sm:flex sm:gap-3 sm:justify-center">
+      <app-reset-button></app-reset-button>
+      <app-change-level-button></app-change-level-button>
+    </div>
+  }
 
-  <!-- Result overlays -->
+  <!-- Result overlays con CTAs embebidos -->
   @if (isGameOver()) {
     <div
       role="status"
       aria-live="assertive"
-      class="absolute inset-0 flex flex-col items-center justify-center gap-3
-             bg-paper/92 backdrop-blur-sm rounded-card
+      class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
+             bg-paper/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
       <app-icon-mine class="size-12 text-detonation"></app-icon-mine>
       <h3 class="font-display font-bold text-3xl sm:text-4xl text-detonation tracking-tight">
         {{ 'result.lose' | trans }}
       </h3>
       <p class="font-mono text-xs text-ink-soft text-center px-4">{{ 'result.loseHint' | trans }}</p>
+      <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
+        <app-reset-button></app-reset-button>
+        <app-change-level-button></app-change-level-button>
+      </div>
     </div>
   }
 
@@ -56,14 +62,18 @@
     <div
       role="status"
       aria-live="assertive"
-      class="absolute inset-0 flex flex-col items-center justify-center gap-3
-             bg-paper/92 backdrop-blur-sm rounded-card
+      class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
+             bg-paper/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
       <app-icon-flag class="size-12 text-safe"></app-icon-flag>
       <h3 class="font-display font-bold text-3xl sm:text-4xl text-safe tracking-tight">
         {{ 'result.win' | trans }}
       </h3>
       <p class="font-mono text-xs text-ink-soft text-center px-4">{{ 'result.winHint' | trans }}</p>
+      <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
+        <app-reset-button></app-reset-button>
+        <app-change-level-button></app-change-level-button>
+      </div>
     </div>
   }
 </article>
