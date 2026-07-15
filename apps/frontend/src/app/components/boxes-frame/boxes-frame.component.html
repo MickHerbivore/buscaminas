@@ -14,7 +14,7 @@
         <div class="flex items-end gap-px pl-7 mb-1" role="row" aria-hidden="true">
           @for (label of colLabels(); track $index) {
             <span
-              class="font-mono text-[0.6rem] text-center text-ink-soft leading-none flex items-center justify-center"
+              class="font-mono text-[0.6rem] text-center text-tinta-suave leading-none flex items-center justify-center"
               [style.width]="'var(--cell-size)'"
               [style.height]="'0.85rem'">{{ label }}</span>
           }
@@ -25,7 +25,7 @@
           @for (row of rows(); track row.label) {
             <div class="flex items-center gap-1" role="row">
               <span
-                class="w-6 shrink-0 font-mono text-[0.6rem] text-right text-ink-soft leading-none pr-1"
+                class="w-6 shrink-0 font-mono text-[0.6rem] text-right text-tinta-suave leading-none pr-1"
                 aria-hidden="true">{{ row.label }}</span>
               <div class="flex gap-px">
                 @for (cell of row.cells; track cell.id) {

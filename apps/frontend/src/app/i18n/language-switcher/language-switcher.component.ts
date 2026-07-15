@@ -8,8 +8,8 @@ import { TranslationService } from '../translation.service';
     <button
       type="button"
       class="font-mono text-xs uppercase tracking-wider px-3 py-1.5 rounded-pill
-             border border-sand-deep bg-paper hover:bg-paper-deep transition-colors
-             text-ink select-none min-h-9 inline-flex items-center gap-1.5"
+             border border-trazo-suave bg-noche hover:bg-tabula transition-colors
+             text-tinta select-none min-h-9 inline-flex items-center gap-1.5"
       (click)="i18n.toggle()"
       [attr.aria-label]="i18n.t('lang.label')">
       <span aria-hidden="true" class="text-sm leading-none">⌖</span>

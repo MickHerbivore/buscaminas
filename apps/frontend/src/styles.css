@@ -4,27 +4,38 @@
   /* Breakpoint estrecho para colapsar HUD/switcher en móvil */
   --breakpoint-xs: 30rem;
 
-  /* Paleta — Campo minado topográfico */
-  --color-paper: #ede7d9;
-  --color-paper-deep: #e0d8c4;
-  --color-ink: #1a1a18;
-  --color-ink-soft: #3a3a36;
-  --color-detonation: #c8412b;
-  --color-detonation-deep: #9a2e1d;
-  --color-safe: #5c6b3d;
-  --color-safe-deep: #43512b;
-  --color-sand: #c8bfa6;
-  --color-sand-deep: #a89e83;
+  /* Paleta — Cartografía nocturna
+     Base obsidiana (sub-tono frío) + tinta pergamino + acento latón (aguja de brújula).
+     La tensión frío/calor es lo que la separa de un "dark mode" genérico. */
+  --color-noche: #0e1014;
+  --color-noche-profunda: #080a0d;
+  --color-tabula: #171a21;
+  --color-trazo: #2a2e37;
+  --color-trazo-suave: #1c1f27;
 
-  /* Rampa de números por adyacencia (1→8) */
-  --color-mine-1: #3b5ba5;
-  --color-mine-2: #5c6b3d;
-  --color-mine-3: #c8412b;
-  --color-mine-4: #5b3a8a;
-  --color-mine-5: #7a1e1e;
-  --color-mine-6: #2a7b7b;
-  --color-mine-7: #1a1a18;
-  --color-mine-8: #6b6b6b;
+  --color-tinta: #eae6dd;
+  --color-tinta-suave: #a6a39b;
+  --color-tinta-tenue: #65686f;
+
+  --color-laton: #d9a45a;
+  --color-laton-brillante: #e8b974;
+  --color-laton-profundo: #a87a38;
+
+  --color-detonacion: #e0533d;
+  --color-detonacion-profunda: #b23a2a;
+  --color-esmeralda: #5fae7e;
+  --color-esmeralda-profunda: #3d8458;
+  --color-zafiro: #6b92e0;
+
+  /* Rampa de números por adyacencia (1→8) — joya desaturada sobre oscuro */
+  --color-mine-1: #6b92e0;
+  --color-mine-2: #5fae7e;
+  --color-mine-3: #e0533d;
+  --color-mine-4: #b582d6;
+  --color-mine-5: #9c6b5a;
+  --color-mine-6: #4fb5b5;
+  --color-mine-7: #d9a45a;
+  --color-mine-8: #8e919a;
 
   /* Tipografía */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -36,9 +47,9 @@
   --radius-card: 4px;
   --radius-pill: 999px;
 
-  /* Sombra stencil (offset duro sin blur) */
-  --shadow-stencil: 2px 2px 0 0 var(--color-ink);
-  --shadow-stencil-sm: 1px 1px 0 0 var(--color-ink);
+  /* Sombra stencil (offset duro sin blur) — tono trazo, visible y sobrio */
+  --shadow-stencil: 2px 2px 0 0 var(--color-trazo);
+  --shadow-stencil-sm: 1px 1px 0 0 var(--color-trazo-suave);
 
   /* Board */
   --board-cell-min: 28px;
@@ -66,8 +77,8 @@
   body {
     min-height: 100dvh;
     font-family: var(--font-sans);
-    color: var(--color-ink);
-    background-color: var(--color-paper);
+    color: var(--color-tinta);
+    background-color: var(--color-noche);
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -77,11 +88,11 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-sand-deep, currentcolor);
+    border-color: var(--color-trazo-suave, currentcolor);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-detonation);
+    outline: 2px solid var(--color-laton);
     outline-offset: 1px;
     border-radius: 1px;
   }
@@ -118,37 +129,40 @@
     box-sizing: border-box;
   }
 
+  /* Oculta: superficie elevada (tabula) — invitación a picar */
   .cell-hidden {
-    background-color: var(--color-sand);
-    border: 1px solid var(--color-sand-deep);
-    color: var(--color-detonation);
+    background-color: var(--color-tabula);
+    border: 1px solid var(--color-trazo);
+    color: var(--color-detonacion);
     cursor: pointer;
     transition: background-color 0.12s ease, transform 0.12s ease;
   }
   .cell-hidden:hover {
-    background-color: var(--color-sand-deep);
+    background-color: var(--color-trazo);
     transform: translateY(-1px);
   }
   .cell-hidden:active {
     transform: translateY(0);
-    background-color: var(--color-paper-deep);
+    background-color: var(--color-noche-profunda);
   }
   .cell-flagged {
-    background-color: var(--color-paper-deep);
-    color: var(--color-detonation);
+    background-color: var(--color-noche);
+    color: var(--color-detonacion);
   }
 
+  /* Revelada: hundida (noche-profunda) bajo el tablero */
   .cell-revealed {
-    background-color: var(--color-paper-deep);
-    border: 1px solid var(--color-sand);
-    color: var(--color-ink);
+    background-color: var(--color-noche-profunda);
+    border: 1px solid var(--color-trazo-suave);
+    color: var(--color-tinta);
     animation: cellPeel 0.18s cubic-bezier(0.2, 0.6, 0.2, 1) both;
     animation-delay: var(--anim-delay, 0ms);
   }
 
+  /* Vacía: se abre al nivel del marco */
   .cell-empty {
-    background-color: var(--color-paper);
-    border-color: var(--color-sand);
+    background-color: var(--color-noche);
+    border-color: var(--color-trazo-suave);
   }
 
   .cell-number {
@@ -166,9 +180,9 @@
   .cell-number[data-n='8'] { color: var(--color-mine-8); }
 
   .cell-mine {
-    background-color: var(--color-paper-deep);
-    border-color: var(--color-detonation);
-    color: var(--color-detonation);
+    background-color: var(--color-tabula);
+    border-color: var(--color-detonacion);
+    color: var(--color-detonacion);
     animation: cellDetonate 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) both;
     animation-delay: var(--anim-delay, 0ms);
     position: relative;
@@ -178,7 +192,7 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-cell);
-    box-shadow: 0 0 0 0 var(--color-detonation);
+    box-shadow: 0 0 0 0 var(--color-detonacion);
     animation: shockwave 0.6s ease-out var(--anim-delay, 0ms) both;
     pointer-events: none;
   }
@@ -210,7 +224,7 @@
 
   @keyframes shockwave {
     0% {
-      box-shadow: 0 0 0 0 var(--color-detonation);
+      box-shadow: 0 0 0 0 var(--color-detonacion);
       opacity: 0.6;
     }
     100% {
@@ -241,4 +255,3 @@
     display: none;
   }
 }
-

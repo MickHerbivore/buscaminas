@@ -1,20 +1,20 @@
 <article
-  class="relative w-full max-w-5xl bg-paper border-2 border-ink rounded-card shadow-stencil
+  class="relative w-full max-w-5xl bg-noche border-2 border-tinta rounded-card shadow-stencil
          p-4 sm:p-6 flex flex-col gap-4 mx-auto">
 
   <!-- HUD stencil -->
   <header
-    class="flex items-center justify-between gap-4 pb-3 border-b border-sand-deep"
+    class="flex items-center justify-between gap-4 pb-3 border-b border-trazo-suave"
     aria-label="Estado de la partida">
     <div class="flex items-center gap-2 font-mono">
-      <app-icon-flag class="size-4 text-detonation"></app-icon-flag>
-      <span class="text-xl font-bold tabular-nums text-ink">{{ flagsPlaced() }}</span>
-      <span class="text-ink-soft" aria-hidden="true">/</span>
-      <span class="text-xl font-bold tabular-nums text-ink-soft">{{ numberOfMines() }}</span>
+      <app-icon-flag class="size-4 text-detonacion"></app-icon-flag>
+      <span class="text-xl font-bold tabular-nums text-tinta">{{ flagsPlaced() }}</span>
+      <span class="text-tinta-suave" aria-hidden="true">/</span>
+      <span class="text-xl font-bold tabular-nums text-tinta-suave">{{ numberOfMines() }}</span>
     </div>
 
     <div class="flex items-baseline gap-2 font-mono">
-      <span class="hidden sm:inline text-[0.65rem] uppercase tracking-[0.2em] text-ink-soft">
+      <span class="hidden sm:inline text-[0.65rem] uppercase tracking-[0.2em] text-tinta-suave">
         {{ 'hud.time' | trans }}
       </span>
       <app-timer></app-timer>
@@ -44,13 +44,13 @@
       role="status"
       aria-live="assertive"
       class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
-             bg-paper/95 backdrop-blur-sm rounded-card
+             bg-noche/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
-      <app-icon-mine class="size-12 text-detonation"></app-icon-mine>
-      <h3 class="font-display font-bold text-3xl sm:text-4xl text-detonation tracking-tight">
+      <app-icon-mine class="size-12 text-detonacion"></app-icon-mine>
+      <h3 class="font-display font-bold text-3xl sm:text-4xl text-detonacion tracking-tight">
         {{ 'result.lose' | trans }}
       </h3>
-      <p class="font-mono text-xs text-ink-soft text-center px-4">{{ 'result.loseHint' | trans }}</p>
+      <p class="font-mono text-xs text-tinta-suave text-center px-4">{{ 'result.loseHint' | trans }}</p>
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
@@ -63,13 +63,13 @@
       role="status"
       aria-live="assertive"
       class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
-             bg-paper/95 backdrop-blur-sm rounded-card
+             bg-noche/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
-      <app-icon-flag class="size-12 text-safe"></app-icon-flag>
-      <h3 class="font-display font-bold text-3xl sm:text-4xl text-safe tracking-tight">
+      <app-icon-flag class="size-12 text-esmeralda"></app-icon-flag>
+      <h3 class="font-display font-bold text-3xl sm:text-4xl text-esmeralda tracking-tight">
         {{ 'result.win' | trans }}
       </h3>
-      <p class="font-mono text-xs text-ink-soft text-center px-4">{{ 'result.winHint' | trans }}</p>
+      <p class="font-mono text-xs text-tinta-suave text-center px-4">{{ 'result.winHint' | trans }}</p>
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
