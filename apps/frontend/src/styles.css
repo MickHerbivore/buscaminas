@@ -146,7 +146,6 @@
     background-color: var(--color-noche-profunda);
   }
   .cell-flagged {
-    background-color: var(--color-noche);
     color: var(--color-detonacion);
   }
 
@@ -159,9 +158,8 @@
     animation-delay: var(--anim-delay, 0ms);
   }
 
-  /* Vacía: se abre al nivel del marco */
+  /* Vacía: hereda el fondo de cell-revealed (noche-profunda) */
   .cell-empty {
-    background-color: var(--color-noche);
     border-color: var(--color-trazo-suave);
   }
 
