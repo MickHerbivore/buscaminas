@@ -17,6 +17,7 @@ export type TranslationKey =
   | 'result.lose'
   | 'result.winHint'
   | 'result.loseHint'
+  | 'result.time'
   | 'action.reset'
   | 'action.changeLevel'
   | 'action.start'
@@ -52,6 +53,7 @@ const es: Dictionary = {
   'result.lose': '¡Pierdes!',
   'result.winHint': 'Todas las casillas seguras descubiertas',
   'result.loseHint': 'Detonaste una mina',
+  'result.time': 'Tu tiempo',
   'action.reset': 'Reiniciar',
   'action.changeLevel': 'Cambiar nivel',
   'action.start': 'Empezar',
@@ -86,6 +88,7 @@ const en: Dictionary = {
   'result.lose': 'Game over',
   'result.winHint': 'Every safe cell uncovered',
   'result.loseHint': 'You triggered a mine',
+  'result.time': 'Your time',
   'action.reset': 'Reset',
   'action.changeLevel': 'Change level',
   'action.start': 'Start',
@@ -120,6 +123,7 @@ const zh: Dictionary = {
   'result.lose': '失败！',
   'result.winHint': '所有安全格已揭开',
   'result.loseHint': '你触发了一颗地雷',
+  'result.time': '用时',
   'action.reset': '重新开始',
   'action.changeLevel': '更换关卡',
   'action.start': '开始',
