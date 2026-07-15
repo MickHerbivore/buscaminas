@@ -40,7 +40,7 @@ export class BoxesFrameComponent {
 
   protected readonly cellSize = computed(() => {
     const cols = this.level()?.columnsQuantity ?? 8;
-    return `clamp(var(--board-cell-min), calc((100dvw - 3.5rem) / ${cols}), var(--board-cell-max))`;
+    return `clamp(var(--board-cell-min), calc((100dvw - 5.5rem) / ${cols}), var(--board-cell-max))`;
   });
 
   protected readonly rows = computed<BoardRow[]>(() => {

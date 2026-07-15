@@ -5,7 +5,7 @@
 
   @if (boxes().length) {
     <div
-      class="max-w-full overflow-x-auto overscroll-x-contain pb-2 -mx-2 px-2"
+      class="no-scrollbar max-w-full overflow-x-auto overscroll-x-contain pb-2"
       role="grid"
       [attr.aria-label]="'Tablero ' + (level()?.rowsQuantity ?? 0) + '×' + (level()?.columnsQuantity ?? 0)">
 
