@@ -9,6 +9,10 @@ import { BoxesFrameComponent } from '../boxes-frame/boxes-frame.component';
 import { ChangeLevelButtonComponent } from '../change-level-button/change-level-button.component';
 import { ResetButtonComponent } from '../reset-button/reset-button.component';
 import { TimerComponent } from '../timer/timer.component';
+import { IconFlagComponent } from '../../shared/components/icon/icon-flag/icon-flag.component';
+import { IconMineComponent } from '../../shared/components/icon/icon-mine/icon-mine.component';
+import { TransPipe } from '../../i18n/trans.pipe';
+import { ConfettiComponent } from '../../shared/components/confetti/confetti.component';
 
 @Component({
   selector: 'app-game-frame',
@@ -17,8 +21,13 @@ import { TimerComponent } from '../timer/timer.component';
     ChangeLevelButtonComponent,
     ResetButtonComponent,
     TimerComponent,
+    IconFlagComponent,
+    IconMineComponent,
+    TransPipe,
+    ConfettiComponent,
   ],
   templateUrl: './game-frame.component.html',
+  host: { class: 'block' },
 })
 export class GameFrameComponent {
   public level = input.required<Level | null>();

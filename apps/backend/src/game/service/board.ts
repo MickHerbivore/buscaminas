@@ -54,7 +54,7 @@ export function floodReveal(
 ): Box[] {
   const revealed: Box[] = [];
   const startCell = grid[startRow][startCol];
-  if (!startCell || startCell.hasMine || startCell.isRevealed) {
+  if (!startCell || startCell.hasMine || startCell.isRevealed || startCell.isFlagged) {
     return revealed;
   }
 
@@ -68,7 +68,7 @@ export function floodReveal(
     visited.add(key);
 
     const cell = grid[r][c];
-    if (!cell || cell.hasMine || cell.isRevealed) continue;
+    if (!cell || cell.hasMine || cell.isRevealed || cell.isFlagged) continue;
 
     cell.isRevealed = true;
     revealed.push(cell);

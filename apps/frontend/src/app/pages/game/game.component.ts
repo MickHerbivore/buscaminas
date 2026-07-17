@@ -7,6 +7,7 @@ import { GameStore } from '../../store/game.store';
   selector: 'app-game',
   imports: [GameFrameComponent],
   templateUrl: './game.component.html',
+  host: { class: 'w-full min-w-0' },
 })
 export class GameComponent {
   private readonly router = inject(Router);
@@ -21,6 +22,7 @@ export class GameComponent {
   protected boxClicked(boxId: string): void {
     const box = this.store.currentBoxes().find((b) => b.id === boxId);
     if (!box) return;
+    if (box.isFlagged) return;
     if (box.isRevealed) {
       if ((box.minesAroundQuantity ?? 0) > 0) this.store.chord(boxId);
     } else {

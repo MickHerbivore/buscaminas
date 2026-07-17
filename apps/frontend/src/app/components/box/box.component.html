@@ -1,21 +1,35 @@
 @if (!box().isRevealed) {
-
-<div class="w-10 h-10 p-2 bg-indigo-700 border-2 border-indigo-400 cursor-pointer flex justify-center items-center
-        hover:bg-indigo-600" (contextmenu)="onRightClick($event)" (click)="onClick()">
-    @if (box().isFlagged){
-    <img src="./assets/img/flag.svg" alt="">
+  <div
+    class="cell cell-hidden"
+    [class.cell-flagged]="box().isFlagged"
+    [style.--anim-delay]="animDelay()"
+    [attr.aria-label]="ariaLabel()"
+    role="gridcell"
+    tabindex="0"
+    (click)="onClick()"
+    (contextmenu)="onRightClick($event)"
+    (keydown)="onKey($event)">
+    @if (box().isFlagged) {
+      <app-icon-flag class="w-3/5 h-3/5"></app-icon-flag>
     }
-</div>
-
+  </div>
 } @else {
-
-<div class="w-10 h-10 p-2 bg-indigo-500 border-2 border-indigo-400 cursor-pointer flex justify-center items-center
-        hover:bg-indigo-500" (click)="onClick()">
-    @if (box().hasMine){
-    <img src="./assets/img/bomb.svg" alt="">
+  <div
+    class="cell cell-revealed"
+    [class.cell-mine]="box().hasMine"
+    [class.cell-number]="!box().hasMine && (box().minesAroundQuantity ?? 0) > 0"
+    [class.cell-empty]="!box().hasMine && (box().minesAroundQuantity ?? 0) === 0"
+    [style.--anim-delay]="animDelay()"
+    [attr.data-n]="box().minesAroundQuantity"
+    [attr.aria-label]="ariaLabel()"
+    role="gridcell"
+    tabindex="0"
+    (click)="onClick()"
+    (keydown)="onKey($event)">
+    @if (box().hasMine) {
+      <app-icon-mine class="w-3/5 h-3/5"></app-icon-mine>
     } @else if ((box().minesAroundQuantity ?? 0) > 0) {
-    {{ box().minesAroundQuantity }}
+      <span>{{ box().minesAroundQuantity }}</span>
     }
-</div>
-
+  </div>
 }

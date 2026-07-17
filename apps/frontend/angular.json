@@ -18,7 +18,7 @@
             "browser": "src/main.ts",
             "polyfills": [],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/favicon.svg", "src/assets"],
             "styles": ["src/styles.css"],
             "scripts": []
           },
@@ -75,7 +75,7 @@
           "options": {
             "polyfills": [],
             "tsConfig": "tsconfig.spec.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/favicon.svg", "src/assets"],
             "styles": ["src/styles.css"],
             "scripts": [],
             "karmaConfig": "karma.conf.js"

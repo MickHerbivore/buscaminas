@@ -1,25 +1,71 @@
-<section class="min-w-80 
-    flex flex-col justify-between items-center gap-4 from-indigo-400 bg-linear-to-br to-zinc-300 p-8
-    md:min-w-96 md:rounded-3xl md:mt-0">
+<section class="w-full flex flex-col gap-5" aria-labelledby="levels-heading">
+  <header class="flex flex-col gap-1">
+    <h2 id="levels-heading" class="font-display font-bold text-2xl tracking-tight">
+      {{ 'levels.heading' | trans }}
+    </h2>
+    <p class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-tinta-suave">
+      {{ 'levels.subtitle' | trans }}
+    </p>
+  </header>
 
-    <h1 class="text-3xl font-bold">Level:</h1>
+  @if (levelsLoading() && !levels().length) {
+    <div class="flex justify-center py-10" role="status" aria-live="polite">
+      <app-loading-spinner class="size-8 text-tinta-suave"></app-loading-spinner>
+    </div>
+  } @else if (!levels().length) {
+    <p class="font-mono text-sm text-tinta-suave py-6 text-center">—</p>
+  } @else {
+    <ul class="flex flex-col gap-3" role="list">
+      @for (level of levels(); track level.id) {
+        <li>
+          <button
+            type="button"
+            class="group w-full text-left bg-noche border-2 border-trazo-suave rounded-card p-4
+                   hover:border-tinta hover:shadow-stencil-sm transition-all
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   flex items-center gap-4 min-w-0"
+            (click)="onLevel(level)"
+            [disabled]="submittedId() !== null"
+            [attr.aria-label]="level.name">
+            <span
+              class="shrink-0 size-12 rounded-cell border-2 border-trazo-suave
+                     flex items-center justify-center gap-1 bg-tabula/40"
+              aria-hidden="true">
+              @for (filled of tierOf(level); track $index) {
+                <span
+                  class="size-1.5 rounded-full transition-colors"
+                  [class.bg-laton]="filled"
+                  [class.bg-trazo]="!filled"></span>
+              }
+            </span>
 
-    @if (!loading()) {
-    @for (level of levels(); track level.id) {
-    <button class="w-full px-4 py-2 bg-indigo-500 border-2 border-indigo-500 rounded-full box-border 
-                hover:bg-indigo-400 hover:border-2 hover:border-indigo-100" (click)="onLevel( level )"
-        [disabled]="loading()">
-        <strong class="text-2xl font-semibold">{{ level.name }}</strong>
-        <span class="flex justify-center items-center gap-2">
-            ( {{ level.rowsQuantity }} × {{ level.columnsQuantity }} <img src="./assets/img/box.svg" alt="Box"
-                class="size-6">
-            and
-            {{ level.minesQuantity}} <img src="./assets/img/bomb.svg" alt="Box" class="size-6">)
-        </span>
-    </button>
-    }
+            <span class="flex-1 flex flex-col gap-1 min-w-0">
+              <span class="font-display font-bold text-lg leading-tight truncate text-tinta">
+                {{ level.name }}
+              </span>
+              <span class="font-mono text-xs text-tinta-suave tracking-wide truncate">
+                {{ level.rowsQuantity }}×{{ level.columnsQuantity }}
+                · {{ level.minesQuantity }} {{ 'levels.mines' | trans }}
+              </span>
+            </span>
 
-    } @else {
-    <app-loading-spinner class="text-indigo-400 hover size-20"></app-loading-spinner>
-    }
+            @if (submittedId() === level.id) {
+              <app-loading-spinner
+                class="size-5 text-detonacion shrink-0"
+                aria-hidden="true"></app-loading-spinner>
+            } @else {
+              <span
+                class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-tinta-suave
+                       group-hover:text-tinta transition-colors shrink-0 hidden xs:inline">
+                {{ 'action.start' | trans }}
+              </span>
+              <span
+                class="font-mono text-base text-tinta-suave group-hover:text-tinta transition-colors shrink-0"
+                aria-hidden="true">→</span>
+            }
+          </button>
+        </li>
+      }
+    </ul>
+  }
 </section>

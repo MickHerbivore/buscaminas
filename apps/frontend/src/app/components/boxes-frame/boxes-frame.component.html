@@ -1,24 +1,41 @@
-<section class="relative flex justify-center">
+<section
+  class="relative w-full min-w-0 flex justify-center"
+  [style.--cell-size]="cellSize()"
+  [class.pointer-events-none]="isGameOver() || hasWon()">
 
-    @if (boxes().length) {
-    <div class="grid w-fit" [style]="'grid-template-columns: repeat('+ level()?.columnsQuantity + ', 1fr)'">
+  @if (boxes().length) {
+    <div
+      #scroller
+      (scroll)="onScroll()"
+      class="no-scrollbar max-w-full overflow-x-auto overscroll-x-contain pb-2"
+      role="grid"
+      [attr.aria-label]="'Tablero ' + (level()?.rowsQuantity ?? 0) + '×' + (level()?.columnsQuantity ?? 0)">
 
-        @for (box of boxes(); track box.id) {
-        <app-box [box]="box" (clickEvent)="boxClicked($event)" (rightClickEvent)="boxRightClicked($event)"></app-box>
-        }
+      <div class="inline-block">
+        <div class="flex flex-col gap-px">
+          @for (row of rows(); track $index) {
+            <div class="flex" role="row">
+              <div class="flex gap-px">
+                @for (cell of row.cells; track cell.id) {
+                  <app-box
+                    [box]="cell"
+                    (clickEvent)="boxClicked($event)"
+                    (rightClickEvent)="boxRightClicked($event)"></app-box>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     </div>
-    }
+  }
 
-    @if (isGameOver()) {
-    <div class="w-full h-full bg-neutral-600/50 flex justify-center items-center py-4 absolute top-0">
-        <h1 class="text-3xl font-extrabold text-pink-500">GAME OVER!</h1>
-    </div>
-    }
-
-    @if (hasWon()) {
-    <div class="w-full h-full bg-neutral-400/50 flex justify-center items-center py-4 absolute top-0">
-        <h1 class="text-3xl font-extrabold text-pink-600">YOU WON!</h1>
-    </div>
-    }
-
+  <div aria-hidden="true"
+    class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-noche/10 backdrop-blur-sm
+           transition-opacity duration-200 [mask-image:linear-gradient(to_right,black,transparent)]"
+    [class.opacity-0]="!shadowStart()" [class.opacity-100]="shadowStart()"></div>
+  <div aria-hidden="true"
+    class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-noche/10 backdrop-blur-sm
+           transition-opacity duration-200 [mask-image:linear-gradient(to_left,black,transparent)]"
+    [class.opacity-0]="!shadowEnd()" [class.opacity-100]="shadowEnd()"></div>
 </section>

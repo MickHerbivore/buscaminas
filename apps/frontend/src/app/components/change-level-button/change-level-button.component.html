@@ -1,15 +1,20 @@
-<div class="flex justify-center">
-    
-    @if(!loading()) {
-        <button class="w-full bg-indigo-500 text-white p-2 rounded-md"
-        (click)="onChangeLevel()">
-            Change Level
-        </button>
-
-    } @else {
-        <button class="w-full bg-indigo-500 text-white p-2 rounded-md flex justify-center items-center gap-4">
-            <span>Loading</span>
-            <app-loading-spinner class="text-white"></app-loading-spinner>
-        </button>
-    }
-</div>
+@if (!loading()) {
+  <button
+    type="button"
+    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-trazo-suave bg-noche hover:bg-tabula
+           font-mono text-xs uppercase tracking-[0.15em] text-tinta-suave hover:text-tinta transition-colors
+           focus-visible:outline-2 focus-visible:outline-detonacion"
+    (click)="onChangeLevel()">
+    ☰ {{ 'action.changeLevel' | trans }}
+  </button>
+} @else {
+  <button
+    type="button"
+    disabled
+    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-trazo-suave bg-tabula
+           font-mono text-xs uppercase tracking-[0.15em] text-tinta-suave
+           flex justify-center items-center gap-2 cursor-not-allowed">
+    <app-loading-spinner class="size-4 text-tinta-suave"></app-loading-spinner>
+    <span>{{ 'loading' | trans }}</span>
+  </button>
+}

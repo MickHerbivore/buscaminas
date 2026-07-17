@@ -11,4 +11,5 @@ export class LevelService {
   );
 
   readonly levels = this.levelsRef.value;
+  readonly isLoading = this.levelsRef.isLoading;
 }
