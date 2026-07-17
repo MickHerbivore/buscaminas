@@ -25,6 +25,7 @@ import { TransPipe } from '../../i18n/trans.pipe';
     TransPipe,
   ],
   templateUrl: './game-frame.component.html',
+  host: { class: 'block' },
 })
 export class GameFrameComponent {
   public level = input.required<Level | null>();

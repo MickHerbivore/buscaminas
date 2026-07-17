@@ -7,6 +7,7 @@ import { GameStore } from '../../store/game.store';
   selector: 'app-game',
   imports: [GameFrameComponent],
   templateUrl: './game.component.html',
+  host: { class: 'w-full min-w-0' },
 })
 export class GameComponent {
   private readonly router = inject(Router);

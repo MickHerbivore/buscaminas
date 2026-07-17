@@ -1,6 +1,6 @@
 <article
-  class="relative w-full max-w-5xl bg-noche border-2 border-tinta rounded-card shadow-stencil
-         p-4 sm:p-6 flex flex-col gap-4 mx-auto">
+  class="relative w-full min-w-0 bg-noche border-2 border-tinta rounded-card shadow-stencil
+         p-4 sm:p-6 flex flex-col gap-4">
 
   <!-- HUD stencil -->
   <header
@@ -32,7 +32,7 @@
 
   <!-- Controls (ocultos mientras se muestra el overlay de resultado) -->
   @if (!isGameOver() && !hasWon()) {
-    <div class="grid grid-cols-2 gap-2 sm:flex sm:gap-3 sm:justify-center">
+    <div class="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3 sm:justify-center sm:items-center">
       <app-reset-button></app-reset-button>
       <app-change-level-button></app-change-level-button>
     </div>
