@@ -1,10 +1,12 @@
 <section
-  class="w-full min-w-0 flex justify-center"
+  class="relative w-full min-w-0 flex justify-center"
   [style.--cell-size]="cellSize()"
   [class.pointer-events-none]="isGameOver() || hasWon()">
 
   @if (boxes().length) {
     <div
+      #scroller
+      (scroll)="onScroll()"
       class="no-scrollbar max-w-full overflow-x-auto overscroll-x-contain pb-2"
       role="grid"
       [attr.aria-label]="'Tablero ' + (level()?.rowsQuantity ?? 0) + '×' + (level()?.columnsQuantity ?? 0)">
@@ -27,4 +29,13 @@
       </div>
     </div>
   }
+
+  <div aria-hidden="true"
+    class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-noche/10 backdrop-blur-sm
+           transition-opacity duration-200 [mask-image:linear-gradient(to_right,black,transparent)]"
+    [class.opacity-0]="!shadowStart()" [class.opacity-100]="shadowStart()"></div>
+  <div aria-hidden="true"
+    class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-noche/10 backdrop-blur-sm
+           transition-opacity duration-200 [mask-image:linear-gradient(to_left,black,transparent)]"
+    [class.opacity-0]="!shadowEnd()" [class.opacity-100]="shadowEnd()"></div>
 </section>
