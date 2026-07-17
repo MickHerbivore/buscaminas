@@ -52,7 +52,13 @@ export class TranslationService {
     }
   }
 
-  t(key: TranslationKey): string {
-    return translations[this._locale()][key] ?? key;
+  t(key: TranslationKey, params?: Record<string, string | number>): string {
+    let value = translations[this._locale()][key] ?? key;
+    if (params) {
+      value = value.replace(/\{(\w+)\}/g, (match, name) =>
+        name in params ? String(params[name]) : match,
+      );
+    }
+    return value;
   }
 }

@@ -48,7 +48,7 @@ export class BoxComponent {
     if (b.isRevealed) {
       if (b.hasMine) return `${coord} · ${this.i18n.t('box.mine')}`;
       const n = b.minesAroundQuantity ?? 0;
-      if (n > 0) return `${coord} · ${n} ${this.i18n.t('box.minesNear')}`;
+      if (n > 0) return `${coord} · ${this.i18n.t('box.minesNear', { n })}`;
       return `${coord} · ${this.i18n.t('box.empty')}`;
     }
     if (b.isFlagged) return `${coord} · ${this.i18n.t('box.flagged')}`;

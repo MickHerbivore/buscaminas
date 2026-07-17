@@ -9,7 +9,7 @@ import { TranslationService } from './translation.service';
 export class TransPipe implements PipeTransform {
   private readonly i18n = inject(TranslationService);
 
-  transform(key: TranslationKey): string {
-    return this.i18n.t(key);
+  transform(key: TranslationKey, params?: Record<string, string | number>): string {
+    return this.i18n.t(key, params);
   }
 }
