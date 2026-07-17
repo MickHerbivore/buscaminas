@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   inject,
   output,
   signal,
@@ -29,9 +30,23 @@ export class LevelsComponent {
     this.levelIdSelectedEvent.emit(level.id);
   }
 
-  density(level: Level): number {
-    const total = level.rowsQuantity * level.columnsQuantity;
-    if (total <= 0) return 0;
-    return Math.round((level.minesQuantity / total) * 100);
+  private readonly tierMap = computed(() => {
+    const sorted = [...this.levels()].sort(
+      (a, b) =>
+        a.minesQuantity - b.minesQuantity ||
+        a.rowsQuantity * a.columnsQuantity - b.rowsQuantity * b.columnsQuantity,
+    );
+    const total = sorted.length;
+    const map = new Map<string, { filled: number; total: number }>();
+    sorted.forEach((level, index) => {
+      map.set(level.id, { filled: index + 1, total });
+    });
+    return map;
+  });
+
+  tierOf(level: Level): boolean[] {
+    const tier = this.tierMap().get(level.id);
+    if (!tier) return [true];
+    return Array.from({ length: tier.total }, (_, i) => i < tier.filled);
   }
 }

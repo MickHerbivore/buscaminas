@@ -29,9 +29,14 @@
             [attr.aria-label]="level.name">
             <span
               class="shrink-0 size-12 rounded-cell border-2 border-trazo-suave
-                     flex items-center justify-center font-mono font-bold text-base
-                     text-tinta-suave bg-tabula/40">
-              {{ density(level) }}<span class="text-[0.6em] mt-[-2px]">%</span>
+                     flex items-center justify-center gap-1 bg-tabula/40"
+              aria-hidden="true">
+              @for (filled of tierOf(level); track $index) {
+                <span
+                  class="size-1.5 rounded-full transition-colors"
+                  [class.bg-laton]="filled"
+                  [class.bg-trazo]="!filled"></span>
+              }
             </span>
 
             <span class="flex-1 flex flex-col gap-1 min-w-0">
