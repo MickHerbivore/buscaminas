@@ -10,23 +10,9 @@
       [attr.aria-label]="'Tablero ' + (level()?.rowsQuantity ?? 0) + '×' + (level()?.columnsQuantity ?? 0)">
 
       <div class="inline-block">
-        <!-- Column header -->
-        <div class="flex items-end gap-px pl-7 mb-1" role="row" aria-hidden="true">
-          @for (label of colLabels(); track $index) {
-            <span
-              class="font-mono text-[0.6rem] text-center text-tinta-suave leading-none flex items-center justify-center"
-              [style.width]="'var(--cell-size)'"
-              [style.height]="'0.85rem'">{{ label }}</span>
-          }
-        </div>
-
-        <!-- Rows -->
         <div class="flex flex-col gap-px">
-          @for (row of rows(); track row.label) {
-            <div class="flex items-center gap-1" role="row">
-              <span
-                class="w-6 shrink-0 font-mono text-[0.6rem] text-right text-tinta-suave leading-none pr-1"
-                aria-hidden="true">{{ row.label }}</span>
+          @for (row of rows(); track $index) {
+            <div class="flex" role="row">
               <div class="flex gap-px">
                 @for (cell of row.cells; track cell.id) {
                   <app-box

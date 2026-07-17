@@ -9,19 +9,7 @@ import { Level } from '../../interfaces/level.interface';
 import { BoxComponent } from '../box/box.component';
 
 interface BoardRow {
-  label: string;
   cells: Box[];
-}
-
-function colLabel(n: number): string {
-  let s = '';
-  let i = n + 1;
-  while (i > 0) {
-    const mod = (i - 1) % 26;
-    s = String.fromCharCode(65 + mod) + s;
-    i = Math.floor((i - 1) / 26);
-  }
-  return s;
 }
 
 @Component({
@@ -53,15 +41,9 @@ export class BoxesFrameComponent {
     }
     return [...byRow.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([rowIndex, cells]) => ({
-        label: String(rowIndex + 1),
+      .map(([, cells]) => ({
         cells: cells.sort((a, b) => a.column - b.column),
       }));
-  });
-
-  protected readonly colLabels = computed<string[]>(() => {
-    const cols = this.level()?.columnsQuantity ?? 0;
-    return Array.from({ length: cols }, (_, i) => colLabel(i));
   });
 
   protected boxClicked(boxId: string) {
