@@ -46,74 +46,73 @@ export class GameStore {
     });
   }
 
-  createGame(levelId: string): void {
+  async createGame(levelId: string): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
-    this.gameService.createGame({ levelId }).subscribe({
-      next: (game) => {
-        localStorage.setItem(STORAGE_GAME_ID, game.id);
-        this._gameId.set(game.id);
-        this.router.navigate(['game']);
-      },
-      error: (err) => {
-        this.handleError(err);
-        this._loading.set(false);
-      },
-    });
+    try {
+      const game = await firstValueFrom(
+        this.gameService.createGame({ levelId }),
+      );
+      localStorage.setItem(STORAGE_GAME_ID, game.id);
+      this._gameId.set(game.id);
+      this.router.navigate(['game']);
+    } catch (err) {
+      this.handleError(err);
+      this._loading.set(false);
+    }
   }
 
   reveal(boxId: string): void {
-    this.act(boxId, (id) => this.gameService.reveal(id, { boxId }));
+    void this.act((id) => this.gameService.reveal(id, { boxId }));
   }
 
   flag(boxId: string): void {
-    this.act(boxId, (id) => this.gameService.flag(id, { boxId }));
+    void this.act((id) => this.gameService.flag(id, { boxId }));
   }
 
   chord(boxId: string): void {
-    this.act(boxId, (id) => this.gameService.chord(id, { boxId }));
+    void this.act((id) => this.gameService.chord(id, { boxId }));
   }
 
-  newGame(): void {
+  async newGame(): Promise<void> {
     const levelId = this._game()?.level?.id;
     const currentId = this._gameId();
     if (!levelId) return;
     if (currentId) {
-      this.gameService.deleteGame(currentId).subscribe({
-        next: () => this.createGame(levelId),
-        error: () => this.createGame(levelId),
-      });
-    } else {
-      this.createGame(levelId);
+      try {
+        await firstValueFrom(this.gameService.deleteGame(currentId));
+      } catch {
+        // ignore delete errors: still create a new game
+      }
     }
+    await this.createGame(levelId);
   }
 
-  changeLevel(): void {
+  async changeLevel(): Promise<void> {
     const id = this._gameId();
-    const done = () => {
-      this.clearStoredGame();
-      this.router.navigate(['/']);
-    };
     if (id) {
-      this.gameService.deleteGame(id).subscribe({ next: done, error: done });
-    } else {
-      done();
+      try {
+        await firstValueFrom(this.gameService.deleteGame(id));
+      } catch {
+        // ignore delete errors: proceed to clear regardless
+      }
     }
+    this.clearStoredGame();
+    this.router.navigate(['/']);
   }
 
-  private act(
-    boxId: string,
+  private async act(
     call: (id: string) => Observable<ActionResult>,
-  ): void {
+  ): Promise<void> {
     const id = this._gameId();
     if (!id || this.isGameOver()) return;
-    call(id).subscribe({
-      next: (result) => {
-        this._game.set(result.game);
-        this.mergeBoxes(result.boxes);
-      },
-      error: (err) => this.handleError(err),
-    });
+    try {
+      const result = await firstValueFrom(call(id));
+      this._game.set(result.game);
+      this.mergeBoxes(result.boxes);
+    } catch (err) {
+      this.handleError(err);
+    }
   }
 
   private async loadGame(id: string): Promise<void> {

@@ -19,6 +19,6 @@ export class ChangeLevelButtonComponent {
 
   protected onChangeLevel(): void {
     this.loading.set(true);
-    this.store.changeLevel();
+    void this.store.changeLevel();
   }
 }

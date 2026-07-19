@@ -23,6 +23,6 @@ export class MainComponent {
   }
 
   createGame(levelId: string) {
-    this.gameStore.createGame(levelId);
+    void this.gameStore.createGame(levelId);
   }
 }

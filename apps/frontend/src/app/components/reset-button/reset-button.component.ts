@@ -11,6 +11,6 @@ export class ResetButtonComponent {
   private readonly store = inject(GameStore);
 
   protected resetGame(): void {
-    this.store.newGame();
+    void this.store.newGame();
   }
 }
