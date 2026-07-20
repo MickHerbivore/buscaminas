@@ -1,33 +1,33 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Breakpoint estrecho para colapsar HUD/switcher en móvil */
+  /* Narrow breakpoint to collapse HUD/switcher on mobile */
   --breakpoint-xs: 30rem;
 
-  /* Paleta — Cartografía nocturna
-     Base obsidiana (sub-tono frío) + tinta pergamino + acento latón (aguja de brújula).
-     La tensión frío/calor es lo que la separa de un "dark mode" genérico. */
-  --color-noche: #0e1014;
-  --color-noche-profunda: #080a0d;
-  --color-tabula: #171a21;
-  --color-trazo: #2a2e37;
-  --color-trazo-suave: #1c1f27;
+  /* Palette — Nocturnal cartography
+     Obsidian base (cool undertone) + parchment ink + brass accent (compass needle).
+     The warm/cold tension is what sets it apart from a generic "dark mode". */
+  --color-night: #0e1014;
+  --color-deep-night: #080a0d;
+  --color-table: #171a21;
+  --color-stroke: #2a2e37;
+  --color-soft-stroke: #1c1f27;
 
-  --color-tinta: #eae6dd;
-  --color-tinta-suave: #a6a39b;
-  --color-tinta-tenue: #65686f;
+  --color-ink: #eae6dd;
+  --color-soft-ink: #a6a39b;
+  --color-dim-ink: #65686f;
 
-  --color-laton: #d9a45a;
-  --color-laton-brillante: #e8b974;
-  --color-laton-profundo: #a87a38;
+  --color-brass: #d9a45a;
+  --color-bright-brass: #e8b974;
+  --color-deep-brass: #a87a38;
 
-  --color-detonacion: #e0533d;
-  --color-detonacion-profunda: #b23a2a;
-  --color-esmeralda: #5fae7e;
-  --color-esmeralda-profunda: #3d8458;
-  --color-zafiro: #6b92e0;
+  --color-detonation: #e0533d;
+  --color-deep-detonation: #b23a2a;
+  --color-emerald: #5fae7e;
+  --color-deep-emerald: #3d8458;
+  --color-sapphire: #6b92e0;
 
-  /* Rampa de números por adyacencia (1→8) — joya desaturada sobre oscuro */
+  /* Adjacency number ramp (1→8) — desaturated jewel on dark */
   --color-mine-1: #6b92e0;
   --color-mine-2: #5fae7e;
   --color-mine-3: #e0533d;
@@ -37,19 +37,19 @@
   --color-mine-7: #d9a45a;
   --color-mine-8: #8e919a;
 
-  /* Tipografía (con pila CJK de fallback para zh) */
+  /* Typography (with CJK fallback stack for zh) */
   --font-sans: 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
   --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, 'Noto Sans Mono CJK SC', monospace;
 
-  /* Radios */
+  /* Radii */
   --radius-cell: 2px;
   --radius-card: 4px;
   --radius-pill: 999px;
 
-  /* Sombra stencil (offset duro sin blur) — tono trazo, visible y sobrio */
-  --shadow-stencil: 2px 2px 0 0 var(--color-trazo);
-  --shadow-stencil-sm: 1px 1px 0 0 var(--color-trazo-suave);
+  /* Stencil shadow (hard offset, no blur) — stroke tone, visible and sober */
+  --shadow-stencil: 2px 2px 0 0 var(--color-stroke);
+  --shadow-stencil-sm: 1px 1px 0 0 var(--color-soft-stroke);
 
   /* Board */
   --board-cell-min: 28px;
@@ -77,8 +77,8 @@
   body {
     min-height: 100dvh;
     font-family: var(--font-sans);
-    color: var(--color-tinta);
-    background-color: var(--color-noche);
+    color: var(--color-ink);
+    background-color: var(--color-night);
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -88,16 +88,16 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-trazo-suave, currentcolor);
+    border-color: var(--color-soft-stroke, currentcolor);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-laton);
+    outline: 2px solid var(--color-brass);
     outline-offset: 1px;
     border-radius: 1px;
   }
 
-  /* Targets táctiles: sin delay ni selección de texto al picar */
+  /* Touch targets: no delay or text selection on tap */
   app-box {
     touch-action: manipulation;
     user-select: none;
@@ -129,38 +129,38 @@
     box-sizing: border-box;
   }
 
-  /* Oculta: superficie elevada (tabula) — invitación a picar */
+  /* Hidden: raised surface (table) — invitation to click */
   .cell-hidden {
-    background-color: var(--color-tabula);
-    border: 1px solid var(--color-trazo);
-    color: var(--color-detonacion);
+    background-color: var(--color-table);
+    border: 1px solid var(--color-stroke);
+    color: var(--color-detonation);
     cursor: pointer;
     transition: background-color 0.12s ease, transform 0.12s ease;
   }
   .cell-hidden:hover {
-    background-color: var(--color-trazo);
+    background-color: var(--color-stroke);
     transform: translateY(-1px);
   }
   .cell-hidden:active {
     transform: translateY(0);
-    background-color: var(--color-noche-profunda);
+    background-color: var(--color-deep-night);
   }
   .cell-flagged {
-    color: var(--color-detonacion);
+    color: var(--color-detonation);
   }
 
-  /* Revelada: hundida (noche-profunda) bajo el tablero */
+  /* Revealed: sunken (deep-night) below the board */
   .cell-revealed {
-    background-color: var(--color-noche-profunda);
-    border: 1px solid var(--color-trazo-suave);
-    color: var(--color-tinta);
+    background-color: var(--color-deep-night);
+    border: 1px solid var(--color-soft-stroke);
+    color: var(--color-ink);
     animation: cellPeel 0.18s cubic-bezier(0.2, 0.6, 0.2, 1) both;
     animation-delay: var(--anim-delay, 0ms);
   }
 
-  /* Vacía: hereda el fondo de cell-revealed (noche-profunda) */
+  /* Empty: inherits cell-revealed background (deep-night) */
   .cell-empty {
-    border-color: var(--color-trazo-suave);
+    border-color: var(--color-soft-stroke);
   }
 
   .cell-number {
@@ -178,9 +178,9 @@
   .cell-number[data-n='8'] { color: var(--color-mine-8); }
 
   .cell-mine {
-    background-color: var(--color-tabula);
-    border-color: var(--color-detonacion);
-    color: var(--color-detonacion);
+    background-color: var(--color-table);
+    border-color: var(--color-detonation);
+    color: var(--color-detonation);
     animation: cellDetonate 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) both;
     animation-delay: var(--anim-delay, 0ms);
     position: relative;
@@ -190,7 +190,7 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-cell);
-    box-shadow: 0 0 0 0 var(--color-detonacion);
+    box-shadow: 0 0 0 0 var(--color-detonation);
     animation: shockwave 0.6s ease-out var(--anim-delay, 0ms) both;
     pointer-events: none;
   }
@@ -222,7 +222,7 @@
 
   @keyframes shockwave {
     0% {
-      box-shadow: 0 0 0 0 var(--color-detonacion);
+      box-shadow: 0 0 0 0 var(--color-detonation);
       opacity: 0.6;
     }
     100% {
@@ -231,7 +231,7 @@
     }
   }
 
-  /* Sr-only helper (Tailwind v4 ya lo trae, replicamos por seguridad) */
+  /* Sr-only helper (Tailwind v4 already includes it, replicate for safety) */
   .sr-only {
     position: absolute;
     width: 1px;
@@ -244,7 +244,7 @@
     border: 0;
   }
 
-  /* Ocultar scrollbar manteniendo el scroll funcional */
+  /* Hide scrollbar while keeping scroll functional */
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
