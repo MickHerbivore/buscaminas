@@ -4,6 +4,8 @@ import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
+    localStorage.clear();
+    spyOnProperty(navigator, 'language', 'get').and.returnValue('es-ES');
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [provideRouter([])],
@@ -26,7 +28,7 @@ describe('AppComponent', () => {
   it('renders the language switcher', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const btn = (fixture.nativeElement as HTMLElement).querySelector('app-language-switcher button');
+    const btn = (fixture.nativeElement as HTMLElement).querySelector('app-language-switcher select');
     expect(btn).toBeTruthy();
   });
 });
