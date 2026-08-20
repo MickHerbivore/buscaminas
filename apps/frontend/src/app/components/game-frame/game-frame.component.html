@@ -1,20 +1,20 @@
 <article
-  class="relative w-fit max-w-full min-w-0 mx-auto bg-noche border-2 border-tinta rounded-card shadow-stencil
+  class="relative w-fit max-w-full min-w-0 mx-auto bg-night border-2 border-ink rounded-card shadow-stencil
          p-4 sm:p-6 flex flex-col gap-4">
 
   <!-- HUD stencil -->
   <header
-    class="flex items-center justify-between gap-4 pb-3 border-b border-trazo-suave"
+    class="flex items-center justify-between gap-4 pb-3 border-b border-soft-stroke"
     aria-label="Estado de la partida">
     <div class="flex items-center gap-2 font-mono">
-      <app-icon-flag class="size-4 text-detonacion"></app-icon-flag>
-      <span class="text-xl font-bold tabular-nums text-tinta">{{ flagsPlaced() }}</span>
-      <span class="text-tinta-suave" aria-hidden="true">/</span>
-      <span class="text-xl font-bold tabular-nums text-tinta-suave">{{ numberOfMines() }}</span>
+      <app-icon-flag class="size-4 text-detonation"></app-icon-flag>
+      <span class="text-xl font-bold tabular-nums text-ink">{{ flagsPlaced() }}</span>
+      <span class="text-soft-ink" aria-hidden="true">/</span>
+      <span class="text-xl font-bold tabular-nums text-soft-ink">{{ numberOfMines() }}</span>
     </div>
 
     <div class="flex items-baseline gap-2 font-mono">
-      <span class="hidden sm:inline text-[0.65rem] uppercase tracking-[0.2em] text-tinta-suave">
+      <span class="hidden sm:inline text-[0.65rem] uppercase tracking-[0.2em] text-soft-ink">
         {{ 'hud.time' | trans }}
       </span>
       <app-timer></app-timer>
@@ -31,48 +31,68 @@
     (boxRightClickEvent)="boxRightClicked($event)"></app-boxes-frame>
 
   <!-- Controls (ocultos mientras se muestra el overlay de resultado) -->
-  @if (!isGameOver() && !hasWon()) {
+  @if ((!isGameOver() && !hasWon()) || resultDismissed()) {
     <div class="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3 sm:justify-center sm:items-center">
+      @if (resultDismissed()) {
+        <div class="flex items-center justify-center gap-2 sm:mr-2">
+          @if (isGameOver()) {
+            <app-icon-mine class="size-4 text-detonation"></app-icon-mine>
+          } @else {
+            <app-icon-flag class="size-4 text-emerald"></app-icon-flag>
+          }
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-soft-ink">
+            {{ (isGameOver() ? 'result.lose' : 'result.win') | trans }}
+          </span>
+        </div>
+      }
       <app-reset-button></app-reset-button>
       <app-change-level-button></app-change-level-button>
     </div>
   }
 
   <!-- Result overlays con CTAs embebidos -->
-  @if (isGameOver()) {
+  @if (isGameOver() && !resultDismissed()) {
     <div
       role="status"
       aria-live="assertive"
       class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
-             bg-noche/95 backdrop-blur-sm rounded-card
+             bg-night/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
-      <app-icon-mine class="size-12 text-detonacion"></app-icon-mine>
-      <h3 class="font-display font-bold text-3xl sm:text-4xl text-detonacion tracking-tight">
+      <app-icon-mine class="size-12 text-detonation"></app-icon-mine>
+      <h3 class="font-display font-bold text-3xl sm:text-4xl text-detonation tracking-tight">
         {{ 'result.lose' | trans }}
       </h3>
-      <p class="font-mono text-xs text-tinta-suave text-center px-4">{{ 'result.loseHint' | trans }}</p>
+      <p class="font-mono text-xs text-soft-ink text-center px-4">{{ 'result.loseHint' | trans }}</p>
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
+        <button
+          type="button"
+          class="w-full px-4 py-2 rounded-pill border-2 border-soft-stroke bg-transparent hover:bg-table
+                 font-mono text-xs uppercase tracking-[0.15em] text-soft-ink hover:text-ink transition-colors
+                 focus-visible:outline-2 focus-visible:outline-detonation"
+          (click)="dismissResult()">
+          {{ 'result.viewBoard' | trans }}
+        </button>
       </div>
     </div>
   }
 
-  @if (hasWon()) {
+  @if (hasWon() && !resultDismissed()) {
     <app-confetti></app-confetti>
     <div
       role="status"
       aria-live="assertive"
       class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4
-             bg-noche/95 backdrop-blur-sm rounded-card
+             bg-night/95 backdrop-blur-sm rounded-card
              animate-[fadeIn_0.2s_ease-out]">
-      <app-icon-flag class="size-12 text-esmeralda"></app-icon-flag>
-      <h3 class="font-display font-bold text-3xl sm:text-4xl text-esmeralda tracking-tight">
+      <app-icon-flag class="size-12 text-emerald"></app-icon-flag>
+      <h3 class="font-display font-bold text-3xl sm:text-4xl text-emerald tracking-tight">
         {{ 'result.win' | trans }}
       </h3>
-      <p class="font-mono text-xs text-tinta-suave text-center px-4">{{ 'result.winHint' | trans }}</p>
+      <p class="font-mono text-xs text-soft-ink text-center px-4">{{ 'result.winHint' | trans }}</p>
       <div class="flex items-baseline gap-2 font-mono">
-        <span class="text-[0.65rem] uppercase tracking-[0.2em] text-tinta-suave">
+        <span class="text-[0.65rem] uppercase tracking-[0.2em] text-soft-ink">
           {{ 'result.time' | trans }}
         </span>
         <app-timer></app-timer>
@@ -80,6 +100,14 @@
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
+        <button
+          type="button"
+          class="w-full px-4 py-2 rounded-pill border-2 border-soft-stroke bg-transparent hover:bg-table
+                 font-mono text-xs uppercase tracking-[0.15em] text-soft-ink hover:text-ink transition-colors
+                 focus-visible:outline-2 focus-visible:outline-detonation"
+          (click)="dismissResult()">
+          {{ 'result.viewBoard' | trans }}
+        </button>
       </div>
     </div>
   }

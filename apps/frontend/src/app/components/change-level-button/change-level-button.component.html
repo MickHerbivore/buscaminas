@@ -1,9 +1,9 @@
 @if (!loading()) {
   <button
     type="button"
-    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-trazo-suave bg-noche hover:bg-tabula
-           font-mono text-xs uppercase tracking-[0.15em] text-tinta-suave hover:text-tinta transition-colors
-           focus-visible:outline-2 focus-visible:outline-detonacion"
+    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-soft-stroke bg-night hover:bg-table
+           font-mono text-xs uppercase tracking-[0.15em] text-soft-ink hover:text-ink transition-colors
+           focus-visible:outline-2 focus-visible:outline-detonation"
     (click)="onChangeLevel()">
     ☰ {{ 'action.changeLevel' | trans }}
   </button>
@@ -11,10 +11,10 @@
   <button
     type="button"
     disabled
-    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-trazo-suave bg-tabula
-           font-mono text-xs uppercase tracking-[0.15em] text-tinta-suave
+    class="w-full sm:w-auto px-4 py-2 rounded-pill border-2 border-soft-stroke bg-table
+           font-mono text-xs uppercase tracking-[0.15em] text-soft-ink
            flex justify-center items-center gap-2 cursor-not-allowed">
-    <app-loading-spinner class="size-4 text-tinta-suave"></app-loading-spinner>
+    <app-loading-spinner class="size-4 text-soft-ink"></app-loading-spinner>
     <span>{{ 'loading' | trans }}</span>
   </button>
 }

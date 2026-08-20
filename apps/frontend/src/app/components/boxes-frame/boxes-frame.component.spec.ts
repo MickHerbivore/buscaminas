@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { BoxesFrameComponent } from './boxes-frame.component';
+import { BoxComponent } from '../box/box.component';
 import { Box } from '../../interfaces/box.interface';
 import { Level } from '../../interfaces/level.interface';
 
@@ -36,5 +38,16 @@ describe('BoxesFrameComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('forwards isGameOver to the boxes', () => {
+    fixture.componentRef.setInput('isGameOver', true);
+    fixture.detectChanges();
+
+    const boxes = fixture.debugElement.queryAll(By.directive(BoxComponent));
+    expect(boxes.length).toBeGreaterThan(0);
+    for (const box of boxes) {
+      expect(box.componentInstance.isGameOver()).toBeTrue();
+    }
   });
 });

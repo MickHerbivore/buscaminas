@@ -18,6 +18,7 @@ export type TranslationKey =
   | 'result.winHint'
   | 'result.loseHint'
   | 'result.time'
+  | 'result.viewBoard'
   | 'action.reset'
   | 'action.changeLevel'
   | 'action.start'
@@ -26,6 +27,8 @@ export type TranslationKey =
   | 'timer.days'
   | 'box.flagged'
   | 'box.mine'
+  | 'box.mineHidden'
+  | 'box.wrongFlag'
   | 'box.minesNear'
   | 'box.empty'
   | 'box.hidden'
@@ -54,6 +57,7 @@ const es: Dictionary = {
   'result.winHint': 'Todas las casillas seguras descubiertas',
   'result.loseHint': 'Detonaste una mina',
   'result.time': 'Tu tiempo',
+  'result.viewBoard': 'Ver tablero',
   'action.reset': 'Reiniciar',
   'action.changeLevel': 'Cambiar nivel',
   'action.start': 'Empezar',
@@ -62,6 +66,8 @@ const es: Dictionary = {
   'timer.days': 'días',
   'box.flagged': 'bandera',
   'box.mine': 'mina',
+  'box.mineHidden': 'mina sin detonar',
+  'box.wrongFlag': 'bandera incorrecta',
   'box.minesNear': '{n} minas cerca',
   'box.empty': 'vacía',
   'box.hidden': 'sin descubrir',
@@ -89,6 +95,7 @@ const en: Dictionary = {
   'result.winHint': 'Every safe cell uncovered',
   'result.loseHint': 'You triggered a mine',
   'result.time': 'Your time',
+  'result.viewBoard': 'View board',
   'action.reset': 'Reset',
   'action.changeLevel': 'Change level',
   'action.start': 'Start',
@@ -97,6 +104,8 @@ const en: Dictionary = {
   'timer.days': 'days',
   'box.flagged': 'flag',
   'box.mine': 'mine',
+  'box.mineHidden': 'undetonated mine',
+  'box.wrongFlag': 'wrong flag',
   'box.minesNear': '{n} mines near',
   'box.empty': 'empty',
   'box.hidden': 'hidden',
@@ -124,6 +133,7 @@ const zh: Dictionary = {
   'result.winHint': '所有安全格已翻开',
   'result.loseHint': '你踩中了一颗地雷',
   'result.time': '用时',
+  'result.viewBoard': '查看棋盘',
   'action.reset': '重新开始',
   'action.changeLevel': '更换关卡',
   'action.start': '开始',
@@ -132,6 +142,8 @@ const zh: Dictionary = {
   'timer.days': '天',
   'box.flagged': '已标记',
   'box.mine': '地雷',
+  'box.mineHidden': '未引爆的地雷',
+  'box.wrongFlag': '错误标记',
   'box.minesNear': '附近有 {n} 颗雷',
   'box.empty': '空格',
   'box.hidden': '未翻开',

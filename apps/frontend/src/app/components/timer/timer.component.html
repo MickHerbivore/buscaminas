@@ -1,8 +1,8 @@
 <span
-  class="font-mono font-bold tabular-nums text-xl text-tinta whitespace-nowrap"
+  class="font-mono font-bold tabular-nums text-xl text-ink whitespace-nowrap"
   [title]="elapsedDays() > 0 ? elapsedDays() + ' ' + ((elapsedDays() !== 1 ? 'days' : 'day')) : ''">
   @if (elapsedDays() > 0) {
-    <span class="text-tinta-suave text-base">·{{ elapsedDays() }}d</span>
+    <span class="text-soft-ink text-base">·{{ elapsedDays() }}d</span>
   }
   {{ elapsedHours() }}:{{ elapsedMinutes() }}:{{ elapsedSeconds() }}
 </span>

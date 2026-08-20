@@ -19,6 +19,7 @@
                 @for (cell of row.cells; track cell.id) {
                   <app-box
                     [box]="cell"
+                    [isGameOver]="isGameOver()"
                     (clickEvent)="boxClicked($event)"
                     (rightClickEvent)="boxRightClicked($event)"></app-box>
                 }
@@ -31,11 +32,11 @@
   }
 
   <div aria-hidden="true"
-    class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-noche/10 backdrop-blur-sm
+    class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-night/10 backdrop-blur-sm
            transition-opacity duration-200 [mask-image:linear-gradient(to_right,black,transparent)]"
     [class.opacity-0]="!shadowStart()" [class.opacity-100]="shadowStart()"></div>
   <div aria-hidden="true"
-    class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-noche/10 backdrop-blur-sm
+    class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-night/10 backdrop-blur-sm
            transition-opacity duration-200 [mask-image:linear-gradient(to_left,black,transparent)]"
     [class.opacity-0]="!shadowEnd()" [class.opacity-100]="shadowEnd()"></div>
 </section>
