@@ -28,6 +28,7 @@ function colLetter(n: number): string {
 })
 export class BoxComponent {
   public box = input.required<Box>();
+  public isGameOver = input(false);
 
   public clickEvent = output<string>();
   public rightClickEvent = output<string>();
@@ -50,6 +51,10 @@ export class BoxComponent {
       const n = b.minesAroundQuantity ?? 0;
       if (n > 0) return `${coord} · ${this.i18n.t('box.minesNear', { n })}`;
       return `${coord} · ${this.i18n.t('box.empty')}`;
+    }
+    if (this.isGameOver()) {
+      if (b.hasMine) return `${coord} · ${this.i18n.t('box.mineHidden')}`;
+      if (b.isFlagged) return `${coord} · ${this.i18n.t('box.wrongFlag')}`;
     }
     if (b.isFlagged) return `${coord} · ${this.i18n.t('box.flagged')}`;
     return `${coord} · ${this.i18n.t('box.hidden')}`;

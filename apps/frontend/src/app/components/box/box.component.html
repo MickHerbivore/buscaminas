@@ -2,6 +2,8 @@
   <div
     class="cell cell-hidden"
     [class.cell-flagged]="box().isFlagged"
+    [class.cell-mine-ghost]="isGameOver() && box().hasMine"
+    [class.cell-wrong-flag]="isGameOver() && box().isFlagged && !box().hasMine"
     [style.--anim-delay]="animDelay()"
     [attr.aria-label]="ariaLabel()"
     role="gridcell"
@@ -9,7 +11,9 @@
     (click)="onClick()"
     (contextmenu)="onRightClick($event)"
     (keydown)="onKey($event)">
-    @if (box().isFlagged) {
+    @if (isGameOver() && box().hasMine) {
+      <app-icon-mine class="w-3/5 h-3/5"></app-icon-mine>
+    } @else if (box().isFlagged) {
       <app-icon-flag class="w-3/5 h-3/5"></app-icon-flag>
     }
   </div>

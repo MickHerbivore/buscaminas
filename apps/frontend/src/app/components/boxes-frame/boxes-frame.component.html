@@ -19,6 +19,7 @@
                 @for (cell of row.cells; track cell.id) {
                   <app-box
                     [box]="cell"
+                    [isGameOver]="isGameOver()"
                     (clickEvent)="boxClicked($event)"
                     (rightClickEvent)="boxRightClicked($event)"></app-box>
                 }

@@ -31,15 +31,27 @@
     (boxRightClickEvent)="boxRightClicked($event)"></app-boxes-frame>
 
   <!-- Controls (ocultos mientras se muestra el overlay de resultado) -->
-  @if (!isGameOver() && !hasWon()) {
+  @if ((!isGameOver() && !hasWon()) || resultDismissed()) {
     <div class="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3 sm:justify-center sm:items-center">
+      @if (resultDismissed()) {
+        <div class="flex items-center justify-center gap-2 sm:mr-2">
+          @if (isGameOver()) {
+            <app-icon-mine class="size-4 text-detonation"></app-icon-mine>
+          } @else {
+            <app-icon-flag class="size-4 text-emerald"></app-icon-flag>
+          }
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-soft-ink">
+            {{ (isGameOver() ? 'result.lose' : 'result.win') | trans }}
+          </span>
+        </div>
+      }
       <app-reset-button></app-reset-button>
       <app-change-level-button></app-change-level-button>
     </div>
   }
 
   <!-- Result overlays con CTAs embebidos -->
-  @if (isGameOver()) {
+  @if (isGameOver() && !resultDismissed()) {
     <div
       role="status"
       aria-live="assertive"
@@ -54,11 +66,19 @@
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
+        <button
+          type="button"
+          class="w-full px-4 py-2 rounded-pill border-2 border-soft-stroke bg-transparent hover:bg-table
+                 font-mono text-xs uppercase tracking-[0.15em] text-soft-ink hover:text-ink transition-colors
+                 focus-visible:outline-2 focus-visible:outline-detonation"
+          (click)="dismissResult()">
+          {{ 'result.viewBoard' | trans }}
+        </button>
       </div>
     </div>
   }
 
-  @if (hasWon()) {
+  @if (hasWon() && !resultDismissed()) {
     <app-confetti></app-confetti>
     <div
       role="status"
@@ -80,6 +100,14 @@
       <div class="flex flex-col gap-2 mt-3 w-full max-w-xs">
         <app-reset-button></app-reset-button>
         <app-change-level-button></app-change-level-button>
+        <button
+          type="button"
+          class="w-full px-4 py-2 rounded-pill border-2 border-soft-stroke bg-transparent hover:bg-table
+                 font-mono text-xs uppercase tracking-[0.15em] text-soft-ink hover:text-ink transition-colors
+                 focus-visible:outline-2 focus-visible:outline-detonation"
+          (click)="dismissResult()">
+          {{ 'result.viewBoard' | trans }}
+        </button>
       </div>
     </div>
   }

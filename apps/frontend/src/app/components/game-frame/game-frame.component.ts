@@ -1,7 +1,9 @@
 import {
   Component,
+  effect,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { Box } from '../../interfaces/box.interface';
 import { Level } from '../../interfaces/level.interface';
@@ -39,6 +41,20 @@ export class GameFrameComponent {
 
   public boxClickedEvent = output<string>();
   public boxRightClickEvent = output<string>();
+
+  protected readonly resultDismissed = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.hasWon();
+      this.isGameOver();
+      this.resultDismissed.set(false);
+    });
+  }
+
+  protected dismissResult(): void {
+    this.resultDismissed.set(true);
+  }
 
   protected boxClicked(boxId: string) {
     this.boxClickedEvent.emit(boxId);

@@ -149,6 +149,40 @@
     color: var(--color-detonation);
   }
 
+  /* Game over: undetonated mines dimmed on hidden cells */
+  .cell-mine-ghost {
+    background-color: var(--color-deep-night);
+    border-color: var(--color-dim-ink);
+    color: var(--color-dim-ink);
+    cursor: default;
+    pointer-events: none;
+  }
+  .cell-mine-ghost:hover {
+    background-color: var(--color-deep-night);
+    transform: none;
+  }
+
+  /* Game over: wrongly placed flag crossed out */
+  .cell-wrong-flag {
+    color: var(--color-detonation);
+    cursor: default;
+    pointer-events: none;
+    position: relative;
+  }
+  .cell-wrong-flag:hover {
+    background-color: var(--color-table);
+    transform: none;
+  }
+  .cell-wrong-flag::after {
+    content: '';
+    position: absolute;
+    inset: 50% 10% auto 10%;
+    height: 0;
+    border-top: 2px solid var(--color-detonation);
+    transform: rotate(-18deg);
+    pointer-events: none;
+  }
+
   /* Revealed: sunken (deep-night) below the board */
   .cell-revealed {
     background-color: var(--color-deep-night);
